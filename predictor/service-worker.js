@@ -3,8 +3,8 @@ const cacheName = 'SHARPI predictor pro';
 const assets = [
   '.', // The index.html file
   'manifest.json',
-  'icon-192.png',
-  'icon-512.png'
+  'p-icon1.png',
+  'p-icon2.png'
 ];
 
 // Install Event - Cache the core assets
