@@ -8,12 +8,12 @@
   "description": "Predictor App powered by SHARPI AI.",
   "icons": [
     {
-      "src": "p-icon-192.png",
+      "src": "p-icon1.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "p-icon-512.png",
+      "src": "p-icon2.png",
       "sizes": "512x512",
       "type": "image/png"
     }
