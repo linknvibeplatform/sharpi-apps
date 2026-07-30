@@ -1,0 +1,3819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SHARPI · Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        /* ============================================================
+           ADMIN UI – PRESERVED + NEW STYLES
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #070b14;
+            --bg-secondary: #0c1425;
+            --bg-card: rgba(16, 26, 50, 0.85);
+            --bg-card-hover: rgba(26, 40, 70, 0.9);
+            --bg-input: rgba(255, 255, 255, 0.04);
+            --bg-input-hover: rgba(255, 255, 255, 0.07);
+            --bg-table: rgba(255, 255, 255, 0.02);
+            --bg-table-hover: rgba(255, 255, 255, 0.04);
+            --text-primary: #e8edf5;
+            --text-secondary: #8a9bb5;
+            --text-muted: #4a5a7a;
+            --text-green: #34d399;
+            --text-red: #f87171;
+            --text-gold: #fbbf24;
+            --text-blue: #60a5fa;
+            --text-purple: #a78bfa;
+            --text-cyan: #22d3ee;
+            --text-orange: #fb923c;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.03);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --radius: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: .2s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 16px;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .admin-container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        .admin-header {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            padding: 16px 24px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .admin-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .admin-header .brand .logo-icon {
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--text-gold), #f59e0b);
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.2);
+        }
+
+        .admin-header .brand .logo-text h1 {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .admin-header .brand .logo-text h1 span {
+            color: var(--text-gold);
+        }
+
+        .admin-header .brand .logo-text .subtitle {
+            color: var(--text-secondary);
+            font-size: 11px;
+            opacity: .6;
+        }
+
+        .admin-header .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .admin-header .live-badge {
+            background: rgba(248, 113, 113, 0.1);
+            color: var(--text-red);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(248, 113, 113, 0.15);
+        }
+
+        .admin-header .live-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-red);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: .3;
+                transform: scale(.8);
+            }
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+        .btn:hover {
+            transform: scale(.97);
+        }
+        .btn:active {
+            transform: scale(.94);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--text-gold), #f59e0b);
+            color: #070b14;
+        }
+        .btn-gold:hover {
+            opacity: .9;
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--text-green), #059669);
+            color: white;
+        }
+        .btn-green:hover {
+            opacity: .9;
+        }
+        .btn-green:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-red {
+            background: linear-gradient(135deg, var(--text-red), #dc2626);
+            color: white;
+        }
+        .btn-red:hover {
+            opacity: .9;
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, var(--text-blue), #2563eb);
+            color: white;
+        }
+        .btn-blue:hover {
+            opacity: .9;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .btn-outline:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 11px;
+        }
+        .btn-xs {
+            padding: 3px 10px;
+            font-size: 10px;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        .btn-whatsapp:hover {
+            background: #2ee07a;
+        }
+
+        /* PANELS */
+        .panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            padding: 20px 22px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .panel-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .panel-header .title {
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-header .title .badge {
+            background: rgba(251, 191, 36, 0.08);
+            color: var(--text-gold);
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .panel-header .title .badge.green {
+            background: rgba(52, 211, 153, 0.08);
+            color: var(--text-green);
+        }
+        .panel-header .title .badge.red {
+            background: rgba(248, 113, 113, 0.08);
+            color: var(--text-red);
+        }
+
+        .panel-header .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--text-gold), transparent);
+            opacity: .3;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border);
+            background: var(--bg-input-hover);
+            transform: translateY(-2px);
+        }
+
+        .stat-card .number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-gold);
+        }
+        .stat-card .number.green {
+            color: var(--text-green);
+        }
+        .stat-card .number.red {
+            color: var(--text-red);
+        }
+        .stat-card .number.blue {
+            color: var(--text-blue);
+        }
+        .stat-card .number.purple {
+            color: var(--text-purple);
+        }
+        .stat-card .number.cyan {
+            color: var(--text-cyan);
+        }
+        .stat-card .number.orange {
+            color: #fb923c;
+        }
+
+        .stat-card .label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 18px;
+            padding: 4px;
+            background: var(--bg-input);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+        }
+
+        .tabs .tab {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            transition: all var(--transition);
+            border: none;
+            background: transparent;
+        }
+
+        .tabs .tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-input-hover);
+        }
+
+        .tabs .tab.active {
+            color: var(--text-primary);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-card);
+        }
+
+        .tabs .tab .tab-badge {
+            background: rgba(251, 191, 36, 0.08);
+            color: var(--text-gold);
+            padding: 0 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            margin-left: 4px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn .3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* QUICK ACTIONS CARDS */
+        .quick-action-card {
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            transition: all var(--transition);
+        }
+
+        .quick-action-card:hover {
+            border-color: var(--border);
+            background: var(--bg-input-hover);
+        }
+
+        .quick-action-card .qa-info {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .quick-action-card .qa-info .qa-name {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 13px;
+            min-width: 80px;
+        }
+
+        .quick-action-card .qa-info .qa-detail {
+            color: var(--text-secondary);
+            font-size: 11px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .quick-action-card .qa-info .qa-detail .tag {
+            background: var(--bg-badge);
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .quick-action-card .qa-info .qa-detail .tag.promo {
+            color: var(--text-cyan);
+            font-family: monospace;
+        }
+
+        .quick-action-card .qa-info .qa-detail .tag.ref {
+            color: var(--text-gold);
+            font-family: monospace;
+        }
+
+        .quick-action-card .qa-info .qa-time {
+            color: var(--text-muted);
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .quick-action-card .qa-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        /* TABLE */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            vertical-align: middle;
+        }
+
+        .table td .highlight {
+            color: var(--text-primary);
+        }
+
+        .table tr:hover td {
+            background: var(--bg-table-hover);
+        }
+
+        .table .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .table .status-badge.success {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--text-green);
+        }
+        .table .status-badge.pending {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--text-gold);
+        }
+        .table .status-badge.paid {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--text-green);
+        }
+        .table .status-badge.key-generated {
+            background: rgba(96, 165, 250, 0.1);
+            color: var(--text-blue);
+        }
+        .table .status-badge.forwarded {
+            background: rgba(167, 139, 250, 0.1);
+            color: var(--text-purple);
+        }
+        .table .status-badge.rejected {
+            background: rgba(248, 113, 113, 0.1);
+            color: var(--text-red);
+        }
+        .table .status-badge.verified {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--text-green);
+        }
+
+        /* FILTERS */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .filters input,
+        .filters select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: var(--text-primary);
+            font-size: 12px;
+            outline: none;
+            transition: all var(--transition);
+            font-family: inherit;
+            min-width: 120px;
+        }
+
+        .filters input::placeholder {
+            color: var(--text-muted);
+        }
+        .filters input:focus,
+        .filters select:focus {
+            border-color: var(--text-gold);
+        }
+
+        .filters select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            z-index: 9999;
+            font-size: 14px;
+            color: var(--text-primary);
+            display: none;
+            max-width: 90%;
+            text-align: center;
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow);
+        }
+
+        .toast.show {
+            display: block;
+            animation: slideUp .3s ease;
+        }
+        .toast.success {
+            border-color: var(--text-green);
+        }
+        .toast.error {
+            border-color: var(--text-red);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* KEY CHECK RESULTS */
+        .key-check-result {
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin: 4px 0;
+            font-family: monospace;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .key-check-result.valid {
+            background: rgba(52, 211, 153, 0.08);
+            border-left: 3px solid var(--text-green);
+        }
+        .key-check-result.used {
+            background: rgba(248, 113, 113, 0.08);
+            border-left: 3px solid var(--text-red);
+        }
+        .key-check-result.invalid {
+            background: rgba(251, 191, 36, 0.08);
+            border-left: 3px solid var(--text-gold);
+        }
+
+        textarea#paymentKeyInput {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+            outline: none;
+            min-height: 120px;
+        }
+
+        textarea#paymentKeyInput:focus {
+            border-color: var(--text-gold);
+        }
+
+        /* EMPTY STATE / LOADING */
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+        }
+        .empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            opacity: .5;
+        }
+
+        .loading {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 30px;
+            font-size: 13px;
+        }
+
+        /* LOOKUP GRID */
+        .lookup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .lookup-item {
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .lookup-item .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-gold);
+        }
+        .lookup-item .label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        /* TREE VIEW */
+        .tree-node {
+            padding: 8px 0;
+            border-left: 2px solid var(--border);
+            padding-left: 20px;
+            margin-left: 10px;
+        }
+
+        .tree-node .node-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+        }
+
+        .tree-node .node-content:hover {
+            background: var(--bg-input-hover);
+            border-color: var(--border);
+        }
+
+        .tree-node .node-content .node-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tree-node .node-content .node-code {
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--text-cyan);
+        }
+
+        .tree-node .node-content .node-stats {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-left: auto;
+            display: flex;
+            gap: 12px;
+        }
+
+        .tree-node .node-content .node-badge {
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .tree-node .node-content .node-badge.parent {
+            background: rgba(167, 139, 250, 0.1);
+            color: var(--text-purple);
+        }
+
+        .tree-node .node-content .node-badge.child {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--text-green);
+        }
+
+        .tree-node .node-content .node-badge.root {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--text-gold);
+        }
+
+        .tree-children {
+            margin-left: 20px;
+        }
+
+        /* PAYMENT HISTORY */
+        .payment-history-card {
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            transition: all var(--transition);
+        }
+
+        .payment-history-card:hover {
+            background: var(--bg-input-hover);
+            border-color: var(--border);
+        }
+
+        .payment-history-card .ph-info {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .payment-history-card .ph-info .ph-amount {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-gold);
+        }
+
+        .payment-history-card .ph-info .ph-detail {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:768px) {
+            .admin-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                padding: 16px;
+            }
+            .admin-header .brand {
+                justify-content: center;
+            }
+            .admin-header .header-actions {
+                justify-content: center;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .panel-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .panel-header .actions {
+                justify-content: flex-start;
+            }
+            .stat-card .number {
+                font-size: 20px;
+            }
+            .tabs {
+                gap: 2px;
+                padding: 3px;
+            }
+            .tabs .tab {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            .lookup-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .table th,
+            .table td {
+                padding: 6px 10px;
+                font-size: 10px;
+            }
+            .btn {
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+            .quick-action-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .quick-action-card .qa-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .quick-action-card .qa-actions {
+                justify-content: flex-start;
+            }
+            .tree-node .node-content {
+                flex-wrap: wrap;
+            }
+            .tree-node .node-content .node-stats {
+                margin-left: 0;
+                width: 100%;
+            }
+            .payment-history-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media(max-width:480px) {
+            body {
+                padding: 6px;
+            }
+            .admin-header .brand .logo-text h1 {
+                font-size: 16px;
+            }
+            .admin-header .brand .logo-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .stat-card {
+                padding: 10px 12px;
+            }
+            .stat-card .number {
+                font-size: 18px;
+            }
+            .panel {
+                padding: 14px 16px;
+            }
+            .lookup-grid {
+                grid-template-columns: 1fr;
+            }
+            .quick-action-card .qa-info .qa-detail {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .tree-node {
+                padding-left: 10px;
+                margin-left: 5px;
+            }
+            .tree-children {
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="admin-container">
+
+        <!-- ============================================================
+        HEADER
+        ============================================================ -->
+        <header class="admin-header">
+            <div class="brand">
+                <div class="logo-icon">🦈</div>
+                <div class="logo-text">
+                    <h1>SHARPI <span>Admin</span></h1>
+                    <div class="subtitle">Affiliate Management · Key Registry · Sales Control</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="live-badge"><span class="dot"></span> LIVE</div>
+                <button class="btn btn-gold btn-sm" onclick="loadAllData()">🔄 Refresh</button>
+                <button class="btn btn-outline btn-sm" onclick="exportData()">📤 Export</button>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        STATS OVERVIEW
+        ============================================================ -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="title">
+                    📊 Real-time Overview
+                    <span class="badge" id="totalRecords">0 total</span>
+                </div>
+                <div class="actions">
+                    <span style="font-size:11px; color:var(--text-muted);">Updated: <span id="lastUpdated">Just now</span></span>
+                </div>
+            </div>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card"><div class="number" id="statAffiliates">0</div><div class="label">Total Affiliates</div></div>
+                <div class="stat-card"><div class="number green" id="statActiveAffiliates">0</div><div class="label">Active Affiliates</div></div>
+                <div class="stat-card"><div class="number blue" id="statAppUsers">0</div><div class="label">Predictor Users</div></div>
+                <div class="stat-card"><div class="number orange" id="statTotalSales">0</div><div class="label">Total Sales</div></div>
+                <div class="stat-card"><div class="number gold" id="statTotalRevenue">0</div><div class="label">Revenue (UGX)</div></div>
+                <div class="stat-card"><div class="number green" id="statTotalCommission">0</div><div class="label">Commissions (UGX)</div></div>
+                <div class="stat-card"><div class="number red" id="statPendingPayouts">0</div><div class="label">Pending Payouts (UGX)</div></div>
+                <div class="stat-card"><div class="number purple" id="statVerifiedTokens">0</div><div class="label">Verified Tokens</div></div>
+                <div class="stat-card"><div class="number gold" id="statTotalKeys">0</div><div class="label">Total Keys</div></div>
+                <div class="stat-card"><div class="number green" id="statKeysForwarded">0</div><div class="label">Keys Forwarded</div></div>
+                <div class="stat-card"><div class="number red" id="statKeysUsed">0</div><div class="label">Keys Used (Paid)</div></div>
+                <div class="stat-card"><div class="number red" id="statKeysRejected">0</div><div class="label">Keys Rejected</div></div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        TABS
+        ============================================================ -->
+        <div class="panel">
+            <div class="tabs" id="tabHeaders">
+                <button class="tab active" data-tab="quickactions">⚡ Quick Actions <span class="tab-badge" id="quickActionsTabBadge">0</span></button>
+                <button class="tab" data-tab="affiliates">👥 Affiliates <span class="tab-badge" id="affiliateTabBadge">0</span></button>
+                <button class="tab" data-tab="tree">🌳 Tree <span class="tab-badge" id="treeTabBadge">0</span></button>
+                <button class="tab" data-tab="users">📱 Users <span class="tab-badge" id="userTabBadge">0</span></button>
+                <button class="tab" data-tab="sales">💰 Sales <span class="tab-badge" id="salesTabBadge">0</span></button>
+                <button class="tab" data-tab="tokens">🔑 Tokens <span class="tab-badge" id="tokenTabBadge">0</span></button>
+                <button class="tab" data-tab="lookup">🔍 Lookup</button>
+                <button class="tab" data-tab="payment">💳 Payment Keys</button>
+            </div>
+
+            <!-- ============================================================
+            TAB 0: QUICK ACTIONS (LATEST PAYMENT REQUESTS)
+            ============================================================ -->
+            <div class="tab-content active" id="tab-quickactions">
+                <div class="panel-header">
+                    <div class="title">⚡ Quick Actions <span class="badge green" id="quickActionsLiveBadge">● LIVE</span></div>
+                    <div class="actions">
+                        <button class="btn btn-outline btn-sm" onclick="loadQuickActions()">🔄 Refresh</button>
+                    </div>
+                </div>
+                <div class="filters">
+                    <input type="text" id="qaSearch" placeholder="🔍 Search by name, promo, ref..." oninput="filterQuickActions()" />
+                    <select id="qaStatusFilter" onchange="filterQuickActions()">
+                        <option value="all">All Status</option>
+                        <option value="pending">⏳ Pending</option>
+                        <option value="verified">✅ Verified</option>
+                        <option value="key_generated">🔑 Key Gen</option>
+                        <option value="forwarded">📤 Forwarded</option>
+                        <option value="paid">💵 Paid</option>
+                        <option value="rejected">❌ Rejected</option>
+                    </select>
+                </div>
+                <div id="quickActionsList">
+                    <div class="loading">🔄 Loading payment requests...</div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            TAB 1: AFFILIATES
+            ============================================================ -->
+            <div class="tab-content" id="tab-affiliates">
+                <div class="filters">
+                    <input type="text" id="affiliateSearch" placeholder="🔍 Search affiliates..." oninput="filterAffiliates()" />
+                    <select id="affiliateStatusFilter" onchange="filterAffiliates()">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div id="affiliatesList"><div class="loading">🔄 Loading affiliates...</div></div>
+            </div>
+
+            <!-- ============================================================
+            TAB 2: TREE (AFFILIATE HIERARCHY)
+            ============================================================ -->
+            <div class="tab-content" id="tab-tree">
+                <div class="panel-header">
+                    <div class="title">🌳 Affiliate Tree <span class="badge green">Full Hierarchy</span></div>
+                    <div class="actions">
+                        <button class="btn btn-outline btn-sm" onclick="loadAffiliateTree()">🔄 Refresh</button>
+                        <button class="btn btn-outline btn-sm" onclick="expandAllTree()">📂 Expand All</button>
+                        <button class="btn btn-outline btn-sm" onclick="collapseAllTree()">📁 Collapse All</button>
+                    </div>
+                </div>
+                <div class="filters">
+                    <input type="text" id="treeSearch" placeholder="🔍 Search in tree..." oninput="filterTree()" />
+                </div>
+                <div id="treeContainer">
+                    <div class="loading">🌳 Building affiliate tree...</div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            TAB 3: USERS
+            ============================================================ -->
+            <div class="tab-content" id="tab-users">
+                <div class="filters">
+                    <input type="text" id="appUserSearch" placeholder="🔍 Search users..." oninput="filterAppUsers()" />
+                    <select id="appUserStatusFilter" onchange="filterAppUsers()">
+                        <option value="all">All Status</option>
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div id="appUsersList"><div class="loading">🔄 Loading users...</div></div>
+            </div>
+
+            <!-- ============================================================
+            TAB 4: SALES (MAIN CONTROL)
+            ============================================================ -->
+            <div class="tab-content" id="tab-sales">
+                <div class="filters">
+                    <input type="text" id="salesSearch" placeholder="🔍 Search sales..." oninput="filterSales()" />
+                    <select id="salesStatusFilter" onchange="filterSales()">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="verified">Verified</option>
+                        <option value="key_generated">Key Generated</option>
+                        <option value="forwarded">Forwarded</option>
+                        <option value="paid">Paid</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div id="salesList"><div class="loading">🔄 Loading sales...</div></div>
+            </div>
+
+            <!-- ============================================================
+            TAB 5: TOKENS
+            ============================================================ -->
+            <div class="tab-content" id="tab-tokens">
+                <div class="filters">
+                    <input type="text" id="tokenSearch" placeholder="🔍 Search tokens..." oninput="filterTokens()" />
+                    <select id="tokenStatusFilter" onchange="filterTokens()">
+                        <option value="all">All Status</option>
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div id="tokensList"><div class="loading">🔄 Loading tokens...</div></div>
+            </div>
+
+            <!-- ============================================================
+            TAB 6: LOOKUP (Enhanced with Payment History & Parent)
+            ============================================================ -->
+            <div class="tab-content" id="tab-lookup">
+                <div class="panel-header">
+                    <div class="title">🔍 Affiliate Lookup <span class="badge green">Full Profile</span></div>
+                    <div class="actions"><button class="btn btn-outline btn-sm" onclick="clearLookup()">Clear</button></div>
+                </div>
+                <div class="filters" style="margin-bottom:16px;">
+                    <input type="text" id="lookupInput" placeholder="Enter affiliate promo code (e.g. SHARPI-XXX-XXXX-XXXXXX)" style="flex:1; min-width:200px;" />
+                    <button class="btn btn-gold" onclick="lookupAffiliate()">🔍 Lookup</button>
+                </div>
+                <div id="lookupResult">
+                    <div class="empty-state"><div class="icon">🔎</div><p style="color:var(--text-secondary);">Enter an affiliate code to see all data including payment history</p></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            TAB 7: PAYMENT KEYS (Enhanced with History)
+            ============================================================ -->
+            <div class="tab-content" id="tab-payment">
+                <div class="panel-header">
+                    <div class="title">💳 Payment Keys <span class="badge green">Check & History</span></div>
+                    <div class="actions">
+                        <button class="btn btn-outline btn-sm" onclick="clearPaymentKeys()">Clear</button>
+                        <button class="btn btn-outline btn-sm" onclick="loadPaymentHistory()">📜 History</button>
+                    </div>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">
+                        Paste payment keys to check against the <strong style="color:var(--text-gold);">SECURE KEY REGISTRY</strong>.
+                        <span style="color:var(--text-gold);">Each valid key = 20,000 UGX</span>
+                        <span style="color:var(--text-red);">Keys are ONE-TIME USE only.</span>
+                    </div>
+                    <textarea id="paymentKeyInput" placeholder="Paste any text with keys here...&#10;e.g.&#10;SHARPI-PAY-XXXX-XXXX-XXXX-XXXX"></textarea>
+                    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                        <button class="btn btn-gold" onclick="checkPaymentKeys()">🔍 Check Keys</button>
+                        <button class="btn btn-outline btn-sm" onclick="clearPaymentKeys()">Clear</button>
+                    </div>
+                </div>
+                <div id="paymentKeyResult">
+                    <div class="empty-state">
+                        <div class="icon">💳</div>
+                        <p style="color:var(--text-secondary);">Paste text containing keys above and click "Check Keys"</p>
+                    </div>
+                </div>
+                <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:16px;">
+                    <div style="font-weight:600; color:var(--text-primary); margin-bottom:10px;">📜 Payment History</div>
+                    <div class="filters">
+                        <select id="paymentHistoryFilter" onchange="loadPaymentHistory()">
+                            <option value="all">All Payments</option>
+                            <option value="forwarded">📤 Forwarded</option>
+                            <option value="paid">💵 Paid</option>
+                            <option value="rejected">❌ Rejected</option>
+                            <option value="key_generated">🔑 Key Generated</option>
+                        </select>
+                    </div>
+                    <div id="paymentHistoryList">
+                        <div class="empty-state"><div class="icon">📜</div><p style="color:var(--text-secondary);">Loading payment history...</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;padding:16px;color:var(--text-muted);font-size:11px;border-top:1px solid var(--border);margin-top:8px;">
+            🦈 SHARPI Admin · All data in UGX · Keys are ONE-TIME USE
+        </div>
+    </div>
+
+    <!-- ============================================================
+    SCRIPT
+    ============================================================ -->
+    <script>
+        // ============================================================
+        // ADMIN DASHBOARD – COMPLETE FIXED VERSION WITH NEW FEATURES
+        // NEW: Payment History per Affiliate
+        // NEW: Affiliate Tree Display (Full Hierarchy)
+        // NEW: Payment Keys area with history
+        // NEW: Enhanced Lookup with Parent and Payment History
+        // ============================================================
+
+        // ============================================================
+        // CONFIGURATION
+        // ============================================================
+        const SUPABASE_URL = 'https://wkdewqwqhopbwygsfdav.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_5QGobPerm0Bw973REoEvXg_Cs6n70lZ';
+
+        let supabaseClient = null;
+        let allAffiliates = [];
+        let allAppUsers = [];
+        let allSales = [];
+        let allTokens = [];
+        let allGeneratedKeys = [];
+        let allQuickActions = [];
+        let allPaymentHistory = [];
+        let affiliateTreeData = [];
+        let chartInstance = null;
+        let adminRealtimeChannel = null;
+
+        // ============================================================
+        // INITIALIZE
+        // ============================================================
+        function initSupabase() {
+            if (typeof supabase !== 'undefined' && supabase.createClient) {
+                try {
+                    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    console.log('✅ Supabase initialized');
+                    return true;
+                } catch (e) {
+                    console.error('❌ Supabase init error:', e);
+                    return false;
+                }
+            }
+            console.warn('⚠️ Supabase library not loaded');
+            return false;
+        }
+
+        function showToast(msg, type = '') {
+            const el = document.getElementById('toast');
+            if (!el) return;
+            el.textContent = msg;
+            el.className = 'toast show ' + type;
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => { el.className = 'toast'; }, 5000);
+        }
+
+        // ============================================================
+        // LETTERS ⇄ NUMBERS (For Token Generation)
+        // ============================================================
+        function lettersToNumbers(str) {
+            if (!str) return '';
+            return str.toUpperCase().split('').map(char => {
+                const code = char.charCodeAt(0) - 64;
+                if (code >= 1 && code <= 26) return code;
+                return '';
+            }).filter(v => v !== '').join('.');
+        }
+
+        function numbersToLetters(str) {
+            if (!str) return '';
+            const map = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+            return str.replace(/\D/g, '').split('').map(digit => {
+                const num = parseInt(digit);
+                return map[num] || '0';
+            }).join('.');
+        }
+
+        // ============================================================
+        // GENERATE HIDDEN KEY (Predictor Token)
+        // ============================================================
+        function generateHiddenKeyForUser(user) {
+            if (!user) return null;
+
+            console.log('🔑 Generating token for user:', user);
+
+            const name = user.name || user.user_name || 'Unknown';
+            const nameParts = name.trim().split(' ');
+            const firstName = nameParts[0] || 'Unknown';
+            const lastName = nameParts.slice(1).join(' ') || '';
+            const firstNamePart = lettersToNumbers(firstName);
+            const lastNamePart = lastName ? lettersToNumbers(lastName) : '';
+
+            const phone = user.whatsapp || user.user_whatsapp || user.contact || '0000000000';
+            const phonePart = numbersToLetters(phone);
+
+            const userId = user.id || user.user_id || '000000';
+            const userIdClean = userId.replace(/\s/g, '');
+            const idPart = numbersToLetters(userIdClean);
+
+            let key = firstNamePart;
+            if (lastNamePart) key += '_' + lastNamePart;
+            key += '_' + phonePart + '_' + idPart;
+
+            console.log('✅ Generated token:', key);
+            return key;
+        }
+
+        // ============================================================
+        // GENERATE PAYMENT KEY
+        // ============================================================
+        function generatePaymentKey(affiliateCode, userName, saleId) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const timestamp = Date.now().toString(36).toUpperCase();
+            const affPart = affiliateCode ? affiliateCode.replace(/[^A-Z0-9]/g, '').slice(0, 6) : 'SHARPI';
+            const namePart = userName ? userName.slice(0, 3).toUpperCase() : 'PAY';
+            let randomPart = '';
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                if (i < 3) randomPart += '-';
+            }
+            return `SHARPI-PAY-${affPart}-${timestamp.slice(0, 4)}-${timestamp.slice(4, 8)}-${randomPart}`;
+        }
+
+        // ============================================================
+        // DISPATCH SALE (Step 1: Generate Token + Key)
+        // ============================================================
+        async function dispatchSale(saleId, userId, userData, buttonElement) {
+            if (!supabaseClient) {
+                showToast('❌ Supabase not initialized', 'error');
+                return;
+            }
+
+            console.log('📦 dispatchSale called with:', { saleId, userId, userData });
+
+            if (!userData) {
+                showToast('❌ Missing user data', 'error');
+                return;
+            }
+
+            const safeUserData = {
+                name: userData.name || userData.user_name || 'User',
+                whatsapp: userData.whatsapp || userData.user_whatsapp || '0000000000',
+                id: userData.id || userData.user_id || userId || '000000',
+                promo_code: userData.promo_code || '',
+                package: userData.package || ''
+            };
+
+            console.log('📦 Safe userData:', safeUserData);
+
+            const originalText = buttonElement.innerHTML;
+            buttonElement.innerHTML = '⏳ Dispatching...';
+            buttonElement.disabled = true;
+
+            try {
+                const token = generateHiddenKeyForUser(safeUserData);
+                if (!token) {
+                    console.error('❌ Failed to generate token for:', safeUserData);
+                    showToast('❌ Failed to generate token', 'error');
+                    buttonElement.innerHTML = '❌ Error';
+                    buttonElement.className = 'btn btn-red btn-xs';
+                    buttonElement.disabled = false;
+                    return;
+                }
+
+                const promoCode = safeUserData.promo_code || 'NONE';
+                const userName = safeUserData.name || 'User';
+                const paymentKey = generatePaymentKey(promoCode, userName, saleId);
+
+                console.log('🔑 Generated:', { token, paymentKey });
+
+                const { error: updateError } = await supabaseClient
+                    .from('payment_requests')
+                    .update({
+                        token: token,
+                        paid_key: paymentKey,
+                        status: 'key_generated',
+                        key_status: 'valid',
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', saleId);
+
+                if (updateError) throw updateError;
+
+                const { error: keyError } = await supabaseClient
+                    .from('generated_keys')
+                    .insert([{
+                        key: paymentKey,
+                        affiliate_code: promoCode,
+                        sale_id: saleId,
+                        user_name: userName,
+                        package: safeUserData.package || 'Package',
+                        amount: 20000,
+                        status: 'valid',
+                        generated_at: new Date().toISOString(),
+                        forwarded: false,
+                        forwarded_at: null,
+                        is_referral: false
+                    }]);
+
+                if (keyError) throw keyError;
+
+                await recordActivity('dispatch',
+                    `Sale ${saleId} dispatched | Key: ${paymentKey} | Token generated`);
+
+                showToast(`✅ Dispatched! Key: ${paymentKey}`, 'success');
+                buttonElement.innerHTML = '📤 Forward';
+                buttonElement.className = 'btn btn-blue btn-xs';
+                buttonElement.disabled = false;
+
+                buttonElement.onclick = function() {
+                    forwardSale(saleId, userId, safeUserData, this);
+                };
+
+                // Update Quick Actions card
+                const card = buttonElement.closest('.quick-action-card');
+                if (card) {
+                    const statusBadge = card.querySelector('.qa-status');
+                    if (statusBadge) {
+                        statusBadge.textContent = '🔑 Key Gen';
+                        statusBadge.className = 'qa-status status-badge key-generated';
+                    }
+                    const actionsDiv = card.querySelector('.qa-actions');
+                    if (actionsDiv) {
+                        actionsDiv.innerHTML = `
+                            <button class="btn btn-blue btn-xs" onclick="forwardSale('${saleId}', '${userId}', ${JSON.stringify(safeUserData).replace(/"/g, "'")}, this)">📤 Forward</button>
+                            <button class="btn btn-red btn-xs" onclick="rejectSale('${saleId}', this)">🗑️ Reject</button>
+                            ${safeUserData.whatsapp && safeUserData.whatsapp !== '0000000000' ? `<button class="btn btn-whatsapp btn-xs" onclick="openWhatsApp('${safeUserData.whatsapp}', '${safeUserData.name}')">💬</button>` : ''}
+                        `;
+                    }
+                }
+
+                // Update sales table row if it exists
+                const row = buttonElement.closest('tr');
+                if (row) {
+                    const statusCell = row.querySelector('.status-badge');
+                    if (statusCell) {
+                        statusCell.textContent = '🔑 Key Gen';
+                        statusCell.className = 'status-badge key-generated';
+                    }
+                    const keyCell = row.querySelector('.paid-key-display');
+                    if (keyCell) {
+                        keyCell.innerHTML =
+                            `<span style="font-family:monospace;color:var(--text-gold);font-size:11px;">${paymentKey}</span>
+                            <button class="btn btn-outline btn-xs" onclick="copyText('${paymentKey}')" style="padding:1px 6px;">📋</button>`;
+                    }
+                    const tokenCell = row.querySelector('.token-display');
+                    if (tokenCell) {
+                        tokenCell.innerHTML =
+                            `<span style="font-family:monospace;color:var(--text-cyan);font-size:11px;">${token}</span>`;
+                    }
+                    const actionCell = row.querySelector('td:last-child');
+                    if (actionCell) {
+                        actionCell.innerHTML = `
+                            <button class="btn btn-blue btn-xs" onclick="forwardSale('${saleId}', '${userId}', ${JSON.stringify(safeUserData).replace(/"/g, "'")}, this)">📤 Forward</button>
+                            <button class="btn btn-red btn-xs" onclick="rejectSale('${saleId}', this)">🗑️</button>
+                        `;
+                    }
+                }
+
+                setTimeout(() => { loadAllData();
+                    loadQuickActions(); }, 500);
+
+            } catch (e) {
+                console.error('❌ Dispatch error:', e);
+                showToast('❌ Failed: ' + e.message, 'error');
+                buttonElement.innerHTML = '❌ Error';
+                buttonElement.className = 'btn btn-red btn-xs';
+                buttonElement.disabled = false;
+                setTimeout(() => {
+                    buttonElement.innerHTML = '🚀 Dispatch';
+                    buttonElement.className = 'btn btn-green btn-xs';
+                    buttonElement.disabled = false;
+                }, 3000);
+            }
+        }
+
+        // ============================================================
+        // FORWARD SALE
+        // ============================================================
+        async function forwardSale(saleId, userId, userData, buttonElement) {
+            if (!supabaseClient) {
+                showToast('❌ Supabase not initialized', 'error');
+                return;
+            }
+
+            const saleIdStr = String(saleId);
+            console.log('📤 Forwarding sale:', saleIdStr, 'for user:', userData?.name);
+
+            if (!userData) {
+                showToast('❌ Missing user data', 'error');
+                return;
+            }
+
+            const safeUserData = {
+                name: (userData.name || userData.user_name || 'User').replace(/'/g, "\\'"),
+                whatsapp: (userData.whatsapp || userData.user_whatsapp || '0000000000').replace(/'/g, "\\'"),
+                id: (userData.id || userData.user_id || userId || '000000').replace(/'/g, "\\'"),
+                promo_code: (userData.promo_code || '').replace(/'/g, "\\'"),
+                package: (userData.package || '').replace(/'/g, "\\'")
+            };
+
+            const originalText = buttonElement.innerHTML;
+            buttonElement.innerHTML = '⏳ Forwarding...';
+            buttonElement.disabled = true;
+
+            try {
+                // Get the sale record
+                const { data: saleData, error: saleError } = await supabaseClient
+                    .from('payment_requests')
+                    .select('promo_code, user_name, package, amount, paid_key, token, ref, status, user_id')
+                    .eq('id', saleIdStr)
+                    .maybeSingle();
+
+                if (saleError) {
+                    console.error('❌ Sale fetch error:', saleError);
+                    throw new Error('Failed to fetch sale: ' + saleError.message);
+                }
+
+                if (!saleData) {
+                    throw new Error('Sale not found with ID: ' + saleIdStr);
+                }
+
+                console.log('📦 Sale data:', saleData);
+
+                // Check if already forwarded
+                if (saleData.status === 'forwarded' || saleData.status === 'paid') {
+                    showToast('⚠️ This sale is already ' + saleData.status, 'error');
+                    buttonElement.innerHTML = '✅ Already ' + saleData.status;
+                    buttonElement.className = 'btn btn-outline btn-xs';
+                    buttonElement.disabled = true;
+                    return;
+                }
+
+                const promoCode = saleData.promo_code || safeUserData.promo_code;
+                console.log('🔍 Promo code from sale:', promoCode);
+
+                // Find the affiliate who owns this promo code
+                let primaryAffiliate = null;
+                if (promoCode && promoCode !== 'NONE' && promoCode !== 'null' && promoCode !== '') {
+                    const { data: affData, error: affError } = await supabaseClient
+                        .from('affiliates')
+                        .select('*')
+                        .eq('code', promoCode)
+                        .maybeSingle();
+
+                    if (!affError && affData) {
+                        primaryAffiliate = affData;
+                        console.log('✅ Primary affiliate found:', primaryAffiliate.name, 'Code:', primaryAffiliate.code);
+                    } else {
+                        console.warn('⚠️ Primary affiliate not found for code:', promoCode);
+                    }
+                }
+
+                // Check if this affiliate has a parent
+                let parentAffiliate = null;
+                let isReferral = false;
+
+                if (primaryAffiliate) {
+                    const { data: referralData, error: refError } = await supabaseClient
+                        .from('affiliate_referrals')
+                        .select('parent_code')
+                        .eq('child_code', primaryAffiliate.code)
+                        .eq('status', 'active')
+                        .maybeSingle();
+
+                    if (!refError && referralData && referralData.parent_code) {
+                        console.log('🔗 Referral found! Parent code:', referralData.parent_code);
+
+                        const { data: parentData, error: parentError } = await supabaseClient
+                            .from('affiliates')
+                            .select('*')
+                            .eq('code', referralData.parent_code)
+                            .maybeSingle();
+
+                        if (!parentError && parentData) {
+                            parentAffiliate = parentData;
+                            isReferral = true;
+                            console.log('✅ Parent affiliate found:', parentAffiliate.name, 'Code:', parentAffiliate.code);
+                        } else {
+                            console.warn('⚠️ Parent affiliate not found for code:', referralData.parent_code);
+                        }
+                    } else {
+                        console.log('ℹ️ No referral found for this affiliate');
+                    }
+                }
+
+                // Correct amounts based on scenario
+                const COMMISSION_PER_SALE = 20000;
+                let childAmount = COMMISSION_PER_SALE;
+                let parentAmount = 0;
+
+                if (isReferral && parentAffiliate) {
+                    childAmount = 18000; // 90%
+                    parentAmount = 2000; // 10%
+                    console.log(`💰 Split: Child ${childAmount} UGX (90%), Parent ${parentAmount} UGX (10%)`);
+                } else {
+                    childAmount = 20000; // 100%
+                    console.log(`💰 No split: 100% to primary affiliate (${childAmount} UGX)`);
+                }
+
+                // Generate child payment key
+                const childKey = generatePaymentKey(
+                    primaryAffiliate?.code || 'NONE',
+                    safeUserData.name || 'User',
+                    saleIdStr
+                );
+
+                // Generate parent payment key (if referral)
+                let parentKey = null;
+                if (isReferral && parentAffiliate) {
+                    parentKey = generatePaymentKey(
+                        parentAffiliate.code,
+                        safeUserData.name || 'User',
+                        saleIdStr + '-parent'
+                    );
+                }
+
+                console.log('🔑 Generated keys:', { childKey, parentKey });
+
+                // STEP 1: Update the original sale (child's record)
+                const { error: updateError } = await supabaseClient
+                    .from('payment_requests')
+                    .update({
+                        status: 'forwarded',
+                        updated_at: new Date().toISOString(),
+                        paid_key: childKey,
+                        parent_affiliate: parentAffiliate?.code || null,
+                        parent_key: parentKey || null,
+                        is_referral: isReferral,
+                        child_amount: childAmount,
+                        parent_amount: parentAmount
+                    })
+                    .eq('id', saleIdStr);
+
+                if (updateError) {
+                    console.error('❌ Update error:', updateError);
+                    throw new Error('Failed to update sale: ' + updateError.message);
+                }
+
+                // STEP 2: Insert child's payment key into generated_keys
+                const { error: childKeyError } = await supabaseClient
+                    .from('generated_keys')
+                    .insert([{
+                        key: childKey,
+                        affiliate_code: primaryAffiliate?.code || promoCode || 'NONE',
+                        sale_id: saleIdStr,
+                        user_name: safeUserData.name || 'User',
+                        package: saleData.package || 'Package',
+                        amount: childAmount,
+                        status: 'valid',
+                        generated_at: new Date().toISOString(),
+                        forwarded: true,
+                        forwarded_at: new Date().toISOString(),
+                        is_referral: false,
+                        parent_key: parentKey || null
+                    }]);
+
+                if (childKeyError) {
+                    console.error('❌ Child key insert error:', childKeyError);
+                    throw new Error('Failed to insert child key: ' + childKeyError.message);
+                }
+
+                // STEP 3: If referral, handle parent side
+                let parentSaleSuccess = false;
+
+                if (isReferral && parentAffiliate && parentKey) {
+                    console.log('🔄 Processing parent side for referral...');
+
+                    // Insert parent's payment key into generated_keys
+                    const { data: existingKey, error: keyCheckError } = await supabaseClient
+                        .from('generated_keys')
+                        .select('id')
+                        .eq('key', parentKey)
+                        .maybeSingle();
+
+                    if (keyCheckError) {
+                        console.warn('⚠️ Check for existing parent key failed:', keyCheckError);
+                    }
+
+                    if (!existingKey) {
+                        const { error: parentKeyError } = await supabaseClient
+                            .from('generated_keys')
+                            .insert([{
+                                key: parentKey,
+                                affiliate_code: parentAffiliate.code,
+                                sale_id: saleIdStr + '-parent',
+                                user_name: safeUserData.name || 'User',
+                                package: saleData.package || 'Package',
+                                amount: parentAmount,
+                                status: 'valid',
+                                generated_at: new Date().toISOString(),
+                                forwarded: true,
+                                forwarded_at: new Date().toISOString(),
+                                is_referral: true,
+                                parent_key: childKey,
+                                child_affiliate_code: primaryAffiliate?.code || 'NONE'
+                            }]);
+
+                        if (parentKeyError) {
+                            console.error('❌ Parent key insert error:', parentKeyError);
+                        } else {
+                            console.log('✅ Parent key inserted into generated_keys:', parentKey);
+                        }
+                    }
+
+                    // Insert referral earning WITH paid_key
+                    const { data: existingEarning, error: earnCheckError } = await supabaseClient
+                        .from('referral_earnings')
+                        .select('id')
+                        .eq('sale_id', saleIdStr)
+                        .eq('parent_code', parentAffiliate.code)
+                        .maybeSingle();
+
+                    if (earnCheckError) {
+                        console.warn('⚠️ Check for existing earning failed:', earnCheckError);
+                    }
+
+                    if (!existingEarning) {
+                        const earningPayload = {
+                            parent_code: parentAffiliate.code,
+                            child_code: primaryAffiliate?.code || 'NONE',
+                            sale_id: saleIdStr,
+                            amount: parentAmount,
+                            status: 'forwarded',
+                            created_at: new Date().toISOString(),
+                            child_name: safeUserData.name || 'User',
+                            description: `Referral commission (10%) from ${primaryAffiliate?.name || 'affiliate'}`,
+                            paid_key: parentKey
+                        };
+
+                        console.log('📝 Inserting referral earning:', earningPayload);
+
+                        const { error: earningError } = await supabaseClient
+                            .from('referral_earnings')
+                            .insert([earningPayload]);
+
+                        if (earningError) {
+                            console.error('❌ Referral earning insert error:', earningError);
+                        } else {
+                            console.log('✅ Referral earning inserted with key:', parentKey);
+                            parentSaleSuccess = true;
+                        }
+                    } else {
+                        console.log('ℹ️ Referral earning already exists, skipping insert');
+                        parentSaleSuccess = true;
+                    }
+
+                    // Update parent affiliate's referral_earnings and balance
+                    if (parentSaleSuccess) {
+                        try {
+                            const { data: parentAffData, error: parentAffError } = await supabaseClient
+                                .from('affiliates')
+                                .select('referral_earnings, referral_count, balance')
+                                .eq('code', parentAffiliate.code)
+                                .maybeSingle();
+
+                            if (parentAffError) {
+                                console.error('❌ Failed to fetch parent affiliate:', parentAffError);
+                            } else if (parentAffData) {
+                                const currentReferralEarnings = parentAffData.referral_earnings || 0;
+                                const currentReferralCount = parentAffData.referral_count || 0;
+                                const currentBalance = parentAffData.balance || 0;
+
+                                console.log(`📊 Parent affiliate ${parentAffiliate.code}: Current earnings ${currentReferralEarnings}, count ${currentReferralCount}`);
+                                console.log(`➕ Adding ${parentAmount} UGX to parent affiliate`);
+
+                                const { error: updateAffError } = await supabaseClient
+                                    .from('affiliates')
+                                    .update({
+                                        referral_earnings: currentReferralEarnings + parentAmount,
+                                        referral_count: currentReferralCount + 1,
+                                        balance: currentBalance + parentAmount
+                                    })
+                                    .eq('code', parentAffiliate.code);
+
+                                if (updateAffError) {
+                                    console.error('❌ Parent affiliate update error:', updateAffError);
+                                } else {
+                                    console.log(`✅ Parent affiliate ${parentAffiliate.code} updated with +${parentAmount} UGX`);
+                                }
+                            }
+                        } catch (e) {
+                            console.error('❌ Parent update error:', e);
+                        }
+                    }
+                }
+
+                // Record activity
+                let activityDesc = '';
+                if (isReferral && parentAffiliate && parentSaleSuccess) {
+                    activityDesc =
+                        `Sale ${saleIdStr} forwarded | Child: ${primaryAffiliate?.name || 'Unknown'} (${childAmount} UGX) | Parent: ${parentAffiliate.name} (${parentAmount} UGX) | Parent Key: ${parentKey}`;
+                } else if (isReferral && parentAffiliate && !parentSaleSuccess) {
+                    activityDesc =
+                        `Sale ${saleIdStr} forwarded | Child: ${primaryAffiliate?.name || 'Unknown'} (${childAmount} UGX) | Parent earning failed for ${parentAffiliate.name}`;
+                } else {
+                    activityDesc =
+                        `Sale ${saleIdStr} forwarded | Affiliate: ${primaryAffiliate?.name || 'Unknown'} (${childAmount} UGX)`;
+                }
+
+                await recordActivity('forwarded', activityDesc);
+
+                // Show success message
+                let successMsg = `✅ Forwarded! `;
+                if (isReferral && parentAffiliate && parentSaleSuccess) {
+                    successMsg +=
+                        `${primaryAffiliate?.name || 'User'} gets ${childAmount.toLocaleString()} UGX (90%), ${parentAffiliate.name} gets ${parentAmount.toLocaleString()} UGX (10%)`;
+                    if (parentKey) {
+                        successMsg += ` | Parent Key: ${parentKey}`;
+                    }
+                } else if (isReferral && parentAffiliate && !parentSaleSuccess) {
+                    successMsg +=
+                        `${primaryAffiliate?.name || 'User'} gets ${childAmount.toLocaleString()} UGX (90%) BUT Parent earning failed! Check logs.`;
+                    showToast(`⚠️ Parent earning failed for ${parentAffiliate.name}. Check console.`, 'error');
+                } else {
+                    successMsg += `${primaryAffiliate?.name || 'User'} gets ${childAmount.toLocaleString()} UGX (100%)`;
+                }
+                showToast(successMsg, 'success');
+
+                buttonElement.innerHTML = '✅ Forwarded ✓';
+                buttonElement.className = 'btn btn-outline btn-xs';
+                buttonElement.disabled = true;
+
+                // Update Quick Actions card
+                const card = buttonElement.closest('.quick-action-card');
+                if (card) {
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        card.remove();
+                        const remaining = document.querySelectorAll('.quick-action-card').length;
+                        document.getElementById('quickActionsTabBadge').textContent = remaining;
+                    }, 300);
+                }
+
+                // Update sales table row if it exists
+                const row = buttonElement.closest('tr');
+                if (row) {
+                    const statusCell = row.querySelector('.status-badge');
+                    if (statusCell) {
+                        if (isReferral && parentAffiliate && parentSaleSuccess) {
+                            statusCell.textContent = '📤 Split (90/10)';
+                        } else if (isReferral && parentAffiliate && !parentSaleSuccess) {
+                            statusCell.textContent = '⚠️ Split Failed';
+                            statusCell.className = 'status-badge rejected';
+                        } else {
+                            statusCell.textContent = '📤 Forwarded';
+                        }
+                        statusCell.className = 'status-badge forwarded';
+                    }
+
+                    const splitCell = row.querySelector('td:nth-child(9)');
+                    if (splitCell) {
+                        if (isReferral && parentAffiliate) {
+                            splitCell.innerHTML =
+                                `Child: ${childAmount.toLocaleString()} UGX (90%) | Parent: ${parentAmount.toLocaleString()} UGX (10%)${parentSaleSuccess ? ' ✅' : ' ⚠️ Failed'}`;
+                        } else {
+                            splitCell.textContent = `100% (${childAmount.toLocaleString()} UGX)`;
+                        }
+                    }
+
+                    const keyCell = row.querySelector('.paid-key-display');
+                    if (keyCell) {
+                        if (isReferral && parentAffiliate && parentKey && parentSaleSuccess) {
+                            keyCell.innerHTML = `
+                                <div style="font-family:monospace;color:var(--text-gold);font-size:11px;">
+                                    Child: ${childKey}
+                                    <button class="btn btn-outline btn-xs" onclick="copyText('${childKey}')" style="padding:1px 6px;">📋</button>
+                                    <br>Parent: ${parentKey}
+                                    <button class="btn btn-outline btn-xs" onclick="copyText('${parentKey}')" style="padding:1px 6px;">📋</button>
+                                    ${parentSaleSuccess ? '✅' : '⚠️'}
+                                </div>
+                            `;
+                        } else {
+                            keyCell.innerHTML = `
+                                <span style="font-family:monospace;color:var(--text-gold);font-size:11px;">${childKey}</span>
+                                <button class="btn btn-outline btn-xs" onclick="copyText('${childKey}')" style="padding:1px 6px;">📋</button>
+                            `;
+                        }
+                    }
+
+                    const actionCell = row.querySelector('td:last-child');
+                    if (actionCell) {
+                        let html = '';
+                        if (isReferral && parentAffiliate && parentSaleSuccess) {
+                            html = `<span style="color:var(--text-purple);font-size:10px;">✅ Split (90/10)</span>`;
+                        } else if (isReferral && parentAffiliate && !parentSaleSuccess) {
+                            html = `<span style="color:var(--text-red);font-size:10px;">⚠️ Parent earning failed</span>`;
+                        } else {
+                            html = `<span style="color:var(--text-purple);font-size:10px;">✅ Forwarded (100%)</span>`;
+                        }
+
+                        if (safeUserData.whatsapp && safeUserData.whatsapp !== '0000000000') {
+                            html +=
+                                `<button class="btn btn-whatsapp btn-xs" onclick="openWhatsApp('${safeUserData.whatsapp}', '${safeUserData.name}')">💬</button>`;
+                        }
+
+                        if (isReferral && parentAffiliate && parentKey && parentSaleSuccess) {
+                            html += `
+                                <button class="btn btn-whatsapp btn-xs" onclick="sendAffiliateNotification('${saleIdStr}', '${safeUserData.name}', '${primaryAffiliate?.code || ''}', '${childKey}', '${parentAffiliate.code}', '${parentKey}')">📤 Notify Child</button>
+                                <button class="btn btn-whatsapp btn-xs" onclick="sendAffiliateNotification('${saleIdStr}', '${safeUserData.name}', '${parentAffiliate.code}', '${parentKey}', null, null)">📤 Notify Parent</button>
+                            `;
+                        } else if (primaryAffiliate) {
+                            html += `
+                                <button class="btn btn-whatsapp btn-xs" onclick="sendAffiliateNotification('${saleIdStr}', '${safeUserData.name}', '${primaryAffiliate?.code || ''}', '${childKey}', null, null)">📤 Notify</button>
+                            `;
+                        }
+                        actionCell.innerHTML = html;
+                    }
+                }
+
+                // Reload data
+                setTimeout(() => {
+                    loadQuickActions();
+                    loadAllData();
+                    loadAffiliateTree();
+                    loadPaymentHistory();
+                }, 500);
+
+            } catch (e) {
+                console.error('❌ Forward error:', e);
+                showToast('❌ Failed: ' + (e.message || 'Unknown error'), 'error');
+                buttonElement.innerHTML = '❌ Error';
+                buttonElement.className = 'btn btn-red btn-xs';
+                buttonElement.disabled = false;
+                setTimeout(() => {
+                    buttonElement.innerHTML = '📤 Forward';
+                    buttonElement.className = 'btn btn-blue btn-xs';
+                    buttonElement.disabled = false;
+                }, 3000);
+            }
+        }
+
+        // ============================================================
+        // REJECT SALE
+        // ============================================================
+        async function rejectSale(saleId, buttonElement) {
+            if (!supabaseClient) {
+                showToast('❌ Supabase not initialized', 'error');
+                return;
+            }
+
+            if (!confirm('Reject this sale?')) return;
+
+            buttonElement.innerHTML = '⏳ Rejecting...';
+            buttonElement.disabled = true;
+
+            try {
+                await supabaseClient
+                    .from('payment_requests')
+                    .update({
+                        status: 'rejected',
+                        rejected_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', saleId);
+
+                await recordActivity('rejected', `Sale ${saleId} rejected`);
+
+                showToast('❌ Sale rejected', 'error');
+                buttonElement.innerHTML = '❌ Rejected';
+                buttonElement.className = 'btn btn-outline btn-xs';
+                buttonElement.disabled = true;
+
+                const card = buttonElement.closest('.quick-action-card');
+                if (card) {
+                    const statusBadge = card.querySelector('.qa-status');
+                    if (statusBadge) {
+                        statusBadge.textContent = '❌ Rejected';
+                        statusBadge.className = 'qa-status status-badge rejected';
+                    }
+                    const actionsDiv = card.querySelector('.qa-actions');
+                    if (actionsDiv) {
+                        actionsDiv.innerHTML = `<span style="color:var(--text-red);font-size:10px;">❌ Rejected</span>`;
+                    }
+                }
+
+                const row = buttonElement.closest('tr');
+                if (row) {
+                    const statusCell = row.querySelector('.status-badge');
+                    if (statusCell) {
+                        statusCell.textContent = '❌ Rejected';
+                        statusCell.className = 'status-badge rejected';
+                    }
+                    const actionCell = row.querySelector('td:last-child');
+                    if (actionCell) {
+                        actionCell.innerHTML = `<span style="color:var(--text-red);font-size:10px;">❌ Rejected</span>`;
+                    }
+                }
+
+                setTimeout(() => { loadAllData();
+                    loadQuickActions(); }, 500);
+
+            } catch (e) {
+                console.error('❌ Reject error:', e);
+                showToast('❌ Failed: ' + e.message, 'error');
+                buttonElement.innerHTML = '❌ Error';
+                buttonElement.className = 'btn btn-red btn-xs';
+                buttonElement.disabled = false;
+                setTimeout(() => {
+                    buttonElement.innerHTML = '🗑️ Reject';
+                    buttonElement.className = 'btn btn-red btn-xs';
+                    buttonElement.disabled = false;
+                }, 3000);
+            }
+        }
+
+        // ============================================================
+        // ✅ FIXED: MARK KEY AS PAID – NO AUTOMATIC parent_key UPDATE
+        // ============================================================
+        async function payNow(key) {
+            if (!key) {
+                showToast('❌ No key provided', 'error');
+                return;
+            }
+
+            if (!confirm(`⚠️ Confirm you have PAID the affiliate for key: ${key}`)) {
+                return;
+            }
+
+            try {
+                const { data: keyData, error: keyError } = await supabaseClient
+                    .from('generated_keys')
+                    .select('*')
+                    .eq('key', key)
+                    .maybeSingle();
+
+                if (keyError) throw keyError;
+
+                if (!keyData) {
+                    showToast('❌ Key not found in registry', 'error');
+                    return;
+                }
+
+                if (keyData.status === 'used') {
+                    showToast('⚠️ This key is already marked as USED', 'error');
+                    return;
+                }
+
+                // Mark ONLY this key as used
+                await supabaseClient
+                    .from('generated_keys')
+                    .update({
+                        status: 'used',
+                        used_at: new Date().toISOString()
+                    })
+                    .eq('key', key);
+
+                // Update the corresponding payment_request
+                await supabaseClient
+                    .from('payment_requests')
+                    .update({
+                        status: 'paid',
+                        paid_at: new Date().toISOString(),
+                        key_status: 'used',
+                        key_used: true,
+                        key_used_at: new Date().toISOString()
+                    })
+                    .eq('paid_key', key);
+
+                // Check if this is a referral earning
+                if (keyData.is_referral === true) {
+                    console.log('🔄 This is a referral key, updating referral_earnings');
+
+                    const { data: earningData, error: earningError } = await supabaseClient
+                        .from('referral_earnings')
+                        .select('*')
+                        .eq('paid_key', key)
+                        .eq('status', 'forwarded')
+                        .maybeSingle();
+
+                    if (earningError) {
+                        console.error('❌ Error finding referral earning:', earningError);
+                    } else if (earningData) {
+                        await supabaseClient
+                            .from('referral_earnings')
+                            .update({
+                                status: 'paid',
+                                paid_at: new Date().toISOString()
+                            })
+                            .eq('id', earningData.id);
+
+                        console.log('✅ Referral earning marked as paid:', earningData.id);
+                    }
+                }
+
+                await recordActivity('paid', `Key ${key} marked as PAID`);
+
+                showToast(`✅ Key ${key} marked as PAID`, 'success');
+
+                setTimeout(() => {
+                    checkPaymentKeys();
+                    loadAllData();
+                    loadQuickActions();
+                    loadPaymentHistory();
+                    loadAffiliateTree();
+                }, 500);
+
+            } catch (e) {
+                console.error('❌ Pay Now error:', e);
+                showToast('❌ Failed: ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // 20 ROTATING WHATSAPP MESSAGES
+        // ============================================================
+        let messageCounter = 0;
+
+        const notificationMessages = [
+            "Hello {name}, you have received a new sale. Open your SHARPI affiliate dashboard to view the details.",
+            "{name}, a new sale has been forwarded to you. Please check your SHARPI affiliate dashboard for the full details.",
+            "Hi {name}, you've got a new commission! Log in to your SHARPI affiliate dashboard to see everything.",
+            "{name}, good news! A new sale has been credited to your account. Visit your SHARPI affiliate dashboard to learn more.",
+            "Hello {name}, you have a new sale waiting. Open your SHARPI affiliate dashboard to view the details.",
+            "{name}, a new sale has been added to your balance. Check your SHARPI affiliate dashboard now.",
+            "Hi {name}, congratulations! You've earned a new commission. View it in your SHARPI affiliate dashboard.",
+            "{name}, you've received a new sale notification. Please log in to your SHARPI affiliate dashboard for more information.",
+            "Hello {name}, a new sale has been assigned to you. Your SHARPI affiliate dashboard has all the details.",
+            "{name}, there's a new sale in your account. Visit your SHARPI affiliate dashboard to see what's new.",
+            "Hi {name}, you have a new sale! Head over to your SHARPI affiliate dashboard to check it out.",
+            "{name}, a new commission has been added to your account. Open your SHARPI affiliate dashboard to view.",
+            "Hello {name}, good news – you've made a new sale! Check your SHARPI affiliate dashboard for the details.",
+            "{name}, you have a new sale waiting for you. Log in to your SHARPI affiliate dashboard to see it.",
+            "Hi {name}, a new sale has been forwarded to your account. Please check your SHARPI affiliate dashboard.",
+            "{name}, you've just received a new sale. Visit your SHARPI affiliate dashboard to view the full details.",
+            "Hello {name}, your new sale is ready. Open your SHARPI affiliate dashboard to see the details.",
+            "{name}, a new sale has been added to your earnings. Check your SHARPI affiliate dashboard now.",
+            "Hi {name}, congratulations on your new sale! View it in your SHARPI affiliate dashboard.",
+            "{name}, you have a new sale notification waiting. Log in to your SHARPI affiliate dashboard to view it."
+        ];
+
+        function getNextMessage(affiliateName) {
+            const message = notificationMessages[messageCounter % notificationMessages.length];
+            messageCounter++;
+            return message.replace(/{name}/g, affiliateName);
+        }
+
+        // ============================================================
+        // SEND AFFILIATE NOTIFICATION
+        // ============================================================
+        async function sendAffiliateNotification(saleId, userName, promoCode, paymentKey, parentCode, parentKey) {
+            if (!promoCode || promoCode === 'NONE' || promoCode === 'null' || promoCode === '') {
+                showToast('❌ No affiliate linked to this sale', 'error');
+                return;
+            }
+
+            const btn = document.activeElement;
+            const originalText = btn?.innerHTML || '📤 Notify';
+
+            if (btn) {
+                btn.innerHTML = '⏳...';
+                btn.disabled = true;
+            }
+
+            try {
+                const { data: affiliate, error: affError } = await supabaseClient
+                    .from('affiliates')
+                    .select('name, contact, code')
+                    .eq('code', promoCode)
+                    .maybeSingle();
+
+                if (affError || !affiliate) {
+                    console.error('❌ Affiliate not found:', affError);
+                    showToast('❌ Affiliate not found: ' + promoCode, 'error');
+                    if (btn) { btn.innerHTML = originalText;
+                        btn.disabled = false; }
+                    return;
+                }
+
+                const { data: forwardedSales, error: salesError } = await supabaseClient
+                    .from('payment_requests')
+                    .select('id')
+                    .eq('promo_code', promoCode)
+                    .eq('status', 'forwarded');
+
+                if (salesError) throw salesError;
+
+                const totalForwarded = forwardedSales?.length || 0;
+                const totalAmount = totalForwarded * 20000;
+
+                const affiliateName = affiliate.name || 'Affiliate';
+                const mainMessage = getNextMessage(affiliateName);
+
+                let fullMessage = `${mainMessage}
+
+---
+
+🔑 Payment Key: ${paymentKey || 'N/A'}`;
+
+                if (parentCode && parentKey) {
+                    fullMessage += `
+🤝 Parent Key: ${parentKey}
+👨‍👦 Parent Affiliate: ${parentCode}`;
+                }
+
+                fullMessage += `
+💰 Amount: ${paymentKey ? '20,000 UGX' : '0 UGX'}
+📤 Pending Sales: ${totalForwarded}
+💵 Total Pending: ${totalAmount.toLocaleString()} UGX
+
+💬 Need help? WhatsApp: +447851843415
+
+🦈 SHARPI Affiliate Team`;
+
+                const affiliateContact = affiliate.contact || '';
+                if (affiliateContact) {
+                    const cleanContact = affiliateContact.replace(/\s/g, '').replace(/^\+/, '');
+                    const whatsappUrl = `https://wa.me/${cleanContact}?text=${encodeURIComponent(fullMessage)}`;
+                    window.open(whatsappUrl, '_blank');
+                    showToast(`✅ WhatsApp opened for ${affiliateName}`, 'success');
+                } else {
+                    try {
+                        await navigator.clipboard.writeText(fullMessage);
+                        showToast('📋 No WhatsApp number. Message copied to clipboard.', 'warning');
+                    } catch (clipError) {
+                        const textarea = document.createElement('textarea');
+                        textarea.value = fullMessage;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showToast('📋 No WhatsApp number. Message copied to clipboard.', 'warning');
+                    }
+                }
+
+            } catch (e) {
+                console.error('❌ Notification error:', e);
+                showToast('❌ Failed to send notification', 'error');
+            }
+
+            if (btn) {
+                btn.innerHTML = '✅ Sent';
+                btn.className = 'btn btn-outline btn-xs';
+                btn.disabled = true;
+                setTimeout(() => {
+                    btn.innerHTML = '📤 Notify';
+                    btn.className = 'btn btn-whatsapp btn-xs';
+                    btn.disabled = false;
+                }, 4000);
+            }
+        }
+
+        // ============================================================
+        // ACTIVITY LOG
+        // ============================================================
+        async function recordActivity(action, description) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.from('activity_log').insert([{
+                    action,
+                    description,
+                    created_at: new Date().toISOString()
+                }]);
+            } catch (e) {
+                console.error('❌ Activity log error:', e);
+            }
+        }
+
+        // ============================================================
+        // WHATSAPP
+        // ============================================================
+        function openWhatsApp(contact, name) {
+            if (!contact) {
+                showToast('❌ No WhatsApp number', 'error');
+                return;
+            }
+            const cleanContact = contact.replace(/\s/g, '').replace(/-/g, '');
+            const message = `🦈 SHARPI Admin - Regarding your SHARPI account.`;
+            window.open(`https://wa.me/${cleanContact}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function copyText(text) {
+            if (!text) {
+                showToast('❌ Nothing to copy', 'error');
+                return;
+            }
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('✅ Copied!', 'success');
+                }).catch(() => { fallbackCopy(text); });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            ta.style.top = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast('✅ Copied!', 'success');
+            } catch (e) {
+                showToast('❌ Failed to copy', 'error');
+            }
+            document.body.removeChild(ta);
+        }
+
+        // ============================================================
+        // CHECK PAYMENT KEYS
+        // ============================================================
+        async function checkPaymentKeys() {
+            const input = document.getElementById('paymentKeyInput');
+            const result = document.getElementById('paymentKeyResult');
+            const rawText = input.value.trim();
+
+            if (!rawText) {
+                result.innerHTML =
+                    `<div class="empty-state"><div class="icon">⚠️</div><p>Please paste some keys to check</p></div>`;
+                return;
+            }
+
+            const keyRegex = /SHARPI-PAY-[A-Z0-9-]+/gi;
+            const matches = rawText.match(keyRegex) || [];
+
+            const keys = [...new Set(matches.map(k => {
+                const cleaned = k.replace(/[^A-Z0-9-]/g, '').toUpperCase();
+                return cleaned;
+            }))];
+
+            if (keys.length === 0) {
+                result.innerHTML =
+                    `<div class="empty-state"><div class="icon">⚠️</div><p>No valid payment keys found.<br>Keys should start with: <strong>SHARPI-PAY-</strong></p></div>`;
+                return;
+            }
+
+            result.innerHTML = `<div class="loading">🔍 Checking ${keys.length} keys against secure registry...</div>`;
+
+            try {
+                let results = [];
+                let validCount = 0;
+                let usedCount = 0;
+                let invalidCount = 0;
+                let totalAmount = 0;
+
+                for (const key of keys) {
+                    const { data, error } = await supabaseClient
+                        .from('generated_keys')
+                        .select('*')
+                        .eq('key', key)
+                        .maybeSingle();
+
+                    if (error) throw error;
+
+                    if (data) {
+                        const isUsed = data.status === 'used';
+                        const isValid = data.status === 'valid';
+                        if (isUsed) {
+                            results.push({ key, exists: true, used: true, data: data });
+                            usedCount++;
+                        } else if (isValid) {
+                            results.push({ key, exists: true, used: false, data: data });
+                            validCount++;
+                            totalAmount += data.amount || 20000;
+                        } else {
+                            results.push({ key, exists: true, used: false, data: data });
+                            invalidCount++;
+                        }
+                    } else {
+                        results.push({ key, exists: false, used: false, data: null });
+                        invalidCount++;
+                    }
+                }
+
+                let html = `
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:16px;">
+                        <div class="stat-card"><div class="number green">${validCount}</div><div class="label">✅ VALID</div></div>
+                        <div class="stat-card"><div class="number red">${usedCount}</div><div class="label">❌ USED (Paid)</div></div>
+                        <div class="stat-card"><div class="number orange">${invalidCount}</div><div class="label">⚠️ INVALID</div></div>
+                        <div class="stat-card"><div class="number gold">${totalAmount.toLocaleString()} UGX</div><div class="label">💰 Total Pending</div></div>
+                        <div class="stat-card"><div class="number blue">${keys.length}</div><div class="label">📋 Total Keys Checked</div></div>
+                    </div>
+                    <div style="max-height:400px;overflow-y:auto;">
+                `;
+
+                results.forEach(r => {
+                    const isUsed = r.used;
+                    const isValid = r.exists && !r.used;
+                    const isInvalid = !r.exists;
+
+                    let statusClass = 'valid';
+                    let statusText = '✅ VALID';
+                    let statusColor = 'var(--text-green)';
+                    let actionButton = '';
+
+                    if (isInvalid) {
+                        statusClass = 'invalid';
+                        statusText = '⚠️ INVALID';
+                        statusColor = 'var(--text-gold)';
+                    } else if (isUsed) {
+                        statusClass = 'used';
+                        statusText = '❌ USED';
+                        statusColor = 'var(--text-red)';
+                    } else {
+                        statusClass = 'valid';
+                        statusText = '✅ VALID';
+                        statusColor = 'var(--text-green)';
+                        actionButton =
+                            `<button class="btn btn-xs" style="background:var(--text-gold);color:black;border:none;border-radius:4px;padding:4px 12px;cursor:pointer;font-weight:600;" onclick="payNow('${r.key}')">💰 Pay Now</button>`;
+                    }
+
+                    const userInfo = r.data ? `👤 ${r.data.user_name || 'Unknown'} (${r.data.package || 'N/A'})` :
+                        '⚠️ Not in registry';
+                    const affInfo = r.data ? `🎯 ${r.data.affiliate_code || 'N/A'}` : '';
+                    const isReferral = r.data?.is_referral || false;
+                    const amount = r.data?.amount || 20000;
+
+                    html += `
+                        <div class="key-check-result ${statusClass}">
+                            <span style="font-family:monospace;font-size:12px;font-weight:600;">${r.key}</span>
+                            <span style="font-size:11px;color:var(--text-secondary);">${userInfo}</span>
+                            <span style="font-size:10px;color:var(--text-muted);">${affInfo}</span>
+                            ${isReferral ? `<span style="font-size:9px;color:var(--text-purple);">🤝 Referral</span>` : ''}
+                            <span style="font-size:10px;color:var(--text-muted);">💰 ${amount.toLocaleString()} UGX</span>
+                            <span style="color:${statusColor};font-weight:700;">${statusText}</span>
+                            ${actionButton}
+                            <button class="btn btn-outline btn-xs" onclick="copyText('${r.key}')">📋</button>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                result.innerHTML = html;
+
+                if (validCount > 0) {
+                    showToast(`✅ ${validCount} VALID keys - Total: ${totalAmount.toLocaleString()} UGX`, 'success');
+                } else if (usedCount > 0 && validCount === 0) {
+                    showToast(`⚠️ ${usedCount} used keys found, no valid keys`, '');
+                } else {
+                    showToast('❌ No valid keys found', 'error');
+                }
+
+            } catch (e) {
+                console.error('❌ Key check error:', e);
+                result.innerHTML = `<div class="empty-state"><div class="icon">❌</div><p>Error: ${e.message}</p></div>`;
+            }
+        }
+
+        function clearPaymentKeys() {
+            document.getElementById('paymentKeyInput').value = '';
+            document.getElementById('paymentKeyResult').innerHTML =
+                `<div class="empty-state"><div class="icon">💳</div><p style="color:var(--text-secondary);">Paste text containing keys above and click "Check Keys"</p></div>`;
+        }
+
+        // ============================================================
+        // LOAD PAYMENT HISTORY
+        // ============================================================
+        async function loadPaymentHistory() {
+            if (!supabaseClient) {
+                console.warn('⚠️ Cannot load payment history: supabase not initialized');
+                return;
+            }
+
+            const filter = document.getElementById('paymentHistoryFilter')?.value || 'all';
+
+            try {
+                let query = supabaseClient
+                    .from('payment_requests')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (filter !== 'all') {
+                    query = query.eq('status', filter);
+                }
+
+                const { data, error } = await query;
+
+                if (error) throw error;
+
+                allPaymentHistory = data || [];
+                renderPaymentHistory(allPaymentHistory);
+
+                console.log(`✅ Loaded ${allPaymentHistory.length} payment history records`);
+
+            } catch (e) {
+                console.error('❌ Load payment history error:', e);
+                document.getElementById('paymentHistoryList').innerHTML =
+                    `<div class="empty-state"><div class="icon">❌</div><p>Error loading payment history: ${e.message}</p></div>`;
+            }
+        }
+
+        function renderPaymentHistory(data) {
+            const container = document.getElementById('paymentHistoryList');
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📜</div>
+                        <p style="color:var(--text-secondary);">No payment history found.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            data.slice(0, 50).forEach(p => {
+                const statusMap = {
+                    'pending': '⏳ Pending',
+                    'verified': '✅ Verified',
+                    'key_generated': '🔑 Key Gen',
+                    'forwarded': '📤 Forwarded',
+                    'paid': '💵 Paid',
+                    'rejected': '❌ Rejected'
+                };
+                const statusText = statusMap[p.status] || p.status || 'Unknown';
+                const statusClass = p.status === 'paid' ? 'paid' : p.status === 'forwarded' ? 'forwarded' :
+                    p.status === 'key_generated' ? 'key-generated' : p.status === 'rejected' ? 'rejected' :
+                    'pending';
+                const isSplit = p.is_referral === true;
+                const dateStr = p.created_at ? new Date(p.created_at).toLocaleString() : 'N/A';
+
+                html += `
+                    <div class="payment-history-card">
+                        <div class="ph-info">
+                            <span class="ph-amount">${(p.amount || 0).toLocaleString()} UGX</span>
+                            <span class="ph-detail">👤 ${p.user_name || 'Unknown'}</span>
+                            <span class="ph-detail">🔑 ${p.promo_code || 'N/A'}</span>
+                            <span class="ph-detail">📋 ${p.ref || 'N/A'}</span>
+                            ${isSplit ? `<span class="ph-detail" style="color:var(--text-purple);">🤝 Split</span>` : ''}
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                            <span class="ph-detail" style="color:var(--text-muted);">${dateStr}</span>
+                        </div>
+                        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                            ${p.paid_key ? `<button class="btn btn-outline btn-xs" onclick="copyText('${p.paid_key}')">📋 Key</button>` : ''}
+                            ${p.status === 'forwarded' ? `<button class="btn btn-green btn-xs" onclick="payNow('${p.paid_key}')">💰 Pay</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (data.length > 50) {
+                html += `<div style="text-align:center;padding:10px;color:var(--text-muted);font-size:11px;">Showing 50 of ${data.length} records</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // LOOKUP AFFILIATE (Enhanced with Parent & Payment History)
+        // ============================================================
+        async function lookupAffiliate() {
+            const input = document.getElementById('lookupInput');
+            const result = document.getElementById('lookupResult');
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) {
+                result.innerHTML =
+                    `<div class="empty-state"><div class="icon">⚠️</div><p>Please enter an affiliate code</p></div>`;
+                return;
+            }
+
+            result.innerHTML = `<div class="loading">🔄 Searching for ${code}...</div>`;
+
+            try {
+                const { data: affiliate, error: affError } = await supabaseClient
+                    .from('affiliates')
+                    .select('*')
+                    .eq('code', code)
+                    .maybeSingle();
+
+                if (affError) throw affError;
+
+                if (!affiliate) {
+                    result.innerHTML = `
+                        <div class="empty-state">
+                            <div class="icon">❌</div>
+                            <p>No affiliate found with code: <strong>${code}</strong></p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Get sales
+                const { data: sales, error: salesError } = await supabaseClient
+                    .from('payment_requests')
+                    .select('*')
+                    .eq('promo_code', code)
+                    .order('created_at', { ascending: false });
+
+                if (salesError) throw salesError;
+
+                // Get visits
+                const { data: visits, error: visitsError } = await supabaseClient
+                    .from('affiliate_visits')
+                    .select('*')
+                    .eq('affiliate_code', code)
+                    .order('created_at', { ascending: false });
+
+                if (visitsError) throw visitsError;
+
+                // Get generated keys
+                const { data: generatedKeys, error: keysError } = await supabaseClient
+                    .from('generated_keys')
+                    .select('*')
+                    .eq('affiliate_code', code)
+                    .order('generated_at', { ascending: false });
+
+                if (keysError) throw keysError;
+
+                // Get referrals (children)
+                const { data: referrals, error: refError } = await supabaseClient
+                    .from('affiliate_referrals')
+                    .select('*')
+                    .eq('parent_code', code)
+                    .order('created_at', { ascending: false });
+
+                if (refError) throw refError;
+
+                // ✅ NEW: Get parent affiliate (who referred this affiliate)
+                let parentAffiliate = null;
+                if (affiliate.referred_by) {
+                    const { data: parentData, error: parentError } = await supabaseClient
+                        .from('affiliates')
+                        .select('*')
+                        .eq('code', affiliate.referred_by)
+                        .maybeSingle();
+
+                    if (!parentError && parentData) {
+                        parentAffiliate = parentData;
+                    }
+                }
+
+                // ✅ NEW: Get payment history (all statuses)
+                const paymentHistory = sales || [];
+
+                const totalSales = sales?.length || 0;
+                const totalRevenue = sales?.reduce((sum, s) => sum + (s.amount || 0), 0) || 0;
+                const totalCommission = totalSales * 20000;
+                const totalVisits = visits?.length || 0;
+                const convertedVisits = visits?.filter(v => v.converted === true).length || 0;
+                const conversionRate = totalVisits > 0 ? Math.round((convertedVisits / totalVisits) * 100) : 0;
+                const totalKeys = generatedKeys?.length || 0;
+                const usedKeys = generatedKeys?.filter(k => k.status === 'used').length || 0;
+                const forwardedKeys = generatedKeys?.filter(k => k.forwarded === true).length || 0;
+                const referralCount = referrals?.length || 0;
+
+                // Count payments by status
+                const paymentStats = {
+                    pending: sales?.filter(s => s.status === 'pending').length || 0,
+                    verified: sales?.filter(s => s.status === 'verified').length || 0,
+                    key_generated: sales?.filter(s => s.status === 'key_generated').length || 0,
+                    forwarded: sales?.filter(s => s.status === 'forwarded').length || 0,
+                    paid: sales?.filter(s => s.status === 'paid').length || 0,
+                    rejected: sales?.filter(s => s.status === 'rejected').length || 0
+                };
+
+                let html = `
+                    <div style="margin-bottom:16px;background:var(--bg-input);border-radius:var(--radius);padding:16px;border:1px solid var(--border-light);">
+                        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+                            <div>
+                                <span style="font-size:18px;font-weight:700;color:var(--text-primary);">${affiliate.name || 'Unknown'}</span>
+                                <span style="font-family:monospace;font-size:13px;color:var(--text-cyan);margin-left:10px;">${affiliate.code || 'N/A'}</span>
+                            </div>
+                            <span class="status-badge ${affiliate.active !== false ? 'success' : 'rejected'}">${affiliate.active !== false ? '✅ Active' : '❌ Inactive'}</span>
+                        </div>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--text-secondary);">
+                            <span>📱 ${affiliate.contact || 'N/A'}</span>
+                            <span>📱 ${affiliate.platform || 'N/A'}</span>
+                            <span>📅 ${affiliate.created_at ? new Date(affiliate.created_at).toLocaleDateString() : 'N/A'}</span>
+                            ${parentAffiliate ? `<span>👨‍👦 Referred by: <strong style="color:var(--text-purple);">${parentAffiliate.name}</strong> (${parentAffiliate.code})</span>` : `<span>🌱 Root affiliate</span>`}
+                            <span>🤝 ${referralCount} referrals</span>
+                        </div>
+                    </div>
+
+                    <div class="lookup-grid">
+                        <div class="lookup-item"><div class="value" style="color:var(--text-gold);">${totalSales}</div><div class="label">Total Sales</div></div>
+                        <div class="lookup-item"><div class="value" style="color:var(--text-gold);">${totalRevenue.toLocaleString()} UGX</div><div class="label">Revenue</div></div>
+                        <div class="lookup-item"><div class="value" style="color:var(--text-gold);">${totalCommission.toLocaleString()} UGX</div><div class="label">Commission Earned</div></div>
+                        <div class="lookup-item"><div class="value" style="color:var(--text-blue);">${totalVisits}</div><div class="label">Link Clicks</div></div>
+                        <div class="lookup-item"><div class="value" style="color:var(--text-green);">${convertedVisits}</div><div class="label">Converted</div></div>
+                        <div class="lookup-item"><div class="value" style="color:${conversionRate > 10 ? 'var(--text-green)' : 'var(--text-gold)'};">${conversionRate}%</div><div class="label">Conversion Rate</div></div>
+                    </div>
+
+                    <div class="lookup-grid">
+                        <div class="lookup-item"><div class="value" style="color:var(--text-cyan);">${totalKeys}</div><div class="label">🔑 Total Keys</div></div>
+                        <div class="lookup-item"><div class="value" style="color:var(--text-green);">${forwardedKeys}</div><div class="label">📤 Forwarded</div></div>
+                        <div class="lookup-item"><div class="value" style="color:var(--text-red);">${usedKeys}</div><div class="label">❌ Used/Paid</div></div>
+                        <div class="lookup-item"><div class="value" style="color:var(--text-gold);">${(usedKeys * 20000).toLocaleString()} UGX</div><div class="label">💰 Paid Out</div></div>
+                        <div class="lookup-item"><div class="value" style="color:var(--text-purple);">${referralCount}</div><div class="label">🤝 Referrals</div></div>
+                    </div>
+
+                    <!-- Payment Status Summary -->
+                    <div style="margin:12px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:6px;">
+                        <div class="stat-card"><div class="number" style="color:var(--text-gold);">${paymentStats.pending}</div><div class="label">⏳ Pending</div></div>
+                        <div class="stat-card"><div class="number" style="color:var(--text-green);">${paymentStats.verified}</div><div class="label">✅ Verified</div></div>
+                        <div class="stat-card"><div class="number" style="color:var(--text-blue);">${paymentStats.key_generated}</div><div class="label">🔑 Key Gen</div></div>
+                        <div class="stat-card"><div class="number" style="color:var(--text-purple);">${paymentStats.forwarded}</div><div class="label">📤 Forwarded</div></div>
+                        <div class="stat-card"><div class="number" style="color:var(--text-green);">${paymentStats.paid}</div><div class="label">💵 Paid</div></div>
+                        <div class="stat-card"><div class="number" style="color:var(--text-red);">${paymentStats.rejected}</div><div class="label">❌ Rejected</div></div>
+                    </div>
+                `;
+
+                // Show referrals (children) if any
+                if (referrals && referrals.length > 0) {
+                    html += `
+                        <div style="margin-top:12px;">
+                            <div style="font-weight:600;color:var(--text-primary);margin-bottom:8px;">🤝 Referrals (${referrals.length})</div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead><tr><th>Child Affiliate</th><th>Status</th><th>Joined</th></tr></thead>
+                                    <tbody>
+                            `;
+                    referrals.slice(0, 20).forEach(r => {
+                        html += `
+                                <tr>
+                                    <td><span class="highlight">${r.child_name || r.child_code || 'Unknown'}</span></td>
+                                    <td><span class="status-badge ${r.status === 'active' ? 'success' : 'pending'}">${r.status === 'active' ? '✅ Active' : '⏳ Inactive'}</span></td>
+                                    <td>${r.created_at ? new Date(r.created_at).toLocaleDateString() : 'N/A'}</td>
+                                </tr>
+                            `;
+                    });
+                    html += `</tbody></table></div>`;
+                }
+
+                // ✅ NEW: Payment History
+                if (paymentHistory && paymentHistory.length > 0) {
+                    html += `
+                        <div style="margin-top:12px;">
+                            <div style="font-weight:600;color:var(--text-primary);margin-bottom:8px;">📜 Payment History (${paymentHistory.length})</div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead><tr><th>User</th><th>Amount</th><th>Status</th><th>Key</th><th>Date</th></tr></thead>
+                                    <tbody>
+                            `;
+                    paymentHistory.slice(0, 20).forEach(p => {
+                        const statusMap = {
+                            'pending': '⏳ Pending',
+                            'verified': '✅ Verified',
+                            'key_generated': '🔑 Key Gen',
+                            'forwarded': '📤 Forwarded',
+                            'paid': '💵 Paid',
+                            'rejected': '❌ Rejected'
+                        };
+                        const statusText = statusMap[p.status] || p.status || 'Unknown';
+                        const statusClass = p.status === 'paid' ? 'paid' : p.status === 'forwarded' ? 'forwarded' :
+                            p.status === 'key_generated' ? 'key-generated' : p.status === 'rejected' ? 'rejected' :
+                            'pending';
+                        html += `
+                                <tr>
+                                    <td><span class="highlight">${p.user_name || 'Unknown'}</span></td>
+                                    <td>${(p.amount || 0).toLocaleString()} UGX</td>
+                                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                                    <td style="font-family:monospace;font-size:10px;color:var(--text-gold);">${p.paid_key ? p.paid_key : '—'}</td>
+                                    <td>${p.created_at ? new Date(p.created_at).toLocaleDateString() : 'N/A'}</td>
+                                </tr>
+                            `;
+                    });
+                    if (paymentHistory.length > 20) {
+                        html +=
+                            `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);font-size:11px;">Showing 20 of ${paymentHistory.length} records</td></tr>`;
+                    }
+                    html += `</tbody></table></div>`;
+                }
+
+                html += `
+                    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                        <button class="btn btn-whatsapp btn-sm" onclick="openWhatsApp('${affiliate.contact || ''}', '${affiliate.name || ''}')">💬 WhatsApp</button>
+                        <button class="btn btn-outline btn-sm" onclick="copyText('${affiliate.code}')">📋 Copy Code</button>
+                        ${parentAffiliate ? `<button class="btn btn-outline btn-sm" onclick="document.getElementById('lookupInput').value='${parentAffiliate.code}';lookupAffiliate();">👨‍👦 View Parent</button>` : ''}
+                        <button class="btn btn-outline btn-sm" onclick="clearLookup()">🔄 Clear</button>
+                    </div>
+                `;
+
+                result.innerHTML = html;
+                showToast(`✅ Found affiliate: ${affiliate.name}`, 'success');
+
+            } catch (e) {
+                console.error('❌ Lookup error:', e);
+                result.innerHTML = `<div class="empty-state"><div class="icon">❌</div>Error: ${e.message}</div>`;
+            }
+        }
+
+        function clearLookup() {
+            document.getElementById('lookupInput').value = '';
+            document.getElementById('lookupResult').innerHTML =
+                `<div class="empty-state"><div class="icon">🔎</div><p style="color:var(--text-secondary);">Enter an affiliate code to see all data including payment history</p></div>`;
+        }
+
+        // ============================================================
+        // AFFILIATE TREE
+        // ============================================================
+        async function loadAffiliateTree() {
+            if (!supabaseClient) {
+                console.warn('⚠️ Cannot load tree: supabase not initialized');
+                return;
+            }
+
+            try {
+                // Get all affiliates
+                const { data: affiliates, error: affError } = await supabaseClient
+                    .from('affiliates')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (affError) throw affError;
+
+                // Get all referrals
+                const { data: referrals, error: refError } = await supabaseClient
+                    .from('affiliate_referrals')
+                    .select('*')
+                    .eq('status', 'active');
+
+                if (refError) throw refError;
+
+                // Build tree
+                const tree = buildTree(affiliates || [], referrals || []);
+                affiliateTreeData = tree;
+
+                renderTree(tree);
+                document.getElementById('treeTabBadge').textContent = tree.length || 0;
+
+                console.log(`✅ Loaded tree with ${tree.length} root nodes`);
+
+            } catch (e) {
+                console.error('❌ Tree load error:', e);
+                document.getElementById('treeContainer').innerHTML =
+                    `<div class="empty-state"><div class="icon">❌</div><p>Error loading tree: ${e.message}</p></div>`;
+            }
+        }
+
+        function buildTree(affiliates, referrals) {
+            // Create map of code -> affiliate
+            const affiliateMap = {};
+            affiliates.forEach(a => {
+                affiliateMap[a.code] = { ...a, children: [] };
+            });
+
+            // Build parent-child relationships
+            referrals.forEach(r => {
+                if (affiliateMap[r.parent_code] && affiliateMap[r.child_code]) {
+                    affiliateMap[r.parent_code].children.push(affiliateMap[r.child_code]);
+                }
+            });
+
+            // Find root nodes (no parent)
+            const rootCodes = new Set(Object.keys(affiliateMap));
+            referrals.forEach(r => {
+                if (rootCodes.has(r.child_code)) {
+                    rootCodes.delete(r.child_code);
+                }
+            });
+
+            const roots = [];
+            rootCodes.forEach(code => {
+                if (affiliateMap[code]) {
+                    roots.push(affiliateMap[code]);
+                }
+            });
+
+            return roots;
+        }
+
+        function renderTree(tree, depth = 0, searchTerm = '') {
+            const container = document.getElementById('treeContainer');
+
+            if (!tree || tree.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🌳</div>
+                        <p style="color:var(--text-secondary);">No affiliates found. The tree will appear here once affiliates join.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            tree.forEach(node => {
+                html += renderTreeNode(node, depth, searchTerm);
+            });
+
+            container.innerHTML = html;
+
+            // Auto-expand if search term is present
+            if (searchTerm) {
+                container.querySelectorAll('.tree-children').forEach(el => {
+                    el.style.display = 'block';
+                });
+            }
+        }
+
+        function renderTreeNode(node, depth = 0, searchTerm = '') {
+            const hasChildren = node.children && node.children.length > 0;
+            const matchSearch = searchTerm === '' || 
+                (node.name || '').toLowerCase().includes(searchTerm) ||
+                (node.code || '').toLowerCase().includes(searchTerm) ||
+                (node.username || '').toLowerCase().includes(searchTerm);
+
+            const indent = depth * 20;
+            const isRoot = depth === 0;
+
+            let html = `
+                <div class="tree-node" style="padding-left:${indent + 20}px; margin-left:${isRoot ? 0 : 20}px;">
+                    <div class="node-content" style="${!matchSearch && searchTerm ? 'display:none;' : ''}">
+                        <span class="node-name">${node.name || 'Unknown'}</span>
+                        <span class="node-code">${node.code || 'N/A'}</span>
+                        <span class="node-badge ${isRoot ? 'root' : 'child'}">${isRoot ? '🌱 Root' : '👤 Child'}</span>
+                        <span class="node-stats">
+                            <span>👥 ${node.children ? node.children.length : 0} referrals</span>
+                            <span>📱 ${node.contact || 'N/A'}</span>
+                            <span>${node.active !== false ? '✅ Active' : '❌ Inactive'}</span>
+                            ${hasChildren ? `<span class="toggle-btn" onclick="toggleTreeNode(this)" style="cursor:pointer;color:var(--text-gold);">📂</span>` : ''}
+                        </span>
+                    </div>
+            `;
+
+            if (hasChildren) {
+                html += `<div class="tree-children" style="display:none;">`;
+                node.children.forEach(child => {
+                    html += renderTreeNode(child, depth + 1, searchTerm);
+                });
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+            return html;
+        }
+
+        function toggleTreeNode(btn) {
+            const childrenDiv = btn.closest('.tree-node').querySelector('.tree-children');
+            if (childrenDiv) {
+                if (childrenDiv.style.display === 'none') {
+                    childrenDiv.style.display = 'block';
+                    btn.textContent = '📂';
+                } else {
+                    childrenDiv.style.display = 'none';
+                    btn.textContent = '📁';
+                }
+            }
+        }
+
+        function expandAllTree() {
+            document.querySelectorAll('.tree-children').forEach(el => {
+                el.style.display = 'block';
+            });
+            document.querySelectorAll('.toggle-btn').forEach(el => {
+                el.textContent = '📂';
+            });
+        }
+
+        function collapseAllTree() {
+            document.querySelectorAll('.tree-children').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.toggle-btn').forEach(el => {
+                el.textContent = '📁';
+            });
+        }
+
+        function filterTree() {
+            const search = document.getElementById('treeSearch').value.toLowerCase().trim();
+            // Re-render tree with search filter
+            renderTree(affiliateTreeData, 0, search);
+            if (search) {
+                expandAllTree();
+            }
+        }
+
+        // ============================================================
+        // LOAD QUICK ACTIONS
+        // ============================================================
+        async function loadQuickActions() {
+            if (!supabaseClient) {
+                console.warn('⚠️ Cannot load quick actions: supabase not initialized');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('payment_requests')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(30);
+
+                if (error) throw error;
+
+                allQuickActions = data || [];
+                renderQuickActions(allQuickActions);
+                document.getElementById('quickActionsTabBadge').textContent = allQuickActions.length || 0;
+
+                console.log(`✅ Loaded ${allQuickActions.length} quick actions`);
+
+            } catch (e) {
+                console.error('❌ Load quick actions error:', e);
+                document.getElementById('quickActionsList').innerHTML =
+                    `<div class="empty-state"><div class="icon">❌</div><p>Error loading payment requests: ${e.message}</p></div>`;
+            }
+        }
+
+        function renderQuickActions(data) {
+            const container = document.getElementById('quickActionsList');
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p style="color:var(--text-secondary);">No payment requests yet. Sales will appear here when customers purchase.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            data.forEach(s => {
+                const statusMap = {
+                    'pending': '⏳ Pending',
+                    'verified': '✅ Verified',
+                    'key_generated': '🔑 Key Gen',
+                    'forwarded': '📤 Forwarded',
+                    'paid': '💵 Paid',
+                    'rejected': '❌ Rejected'
+                };
+                const statusText = statusMap[s.status] || s.status || 'Unknown';
+                const statusClass = s.status === 'paid' ? 'paid' : s.status === 'forwarded' ? 'forwarded' :
+                    s.status === 'key_generated' ? 'key-generated' : s.status === 'rejected' ? 'rejected' :
+                    'pending';
+
+                const canDispatch = s.status === 'pending' || s.status === 'verified';
+                const canForward = s.status === 'key_generated';
+                const isSplit = s.is_referral === true;
+
+                const safeUserData = {
+                    name: (s.user_name || s.name || 'User').replace(/'/g, "\\'"),
+                    whatsapp: (s.user_whatsapp || s.whatsapp || '0000000000').replace(/'/g, "\\'"),
+                    id: (s.user_id || s.id || '000000').replace(/'/g, "\\'"),
+                    promo_code: (s.promo_code || '').replace(/'/g, "\\'"),
+                    package: (s.package || '').replace(/'/g, "\\'")
+                };
+                const userDataJson = JSON.stringify(safeUserData).replace(/"/g, '&quot;');
+
+                const timeAgo = s.created_at ? getTimeAgo(new Date(s.created_at)) : 'Just now';
+
+                html += `
+                    <div class="quick-action-card" data-status="${s.status}" data-search="${(s.user_name || '')} ${(s.promo_code || '')} ${(s.ref || '')}">
+                        <div class="qa-info">
+                            <span class="qa-name">${s.user_name || 'Anonymous'}</span>
+                            <div class="qa-detail">
+                                <span class="tag promo">🔑 ${s.promo_code || 'N/A'}</span>
+                                <span class="tag ref">📋 ${s.ref || 'N/A'}</span>
+                                <span>📱 ${s.user_whatsapp || 'N/A'}</span>
+                                <span class="qa-status status-badge ${statusClass}">${statusText}</span>
+                                ${isSplit ? `<span style="font-size:9px;color:var(--text-purple);">🤝 Split</span>` : ''}
+                            </div>
+                            <span class="qa-time">🕐 ${timeAgo}</span>
+                        </div>
+                        <div class="qa-actions">
+                            ${canDispatch ? `
+                                <button class="btn btn-green btn-xs" onclick="dispatchSale('${s.id}', '${s.user_id || s.id}', ${userDataJson}, this)">🚀 Dispatch</button>
+                                <button class="btn btn-red btn-xs" onclick="rejectSale('${s.id}', this)">🗑️ Reject</button>
+                                ${safeUserData.whatsapp && safeUserData.whatsapp !== '0000000000' ? `<button class="btn btn-whatsapp btn-xs" onclick="openWhatsApp('${safeUserData.whatsapp}', '${safeUserData.name}')">💬</button>` : ''}
+                            ` : ''}
+                            ${canForward ? `
+                                <button class="btn btn-blue btn-xs" onclick="forwardSale('${s.id}', '${s.user_id || s.id}', ${userDataJson}, this)">📤 Forward</button>
+                                <button class="btn btn-red btn-xs" onclick="rejectSale('${s.id}', this)">🗑️ Reject</button>
+                                ${safeUserData.whatsapp && safeUserData.whatsapp !== '0000000000' ? `<button class="btn btn-whatsapp btn-xs" onclick="openWhatsApp('${safeUserData.whatsapp}', '${safeUserData.name}')">💬</button>` : ''}
+                            ` : ''}
+                            ${s.status === 'forwarded' ? `
+                                <span style="color:var(--text-purple);font-size:10px;">${isSplit ? '📤 Split (90/10)' : '📤 Forwarded'}</span>
+                                <button class="btn btn-whatsapp btn-xs" onclick="sendAffiliateNotification('${s.id}', '${safeUserData.name}', '${s.promo_code || ''}', '${s.paid_key || ''}', '${s.parent_affiliate || ''}', '${s.parent_key || ''}')">📤 Notify</button>
+                                ${s.paid_key ? `<button class="btn btn-outline btn-xs" onclick="copyText('${s.paid_key}')">📋 Key</button>` : ''}
+                            ` : ''}
+                            ${s.status === 'paid' ? `<span style="color:var(--text-green);font-size:10px;">💵 Paid</span>` : ''}
+                            ${s.status === 'rejected' ? `<span style="color:var(--text-red);font-size:10px;">❌ Rejected</span>` : ''}
+                            ${s.user_whatsapp && !canDispatch && !canForward && s.status !== 'forwarded' ? `<button class="btn btn-whatsapp btn-xs" onclick="openWhatsApp('${s.user_whatsapp}', '${s.user_name}')">💬</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            const visibleCards = container.querySelectorAll('.quick-action-card:not([style*="display: none"])');
+            document.getElementById('quickActionsTabBadge').textContent = visibleCards.length || 0;
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            const intervals = {
+                year: 31536000,
+                month: 2592000,
+                week: 604800,
+                day: 86400,
+                hour: 3600,
+                minute: 60,
+                second: 1
+            };
+            for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+                const interval = Math.floor(seconds / secondsInUnit);
+                if (interval >= 1) {
+                    return interval + ' ' + unit + (interval === 1 ? '' : 's') + ' ago';
+                }
+            }
+            return 'Just now';
+        }
+
+        function filterQuickActions() {
+            const search = document.getElementById('qaSearch').value.toLowerCase();
+            const status = document.getElementById('qaStatusFilter').value;
+            const cards = document.querySelectorAll('.quick-action-card');
+
+            cards.forEach(card => {
+                const searchText = card.dataset.search.toLowerCase();
+                const cardStatus = card.dataset.status;
+                const matchesSearch = search === '' || searchText.includes(search);
+                const matchesStatus = status === 'all' || cardStatus === status;
+                if (matchesSearch && matchesStatus) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const visible = document.querySelectorAll('.quick-action-card:not([style*="display: none"])');
+            document.getElementById('quickActionsTabBadge').textContent = visible.length || 0;
+        }
+
+        // ============================================================
+        // LOAD ALL DATA
+        // ============================================================
+        async function loadAllData() {
+            if (!supabaseClient) {
+                if (!initSupabase()) {
+                    document.getElementById('affiliatesList').innerHTML =
+                        `<div class="empty-state"><div class="icon">⚠️</div>Supabase not connected</div>`;
+                    return;
+                }
+            }
+
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+
+            await Promise.all([
+                loadAffiliates(),
+                loadAppUsers(),
+                loadSales(),
+                loadTokens(),
+                loadGeneratedKeys(),
+                loadStats(),
+                loadQuickActions(),
+                loadAffiliateTree(),
+                loadPaymentHistory()
+            ]);
+
+            updateTabBadges();
+        }
+
+        function updateTabBadges() {
+            document.getElementById('affiliateTabBadge').textContent = allAffiliates.length || 0;
+            document.getElementById('userTabBadge').textContent = allAppUsers.length || 0;
+            document.getElementById('salesTabBadge').textContent = allSales.length || 0;
+            document.getElementById('tokenTabBadge').textContent = allTokens.length || 0;
+            document.getElementById('treeTabBadge').textContent = affiliateTreeData.length || 0;
+            document.getElementById('quickActionsTabBadge').textContent = allQuickActions.length || 0;
+        }
+
+        // ============================================================
+        // LOAD GENERATED KEYS
+        // ============================================================
+        async function loadGeneratedKeys() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('generated_keys')
+                    .select('*')
+                    .order('generated_at', { ascending: false });
+
+                if (error) throw error;
+                allGeneratedKeys = data || [];
+                console.log(`✅ Loaded ${allGeneratedKeys.length} generated keys`);
+                return true;
+            } catch (e) {
+                console.error('❌ Generated keys error:', e);
+                return false;
+            }
+        }
+
+        // ============================================================
+        // LOAD AFFILIATES
+        // ============================================================
+        async function loadAffiliates() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('affiliates')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                if (error) throw error;
+                allAffiliates = data || [];
+                renderAffiliates(allAffiliates);
+            } catch (e) {
+                console.error('❌ Affiliates error:', e);
+                document.getElementById('affiliatesList').innerHTML =
+                    `<div class="empty-state"><div class="icon">❌</div>Error loading affiliates</div>`;
+            }
+        }
+
+        function renderAffiliates(data) {
+            const container = document.getElementById('affiliatesList');
+            if (!data || data.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">📭</div>No affiliates yet</div>`;
+                return;
+            }
+
+            let html =
+                `<div class="table-responsive"><table class="table"><thead><tr><th>Name</th><th>Code</th><th>Contact</th><th>Platform</th><th>Status</th><th>Sales</th><th>Actions</th></tr></thead><tbody>`;
+
+            data.forEach(a => {
+                const isActive = a.active !== false;
+                const sales = allSales.filter(s => s.promo_code === a.code);
+                const totalSales = sales.length;
+
+                html += `
+                    <tr>
+                        <td><span class="highlight">${a.name || 'Unknown'}</span></td>
+                        <td style="font-family:monospace;font-size:11px;color:var(--text-cyan);">${a.code || 'N/A'}</td>
+                        <td>${a.contact || 'N/A'}</td>
+                        <td>${a.platform || 'N/A'}</td>
+                        <td><span class="status-badge ${isActive ? 'success' : 'rejected'}">${isActive ? '✅ Active' : '❌ Inactive'}</span></td>
+                        <td>${totalSales}</td>
+                        <td>
+                            <button class="btn btn-whatsapp btn-xs" onclick="openWhatsApp('${a.contact || ''}', '${a.name || ''}')">💬</button>
+                            <button class="btn btn-outline btn-xs" onclick="lookupAffiliateCode('${a.code}')">🔍</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+        }
+
+        function lookupAffiliateCode(code) {
+            document.getElementById('lookupInput').value = code;
+            document.querySelector('[data-tab="lookup"]').click();
+            setTimeout(lookupAffiliate, 300);
+        }
+
+        function filterAffiliates() {
+            const search = document.getElementById('affiliateSearch').value.toLowerCase();
+            const status = document.getElementById('affiliateStatusFilter').value;
+            let filtered = allAffiliates.filter(a => {
+                const matchesSearch = (a.name || '').toLowerCase().includes(search) ||
+                    (a.code || '').toLowerCase().includes(search);
+                const isActive = a.active !== false;
+                const matchesStatus = status === 'all' ||
+                    (status === 'active' && isActive) ||
+                    (status === 'inactive' && !isActive);
+                return matchesSearch && matchesStatus;
+            });
+            renderAffiliates(filtered);
+        }
+
+        // ============================================================
+        // LOAD APP USERS
+        // ============================================================
+        async function loadAppUsers() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('payment_requests')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                if (error) throw error;
+                allAppUsers = data || [];
+                renderAppUsers(allAppUsers);
+            } catch (e) {
+                console.error('❌ App users error:', e);
+                document.getElementById('appUsersList').innerHTML =
+                    `<div class="empty-state"><div class="icon">❌</div>Error loading users</div>`;
+            }
+        }
+
+        function renderAppUsers(data) {
+            const container = document.getElementById('appUsersList');
+            if (!data || data.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">📱</div>No users yet</div>`;
+                return;
+            }
+
+            let html =
+                `<div class="table-responsive"><table class="table"><thead><tr><th>User</th><th>Contact</th><th>Package</th><th>Ref</th><th>Status</th><th>Token</th><th>Date</th></tr></thead><tbody>`;
+
+            data.slice(0, 50).forEach(u => {
+                const statusMap = {
+                    'pending': '⏳ Pending',
+                    'verified': '✅ Verified',
+                    'key_generated': '🔑 Key Gen',
+                    'forwarded': '📤 Forwarded',
+                    'paid': '💵 Paid',
+                    'rejected': '❌ Rejected'
+                };
+                const statusText = statusMap[u.status] || u.status || 'Unknown';
+                const statusClass = u.status === 'paid' ? 'paid' : u.status === 'forwarded' ? 'forwarded' :
+                    u.status === 'key_generated' ? 'key-generated' : u.status === 'rejected' ? 'rejected' :
+                    'pending';
+
+                html += `
+                    <tr>
+                        <td><span class="highlight">${u.user_name || 'Unknown'}</span></td>
+                        <td>${u.user_whatsapp || 'N/A'}</td>
+                        <td><span class="status-badge ${u.package === 'platinum' ? 'success' : u.package === 'gold' ? 'pending' : ''}">${u.package || 'N/A'}</span></td>
+                        <td style="font-family:monospace;font-size:11px;color:var(--text-gold);">${u.ref || '—'}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td class="token-display" style="font-family:monospace;color:var(--text-cyan);font-size:11px;">${u.token || '—'}</td>
+                        <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A'}</td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+        }
+
+        function filterAppUsers() {
+            const search = document.getElementById('appUserSearch').value.toLowerCase();
+            const status = document.getElementById('appUserStatusFilter').value;
+            let filtered = allAppUsers.filter(u => {
+                const matchesSearch = (u.user_name || '').toLowerCase().includes(search);
+                const isVerified = u.status === 'verified' || u.verified === true;
+                const matchesStatus = status === 'all' ||
+                    (status === 'verified' && isVerified) ||
+                    (status === 'pending' && !isVerified);
+                return matchesSearch && matchesStatus;
+            });
+            renderAppUsers(filtered);
+        }
+
+        // ============================================================
+        // LOAD SALES
+        // ============================================================
+        async function loadSales() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('payment_requests')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                allSales = data || [];
+                renderSales(allSales);
+                console.log(`✅ Loaded ${allSales.length} sales`);
+            } catch (e) {
+                console.error('❌ Sales error:', e);
+                document.getElementById('salesList').innerHTML =
+                    `<div class="empty-state"><div class="icon">❌</div>Error loading sales</div>`;
+            }
+        }
+
+        function renderSales(data) {
+            const container = document.getElementById('salesList');
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">📭</div>No sales yet</div>`;
+                return;
+            }
+
+            let html =
+                `<div class="table-responsive"><table class="table"><thead><tr><th>Customer</th><th>Package</th><th>Amount</th><th>Ref</th><th>Promo Code</th><th>Status</th><th>Token</th><th>Key</th><th>Split Info</th><th>Date</th><th>Actions</th></tr></thead><tbody>`;
+
+            data.forEach(s => {
+                const statusMap = {
+                    'pending': '⏳ Pending',
+                    'verified': '✅ Verified',
+                    'key_generated': '🔑 Key Gen',
+                    'forwarded': '📤 Forwarded',
+                    'paid': '💵 Paid',
+                    'rejected': '❌ Rejected'
+                };
+                const statusText = statusMap[s.status] || s.status || 'Unknown';
+                const statusClass = s.status === 'paid' ? 'paid' : s.status === 'forwarded' ? 'forwarded' :
+                    s.status === 'key_generated' ? 'key-generated' : s.status === 'rejected' ? 'rejected' :
+                    'pending';
+                const hasKey = s.paid_key || false;
+                const hasToken = s.token || false;
+                const canDispatch = s.status === 'pending' || s.status === 'verified';
+                const canForward = s.status === 'key_generated';
+                const isSplit = s.is_referral === true;
+                const splitInfo = isSplit ?
+                    `Child: ${(s.child_amount || 0).toLocaleString()} UGX (90%) | Parent: ${(s.parent_amount || 0).toLocaleString()} UGX (10%)` :
+                    '100%';
+
+                const safeUserData = {
+                    name: (s.user_name || s.name || 'User').replace(/'/g, "\\'"),
+                    whatsapp: (s.user_whatsapp || s.whatsapp || '0000000000').replace(/'/g, "\\'"),
+                    id: (s.user_id || s.id || '000000').replace(/'/g, "\\'"),
+                    promo_code: (s.promo_code || '').replace(/'/g, "\\'"),
+                    package: (s.package || '').replace(/'/g, "\\'")
+                };
+
+                const userDataJson = JSON.stringify(safeUserData).replace(/"/g, '&quot;');
+
+                html += `
+                    <tr>
+                        <td><span class="highlight">${s.user_name || 'Anonymous'}</span></td>
+                        <td><span class="status-badge ${s.package === 'platinum' ? 'success' : s.package === 'gold' ? 'pending' : ''}">${s.package || 'N/A'}</span></td>
+                        <td>${(s.amount || 0).toLocaleString()} UGX</td>
+                        <td style="font-family:monospace;font-size:11px;color:var(--text-gold);">${s.ref || '—'}</td>
+                        <td style="font-family:monospace;font-size:11px;color:var(--text-cyan);">${s.promo_code || '—'}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td class="token-display" style="font-family:monospace;color:var(--text-cyan);font-size:11px;">${hasToken ? s.token : '—'}</td>
+                        <td class="paid-key-display" style="font-family:monospace;color:var(--text-gold);font-size:11px;">
+                            ${hasKey ? `${s.paid_key} <button class="btn btn-outline btn-xs" onclick="copyText('${s.paid_key}')" style="padding:1px 6px;">📋</button>` : '—'}
+                            ${s.parent_key ? `<br><span style="color:var(--text-purple);font-size:9px;">Parent: ${s.parent_key}</span>` : ''}
+                        </td>
+                        <td style="font-size:9px;color:var(--text-secondary);">${splitInfo}</td>
+                        <td>${s.created_at ? new Date(s.created_at).toLocaleDateString() : 'N/A'}</td>
+                        <td>
+                            ${canDispatch ? `
+                                <button class="btn btn-green btn-xs" onclick="dispatchSale('${s.id}', '${s.user_id || s.id}', ${userDataJson}, this)">🚀 Dispatch</button>
+                                <button class="btn btn-red btn-xs" onclick="rejectSale('${s.id}', this)">🗑️</button>
+                            ` : ''}
+                            ${canForward ? `
+                                <button class="btn btn-blue btn-xs" onclick="forwardSale('${s.id}', '${s.user_id || s.id}', ${userDataJson}, this)">📤 Forward</button>
+                                <button class="btn btn-red btn-xs" onclick="rejectSale('${s.id}', this)">🗑️</button>
+                            ` : ''}
+                            ${s.status === 'forwarded' ? `
+                                <span style="color:var(--text-purple);font-size:10px;">${isSplit ? '📤 Split (90/10)' : '📤 Forwarded'}</span>
+                                <button class="btn btn-whatsapp btn-xs" onclick="sendAffiliateNotification('${s.id}', '${safeUserData.name}', '${s.promo_code || ''}', '${s.paid_key || ''}', '${s.parent_affiliate || ''}', '${s.parent_key || ''}')">📤 Notify</button>
+                            ` : ''}
+                            ${s.status === 'paid' ? `<span style="color:var(--text-green);font-size:10px;">💵 Paid</span>` : ''}
+                            ${s.status === 'rejected' ? `<span style="color:var(--text-red);font-size:10px;">❌ Rejected</span>` : ''}
+                            ${s.user_whatsapp ? `<button class="btn btn-whatsapp btn-xs" onclick="openWhatsApp('${s.user_whatsapp}', '${s.user_name}')">💬</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+        }
+
+        function filterSales() {
+            const search = document.getElementById('salesSearch').value.toLowerCase();
+            const status = document.getElementById('salesStatusFilter').value;
+            let filtered = allSales.filter(s => {
+                const matchesSearch = (s.user_name || '').toLowerCase().includes(search) ||
+                    (s.promo_code || '').toLowerCase().includes(search);
+                const matchesStatus = status === 'all' || s.status === status;
+                return matchesSearch && matchesStatus;
+            });
+            renderSales(filtered);
+        }
+
+        // ============================================================
+        // LOAD TOKENS
+        // ============================================================
+        async function loadTokens() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('payment_requests')
+                    .select('*')
+                    .not('token', 'is', null)
+                    .order('verified_at', { ascending: false });
+
+                if (error) throw error;
+                allTokens = data || [];
+                renderTokens(allTokens);
+            } catch (e) {
+                console.error('❌ Tokens error:', e);
+                document.getElementById('tokensList').innerHTML =
+                    `<div class="empty-state"><div class="icon">❌</div>Error loading tokens</div>`;
+            }
+        }
+
+        function renderTokens(data) {
+            const container = document.getElementById('tokensList');
+            if (!data || data.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">🔑</div>No tokens generated yet</div>`;
+                return;
+            }
+
+            let html =
+                `<div class="table-responsive"><table class="table"><thead><tr><th>User</th><th>Token</th><th>Package</th><th>Status</th><th>Verified At</th><th>Actions</th></tr></thead><tbody>`;
+
+            data.forEach(t => {
+                const statusClass = t.status === 'forwarded' ? 'forwarded' : t.status === 'paid' ? 'paid' :
+                    t.status === 'key_generated' ? 'key-generated' : 'pending';
+                const statusText = t.status === 'forwarded' ? '📤 Forwarded' : t.status === 'paid' ? '💵 Paid' :
+                    t.status === 'key_generated' ? '🔑 Key Gen' : '⏳ Pending';
+
+                html += `
+                    <tr>
+                        <td><span class="highlight">${t.user_name || 'Unknown'}</span></td>
+                        <td style="font-family:monospace;color:var(--text-gold);font-size:11px;">${t.token || '—'}</td>
+                        <td><span class="status-badge ${t.package === 'platinum' ? 'success' : t.package === 'gold' ? 'pending' : ''}">${t.package || 'N/A'}</span></td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>${t.verified_at ? new Date(t.verified_at).toLocaleString() : 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-outline btn-xs" onclick="copyText('${t.token}')">📋</button>
+                            ${t.user_whatsapp ? `<button class="btn btn-whatsapp btn-xs" onclick="openWhatsApp('${t.user_whatsapp}', '${t.user_name}')">💬</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+        }
+
+        function filterTokens() {
+            const search = document.getElementById('tokenSearch').value.toLowerCase();
+            const status = document.getElementById('tokenStatusFilter').value;
+            let filtered = allTokens.filter(t => {
+                const matchesSearch = (t.token || '').toLowerCase().includes(search) ||
+                    (t.user_name || '').toLowerCase().includes(search);
+                const isVerified = t.status === 'verified' || t.status === 'key_generated' || t.status === 'forwarded' ||
+                    t.status === 'paid';
+                const matchesStatus = status === 'all' ||
+                    (status === 'verified' && isVerified) ||
+                    (status === 'pending' && !isVerified);
+                return matchesSearch && matchesStatus;
+            });
+            renderTokens(filtered);
+        }
+
+        // ============================================================
+        // LOAD STATS
+        // ============================================================
+        async function loadStats() {
+            try {
+                const { data: affiliates } = await supabaseClient.from('affiliates').select('*');
+                const totalAffiliates = affiliates?.length || 0;
+                const activeAffiliates = affiliates?.filter(a => a.active !== false).length || 0;
+
+                const { data: users } = await supabaseClient.from('payment_requests').select('*');
+                const totalUsers = users?.length || 0;
+
+                const { data: sales } = await supabaseClient.from('payment_requests').select('*');
+                const totalSales = sales?.length || 0;
+                const totalRevenue = sales?.reduce((sum, s) => sum + (s.amount || 0), 0) || 0;
+                const totalCommission = totalSales * 20000;
+                const pendingPayouts = sales?.filter(s => s.status === 'forwarded').length * 20000 || 0;
+                const verifiedTokens = sales?.filter(s => s.status === 'key_generated' && s.token).length || 0;
+
+                const { data: keys } = await supabaseClient.from('generated_keys').select('*');
+                const totalKeys = keys?.length || 0;
+                const keysForwarded = keys?.filter(k => k.forwarded === true).length || 0;
+                const keysUsed = keys?.filter(k => k.status === 'used').length || 0;
+                const keysRejected = keys?.filter(k => k.status === 'invalid').length || 0;
+
+                document.getElementById('statAffiliates').textContent = totalAffiliates;
+                document.getElementById('statActiveAffiliates').textContent = activeAffiliates;
+                document.getElementById('statAppUsers').textContent = totalUsers;
+                document.getElementById('statTotalSales').textContent = totalSales;
+                document.getElementById('statTotalRevenue').textContent = Math.round(totalRevenue).toLocaleString();
+                document.getElementById('statTotalCommission').textContent = Math.round(totalCommission).toLocaleString();
+                document.getElementById('statPendingPayouts').textContent = Math.round(pendingPayouts).toLocaleString();
+                document.getElementById('statVerifiedTokens').textContent = verifiedTokens;
+                document.getElementById('statTotalKeys').textContent = totalKeys;
+                document.getElementById('statKeysForwarded').textContent = keysForwarded;
+                document.getElementById('statKeysUsed').textContent = keysUsed;
+                document.getElementById('statKeysRejected').textContent = keysRejected;
+                document.getElementById('totalRecords').textContent = totalAffiliates + ' affiliates';
+
+            } catch (e) {
+                console.error('Stats error:', e);
+            }
+        }
+
+        // ============================================================
+        // ADMIN REALTIME LISTENER
+        // ============================================================
+        function setupAdminRealtime() {
+            if (adminRealtimeChannel) {
+                try {
+                    supabaseClient.removeChannel(adminRealtimeChannel);
+                } catch (e) {}
+                adminRealtimeChannel = null;
+            }
+
+            if (!supabaseClient) {
+                console.warn('⚠️ Cannot setup admin realtime: no supabase');
+                return;
+            }
+
+            console.log('📡 Setting up admin realtime listener...');
+
+            try {
+                adminRealtimeChannel = supabaseClient.channel('admin_updates');
+
+                adminRealtimeChannel
+                    .on('postgres_changes', {
+                        event: 'INSERT',
+                        schema: 'public',
+                        table: 'payment_requests'
+                    }, (payload) => {
+                        const row = payload.new;
+                        console.log('📡 New sale detected:', row.user_name, row.promo_code);
+                        showToast(`📥 New payment from ${row.user_name || 'Unknown'}`, 'success');
+                        loadAllData();
+                    })
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'payment_requests'
+                    }, (payload) => {
+                        const row = payload.new;
+                        console.log('📡 Sale update detected:', row.status, row.user_name);
+                        loadAllData();
+                    })
+                    .on('postgres_changes', {
+                        event: 'INSERT',
+                        schema: 'public',
+                        table: 'generated_keys'
+                    }, (payload) => {
+                        const row = payload.new;
+                        console.log('📡 New key generated:', row.key);
+                        loadAllData();
+                    })
+                    .subscribe((status) => {
+                        console.log('📡 Admin realtime status:', status);
+                        if (status === 'SUBSCRIBED') {
+                            console.log('✅ Admin realtime connected');
+                        } else if (status === 'CHANNEL_ERROR' || status === 'CLOSED') {
+                            console.warn('⚠️ Admin realtime disconnected, retrying...');
+                            setTimeout(setupAdminRealtime, 5000);
+                        }
+                    });
+
+                console.log('✅ Admin realtime listener active');
+
+            } catch (e) {
+                console.error('❌ Admin realtime setup error:', e);
+                setTimeout(setupAdminRealtime, 5000);
+            }
+        }
+
+        // ============================================================
+        // EXPORT
+        // ============================================================
+        function exportData() {
+            const data = {
+                affiliates: allAffiliates,
+                users: allAppUsers,
+                sales: allSales,
+                tokens: allTokens,
+                generatedKeys: allGeneratedKeys,
+                quickActions: allQuickActions,
+                paymentHistory: allPaymentHistory,
+                tree: affiliateTreeData,
+                exportedAt: new Date().toISOString(),
+                totalAffiliates: allAffiliates.length,
+                totalSales: allSales.length,
+                totalKeys: allGeneratedKeys.length
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sharpi_admin_export_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📤 Data exported successfully!', 'success');
+        }
+
+        // ============================================================
+        // TABS
+        // ============================================================
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                const target = document.getElementById('tab-' + this.dataset.tab);
+                if (target) target.classList.add('active');
+                if (this.dataset.tab === 'quickactions') loadQuickActions();
+                if (this.dataset.tab === 'tokens') loadTokens();
+                if (this.dataset.tab === 'tree') loadAffiliateTree();
+                if (this.dataset.tab === 'lookup') document.getElementById('lookupInput').focus();
+                if (this.dataset.tab === 'payment') {
+                    document.getElementById('paymentKeyInput').focus();
+                    loadPaymentHistory();
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const lookupInput = document.getElementById('lookupInput');
+            if (lookupInput) {
+                lookupInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') lookupAffiliate();
+                });
+            }
+            const paymentInput = document.getElementById('paymentKeyInput');
+            if (paymentInput) {
+                paymentInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && e.ctrlKey) {
+                        checkPaymentKeys();
+                    }
+                });
+            }
+            const qaSearch = document.getElementById('qaSearch');
+            if (qaSearch) {
+                qaSearch.addEventListener('input', filterQuickActions);
+            }
+            const qaStatusFilter = document.getElementById('qaStatusFilter');
+            if (qaStatusFilter) {
+                qaStatusFilter.addEventListener('change', filterQuickActions);
+            }
+            const treeSearch = document.getElementById('treeSearch');
+            if (treeSearch) {
+                treeSearch.addEventListener('input', filterTree);
+            }
+        });
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initSupabase();
+
+            document.getElementById('quickActionsList').innerHTML = '<div class="loading">🔄 Loading payment requests...</div>';
+            document.getElementById('affiliatesList').innerHTML = '<div class="loading">🔄 Loading affiliates...</div>';
+            document.getElementById('appUsersList').innerHTML = '<div class="loading">🔄 Loading users...</div>';
+            document.getElementById('salesList').innerHTML = '<div class="loading">🔄 Loading sales...</div>';
+            document.getElementById('tokensList').innerHTML = '<div class="loading">🔄 Loading tokens...</div>';
+            document.getElementById('treeContainer').innerHTML = '<div class="loading">🌳 Building affiliate tree...</div>';
+            document.getElementById('paymentHistoryList').innerHTML =
+                '<div class="empty-state"><div class="icon">📜</div><p style="color:var(--text-secondary);">Loading payment history...</p></div>';
+
+            setTimeout(() => {
+                loadAllData();
+                setupAdminRealtime();
+            }, 500);
+
+            setInterval(loadAllData, 30000);
+
+            console.log('🦈 SHARPI Admin v5.0 - NEW FEATURES');
+            console.log('✅ NEW: Payment History per Affiliate');
+            console.log('✅ NEW: Affiliate Tree Display (Full Hierarchy)');
+            console.log('✅ NEW: Payment Keys area with history');
+            console.log('✅ NEW: Enhanced Lookup with Parent and Payment History');
+            console.log('✅ ALL original features preserved');
+        });
+
+        // ============================================================
+        // GLOBAL EXPOSURE
+        // ============================================================
+        window.loadAllData = loadAllData;
+        window.loadQuickActions = loadQuickActions;
+        window.loadPaymentHistory = loadPaymentHistory;
+        window.loadAffiliateTree = loadAffiliateTree;
+        window.filterQuickActions = filterQuickActions;
+        window.filterTree = filterTree;
+        window.filterAffiliates = filterAffiliates;
+        window.filterAppUsers = filterAppUsers;
+        window.filterSales = filterSales;
+        window.filterTokens = filterTokens;
+        window.dispatchSale = dispatchSale;
+        window.forwardSale = forwardSale;
+        window.rejectSale = rejectSale;
+        window.payNow = payNow;
+        window.openWhatsApp = openWhatsApp;
+        window.copyText = copyText;
+        window.exportData = exportData;
+        window.lookupAffiliate = lookupAffiliate;
+        window.clearLookup = clearLookup;
+        window.checkPaymentKeys = checkPaymentKeys;
+        window.clearPaymentKeys = clearPaymentKeys;
+        window.lookupAffiliateCode = lookupAffiliateCode;
+        window.generatePaymentKey = generatePaymentKey;
+        window.setupAdminRealtime = setupAdminRealtime;
+        window.lettersToNumbers = lettersToNumbers;
+        window.numbersToLetters = numbersToLetters;
+        window.generateHiddenKeyForUser = generateHiddenKeyForUser;
+        window.sendAffiliateNotification = sendAffiliateNotification;
+        window.getNextMessage = getNextMessage;
+        window.renderQuickActions = renderQuickActions;
+        window.renderPaymentHistory = renderPaymentHistory;
+        window.getTimeAgo = getTimeAgo;
+        window.renderTree = renderTree;
+        window.toggleTreeNode = toggleTreeNode;
+        window.expandAllTree = expandAllTree;
+        window.collapseAllTree = collapseAllTree;
+        window.buildTree = buildTree;
+        window.affiliateTreeData = affiliateTreeData;
+    </script>
+</body>
+</html>
