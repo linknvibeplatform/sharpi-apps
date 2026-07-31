@@ -3665,7 +3665,7 @@
         // ============================================================
         function getAffiliateInviteLink() {
             if (!currentAffiliate) return null;
-            return `https://linknvibeplatform.github.io/affiliate-work/?ref=${currentAffiliate.code}&mode=invite`;
+            return `https://linknvibeplatform.github.io/sharpi-apps/affiliate/?ref=${currentAffiliate.code}&mode=invite`;
         }
 
         function canInviteAffiliates() {
@@ -4006,7 +4006,7 @@ Thank you! 🦈`;
         // ============================================================
         function getShareLink() {
             if (!currentAffiliate) return null;
-            return `https://linknvibeplatform.github.io/sharpi-signals/?ref=${currentAffiliate.code}`;
+            return `https://linknvibeplatform.github.io/sharpi-apps/predictor/?ref=${currentAffiliate.code}`;
         }
 
         function getShareMessage() {
@@ -4833,7 +4833,7 @@ Thank you! 🦈`;
             if (shareTotalSales) shareTotalSales.textContent = stats.totalSales;
 
             // Affiliate Link
-            const link = `https://linknvibeplatform.github.io/sharpi-signals/?ref=${currentAffiliate.code}`;
+            const link = `https://linknvibeplatform.github.io/sharpi-apps/predictor/?ref=${currentAffiliate.code}`;
             const affiliateLinkDisplay = document.getElementById('affiliateLinkDisplay');
             if (affiliateLinkDisplay) affiliateLinkDisplay.textContent = link;
 
