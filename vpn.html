@@ -1,0 +1,2798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>ProxyNest · Complete Platform v8.0</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <style>
+        /* ===== COMPLETE STYLES ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; min-height: 100vh; background: #0a0a0e; color: #fff; overflow-x: hidden; }
+        
+        /* ===== BACKGROUND ===== */
+        #bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; filter: brightness(0.40) saturate(1.15) blur(1.5px); transform: scale(1.02); }
+        .video-fallback { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; background: radial-gradient(ellipse at 30% 40%, #1a1a2e 0%, #0a0a0e 100%); display: none; }
+        
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 10px; }
+        
+        /* ===== NAVIGATION ===== */
+        .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 12px 24px; background: rgba(10,10,14,0.85); backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; transition: all 0.35s; min-height: 64px; }
+        .navbar.scrolled { background: rgba(10,10,14,0.95); box-shadow: 0 4px 40px rgba(0,0,0,0.5); min-height: 56px; padding: 8px 16px; }
+        .nav-brand { display: flex; align-items: center; gap: 8px; font-size: 1.2rem; font-weight: 700; color: #fff; text-decoration: none; cursor: pointer; }
+        .nav-brand i { color: #6c5ce7; font-size: 1.4rem; }
+        .nav-brand span { background: linear-gradient(135deg, #fff 30%, #6c5ce7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; align-items: center; gap: 14px; list-style: none; flex-wrap: wrap; }
+        .nav-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: all 0.35s; padding: 4px 0; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; }
+        .nav-links a:hover, .nav-links a.active { color: #fff; border-bottom-color: #6c5ce7; }
+        .nav-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .nav-btn { padding: 6px 14px; border-radius: 40px; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.7rem; cursor: pointer; transition: all 0.35s; background: rgba(255,255,255,0.06); color: #fff; border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(4px); display: inline-flex; align-items: center; gap: 4px; }
+        .nav-btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
+        .nav-btn-primary { background: #6c5ce7; border-color: #6c5ce7; color: #fff; }
+        .nav-btn-primary:hover { background: #7d6be8; border-color: #7d6be8; box-shadow: 0 8px 30px rgba(108,92,231,0.30); }
+        .nav-btn .badge-dot { width: 6px; height: 6px; background: #ff6b6b; border-radius: 50%; display: inline-block; animation: pulse-dot 1.5s infinite; }
+        .live-indicator { display: flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 40px; background: rgba(0,184,148,0.08); border: 1px solid rgba(0,184,148,0.10); font-size: 0.6rem; font-weight: 600; color: #55efc4; letter-spacing: 0.04em; }
+        .live-indicator .pulse { width: 5px; height: 5px; border-radius: 50%; background: #55efc4; animation: pulse-dot 1.5s infinite; }
+        
+        /* ===== MAIN ===== */
+        .main-container { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; padding: 80px 16px 30px; }
+        
+        /* ===== GLASS CARDS ===== */
+        .glass-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(16px) saturate(180%); border-radius: 24px; padding: 20px 18px; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 8px 32px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.04); transition: all 0.35s; position: relative; overflow: hidden; }
+        .glass-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.02) 0%, transparent 70%); opacity: 0; transition: opacity 0.6s ease; pointer-events: none; }
+        .glass-card:hover::before { opacity: 1; }
+        .glass-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.12); transform: translateY(-2px); box-shadow: 0 20px 60px rgba(0,0,0,0.30); }
+        .glass-card.col-span-4:first-of-type { margin-top: 8px; padding: 24px 20px; min-height: auto; }
+        
+        /* ===== GRID ===== */
+        .grid { display: grid; gap: 16px; }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
+        .col-span-4 { grid-column: span 4; }
+        
+        /* ===== TYPOGRAPHY ===== */
+        h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; background: linear-gradient(135deg, #ffffff 0%, #a8b8d0 40%, #c4b0d8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        h2 { font-size: 1.3rem; font-weight: 650; letter-spacing: -0.025em; color: #fff; margin-bottom: 4px; }
+        h3 { font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 4px; }
+        p { font-size: 0.88rem; font-weight: 400; line-height: 1.6; color: rgba(255,255,255,0.7); }
+        .text-muted { color: rgba(255,255,255,0.4); font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+        
+        /* ===== BADGES ===== */
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 40px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.04); font-size: 0.55rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.4); backdrop-filter: blur(4px); }
+        .badge-success { background: rgba(0,184,148,0.15); border-color: rgba(0,184,148,0.20); color: #55efc4; }
+        .badge-warning { background: rgba(253,203,110,0.12); border-color: rgba(253,203,110,0.15); color: #fdcb6e; }
+        .badge-danger { background: rgba(255,107,107,0.12); border-color: rgba(255,107,107,0.15); color: #ff6b6b; }
+        .badge-accent { background: rgba(108,92,231,0.15); border-color: rgba(108,92,231,0.20); color: #a29bfe; }
+        .badge-isp { background: rgba(253,203,110,0.08); border-color: rgba(253,203,110,0.10); color: #fdcb6e; }
+        
+        /* ===== BUTTONS ===== */
+        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 60px; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.35s; text-decoration: none; background: rgba(255,255,255,0.04); color: #fff; border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(4px); }
+        .btn:hover { background: rgba(255,255,255,0.10); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.20); }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: #6c5ce7; border-color: #6c5ce7; color: #fff; }
+        .btn-primary:hover { background: #7d6be8; border-color: #7d6be8; box-shadow: 0 8px 30px rgba(108,92,231,0.25); }
+        .btn-success { background: #00b894; border-color: #00b894; color: #fff; }
+        .btn-success:hover { background: #00d2a0; border-color: #00d2a0; box-shadow: 0 8px 30px rgba(0,184,148,0.25); }
+        .btn-danger { background: #ff6b6b; border-color: #ff6b6b; color: #fff; }
+        .btn-danger:hover { background: #ff7a7a; border-color: #ff7a7a; box-shadow: 0 8px 30px rgba(255,107,107,0.25); }
+        .btn-outline { background: transparent; border-color: rgba(255,255,255,0.08); }
+        .btn-outline:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); }
+        .btn-sm { padding: 6px 14px; font-size: 0.7rem; }
+        .btn-xs { padding: 3px 10px; font-size: 0.6rem; border-radius: 30px; }
+        .btn-block { width: 100%; justify-content: center; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+        
+        /* ===== PROXY ITEMS ===== */
+        .proxy-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); transition: all 0.35s; flex-wrap: wrap; gap: 8px; cursor: pointer; }
+        .proxy-item:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06); }
+        .proxy-item.selected { border-color: #6c5ce7; background: rgba(108,92,231,0.08); }
+        .proxy-ip { font-family: 'Inter', monospace; font-weight: 600; font-size: 0.85rem; color: #fff; letter-spacing: -0.01em; }
+        .proxy-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.7rem; color: rgba(255,255,255,0.7); }
+        .proxy-status { display: flex; align-items: center; gap: 4px; }
+        .proxy-status .dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; animation: pulse-dot 2s infinite; }
+        .dot-green { background: #55efc4; }
+        .dot-yellow { background: #fdcb6e; }
+        .dot-red { background: #ff6b6b; }
+        @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .proxy-checkbox { width: 16px; height: 16px; accent-color: #6c5ce7; cursor: pointer; flex-shrink: 0; }
+        .exit-node-hidden { background: rgba(255,107,107,0.08); padding: 2px 8px; border-radius: 20px; color: #ff6b6b; font-size: 0.55rem; cursor: not-allowed; display: inline-flex; align-items: center; gap: 4px; }
+        .exit-node-hidden i { color: #ff6b6b; }
+        
+        /* ===== STATS ===== */
+        .stat-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .stat-item { flex: 1; min-width: 60px; }
+        .stat-number { font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; line-height: 1; }
+        .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.4); margin-top: 2px; }
+        
+        /* ===== PRICING ===== */
+        .pricing-tier { text-align: center; padding: 18px 14px; border-radius: 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); transition: all 0.35s; cursor: pointer; }
+        .pricing-tier:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); transform: translateY(-4px); }
+        .pricing-tier .price { font-size: 2.2rem; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
+        .pricing-tier .price span { font-size: 0.8rem; font-weight: 400; color: rgba(255,255,255,0.4); }
+        .pricing-tier ul { list-style: none; padding: 0; margin: 10px 0; }
+        .pricing-tier ul li { padding: 4px 0; font-size: 0.8rem; color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .pricing-tier ul li:last-child { border-bottom: none; }
+        .pricing-tier ul li i { color: #00b894; margin-right: 6px; font-size: 0.7rem; }
+        
+        /* ===== PAYMENT ===== */
+        .payment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin: 12px 0; }
+        .payment-method { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 10px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); transition: all 0.35s; cursor: pointer; }
+        .payment-method:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); transform: translateY(-2px); }
+        .payment-method img { width: 36px; height: 36px; object-fit: contain; border-radius: 6px; }
+        .payment-method .name { font-size: 0.6rem; font-weight: 500; color: rgba(255,255,255,0.7); }
+        .payment-method.selected { border-color: #6c5ce7; background: rgba(108,92,231,0.08); }
+        
+        /* ===== FORMS ===== */
+        .glass-input { width: 100%; padding: 10px 14px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04); color: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; transition: all 0.35s; outline: none; }
+        .glass-input:focus { border-color: #6c5ce7; background: rgba(255,255,255,0.05); box-shadow: 0 0 0 3px rgba(108,92,231,0.08); }
+        .glass-input::placeholder { color: rgba(255,255,255,0.4); }
+        .glass-input select { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='rgba(255,255,255,0.3)' d='M6 8L1 3h10z'/></svg>"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 34px; cursor: pointer; }
+        .glass-input option { background: #1a1a2e; color: #fff; }
+        
+        /* ===== MODAL ===== */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 16px; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; background: rgba(20,20,30,0.95); backdrop-filter: blur(20px); border-radius: 28px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 40px 100px rgba(0,0,0,0.6); animation: modalIn 0.3s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-close { float: right; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.3rem; cursor: pointer; transition: all 0.35s; }
+        .modal-close:hover { color: #fff; transform: rotate(90deg); }
+        
+        /* ===== NOTIFICATION ===== */
+        .notification { position: fixed; bottom: 16px; right: 16px; z-index: 3000; padding: 12px 18px; border-radius: 14px; background: rgba(20,20,30,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 20px 60px rgba(0,0,0,0.4); color: #fff; font-size: 0.82rem; max-width: 360px; animation: slideIn 0.4s ease; display: none; }
+        .notification.show { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+        .notification i { margin-right: 8px; }
+        .notification.success i { color: #55efc4; }
+        .notification.error i { color: #ff6b6b; }
+        .notification.info i { color: #74b9ff; }
+        
+        /* ===== BULK ACTIONS ===== */
+        .bulk-actions { display: flex; gap: 6px; flex-wrap: wrap; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 12px; margin: 6px 0; align-items: center; }
+        .bulk-actions .btn { font-size: 0.65rem; padding: 4px 12px; }
+        
+        /* ===== PROGRESS BAR ===== */
+        .progress-bar { height: 4px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; margin: 6px 0; }
+        .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #6c5ce7, #00b894); border-radius: 4px; transition: width 0.5s ease; }
+        
+        /* ===== CHAT ===== */
+        .chat-container { height: 280px; background: rgba(255,255,255,0.02); border-radius: 12px; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+        .chat-message { padding: 6px 10px; border-radius: 10px; max-width: 80%; }
+        .chat-message.bot { background: rgba(108,92,231,0.1); align-self: flex-start; }
+        .chat-message.user { background: rgba(0,184,148,0.1); align-self: flex-end; }
+        .chat-message .sender { font-size: 0.55rem; color: rgba(255,255,255,0.4); margin-bottom: 2px; }
+        .chat-message .text { font-size: 0.82rem; color: #fff; }
+        .chat-typing { color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 4px 8px; }
+        
+        /* ===== TOGGLE ===== */
+        .toggle-switch { width: 40px; height: 22px; background: rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; transition: all 0.35s; position: relative; flex-shrink: 0; }
+        .toggle-switch.active { background: #6c5ce7; }
+        .toggle-switch .toggle-knob { width: 16px; height: 16px; background: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: all 0.35s; }
+        .toggle-switch.active .toggle-knob { left: 21px; }
+        
+        /* ===== SETTINGS ===== */
+        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .settings-group { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 14px; }
+        .settings-group h4 { margin-bottom: 8px; color: #fff; font-size: 0.9rem; }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); flex-wrap: wrap; gap: 4px; }
+        .settings-row:last-child { border-bottom: none; }
+        .settings-row .label { color: rgba(255,255,255,0.7); font-size: 0.78rem; }
+        .settings-row .value { color: #fff; font-size: 0.78rem; }
+        
+        /* ===== INFINITE SCROLL ===== */
+        .infinite-scroll-trigger { text-align: center; padding: 16px; color: rgba(255,255,255,0.4); font-size: 0.8rem; cursor: pointer; transition: all 0.35s; }
+        .infinite-scroll-trigger:hover { color: #fff; }
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: #6c5ce7; animation: spin 0.8s linear infinite; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* ===== CHARTS ===== */
+        .chart-container { height: 120px; display: flex; align-items: flex-end; justify-content: center; gap: 4px; padding: 8px; }
+        .chart-bar { flex: 1; border-radius: 3px; min-height: 3px; transition: height 0.5s ease; }
+        .chart-bar:nth-child(odd) { background: #6c5ce7; }
+        .chart-bar:nth-child(even) { background: #00b894; }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) { .grid-4 { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 992px) { .grid-4, .grid-3 { grid-template-columns: repeat(2, 1fr); } .col-span-2, .col-span-3, .col-span-4 { grid-column: span 2; } h1 { font-size: 2rem; } .settings-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .navbar { padding: 10px 12px; min-height: 56px; flex-direction: column; gap: 6px; }
+            .nav-links { gap: 8px; width: 100%; justify-content: center; order: 3; }
+            .nav-links a { font-size: 0.65rem; }
+            .nav-actions { width: 100%; justify-content: center; order: 2; }
+            .main-container { padding: 100px 12px 20px; }
+            .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            .col-span-2, .col-span-3, .col-span-4 { grid-column: span 1; }
+            h1 { font-size: 1.6rem; }
+            h2 { font-size: 1.1rem; }
+            .stat-number { font-size: 1.3rem; }
+            .pricing-tier .price { font-size: 1.8rem; }
+            .payment-grid { grid-template-columns: repeat(2, 1fr); }
+            .glass-card { padding: 14px 12px; border-radius: 18px; }
+            .proxy-item { flex-direction: column; align-items: stretch; text-align: center; }
+            .proxy-meta { justify-content: center; }
+            .modal-content { padding: 16px; margin: 8px; }
+            .bulk-actions { justify-content: center; }
+            .settings-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .navbar { padding: 8px 10px; min-height: 48px; }
+            .nav-brand { font-size: 0.9rem; }
+            .nav-btn { padding: 4px 10px; font-size: 0.6rem; }
+            .main-container { padding: 80px 8px 16px; }
+            .glass-card { padding: 12px 10px; border-radius: 14px; }
+            .proxy-item { padding: 8px 10px; }
+            .proxy-ip { font-size: 0.75rem; }
+            .payment-grid { grid-template-columns: repeat(2, 1fr); }
+            .modal-content { padding: 14px; }
+            .stat-number { font-size: 1.1rem; }
+        }
+        
+        .animate-in { animation: fadeUp 0.6s ease forwards; }
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.10s; }
+        .delay-3 { animation-delay: 0.15s; }
+        .delay-4 { animation-delay: 0.20s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- ===== BACKGROUND VIDEO ===== -->
+    <video id="bg-video" autoplay muted loop playsinline preload="auto">
+        <source src="vpn-video.mp4" type="video/mp4" />
+    </video>
+    <div class="video-fallback"></div>
+
+    <!-- ===== NOTIFICATION ===== -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationMessage">Action completed</span>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modalBody">
+                <h2 id="modalTitle">Modal</h2>
+                <div id="modalDescription">Content</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar" id="navbar">
+        <a href="#home" class="nav-brand" onclick="navigateTo('dashboard')">
+            <i class="fas fa-globe"></i>
+            <span>ProxyNest</span>
+            <span style="font-size:0.5rem; font-weight:400; background:rgba(255,255,255,0.04); padding:1px 6px; border-radius:12px; -webkit-text-fill-color:rgba(255,255,255,0.4);">v8.0</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#dashboard" class="active" onclick="navigateTo('dashboard')">Dashboard</a></li>
+            <li><a href="#proxies" onclick="navigateTo('proxies')">Proxies</a></li>
+            <li><a href="#pricing" onclick="navigateTo('pricing')">Pricing</a></li>
+            <li><a href="#analytics" onclick="navigateTo('analytics')">Analytics</a></li>
+            <li><a href="#settings" onclick="navigateTo('settings')">Settings</a></li>
+            <li><a href="#docs" onclick="navigateTo('docs')">Docs</a></li>
+            <li><a href="#support" onclick="navigateTo('support')">Support</a></li>
+        </ul>
+        <div class="nav-actions">
+            <div class="live-indicator"><span class="pulse"></span><span id="liveCount">1.2M+</span></div>
+            <button class="nav-btn" onclick="toggleNotifications()"><i class="fas fa-bell"></i><span class="badge-dot" id="notificationDot" style="display:none;"></span></button>
+            <button class="nav-btn nav-btn-primary" onclick="openModal('API Access', generateAPIKeyModal())"><i class="fas fa-key"></i> API</button>
+            <button class="nav-btn" onclick="navigateTo('settings')"><i class="fas fa-user"></i></button>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container" id="mainContent">
+
+        <!-- ===== PAGE: DASHBOARD ===== -->
+        <div id="page-dashboard">
+            <!-- Hero -->
+            <div class="grid grid-4" style="margin-bottom:16px;">
+                <div class="glass-card col-span-4 animate-in">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
+                                <span class="badge badge-success"><i class="fas fa-check-circle"></i> Live</span>
+                                <span class="badge badge-accent"><i class="fas fa-rocket"></i> <span id="uptimeDisplay">99.97%</span></span>
+                                <span class="badge"><i class="fas fa-database"></i> <span id="countryCountDisplay">195</span> countries</span>
+                                <span class="badge badge-isp"><i class="fas fa-network-wired"></i> <span id="ispCountDisplay">2,847</span> ISPs</span>
+                            </div>
+                            <h1>Residential IP Marketplace</h1>
+                            <p style="max-width:500px; font-size:0.95rem;">Deploy <strong style="color:#fff;" id="heroProxyCount">1,000,000+</strong> proxies with precise location data.</p>
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px; min-width:100px;">
+                            <div style="font-size:0.6rem; color:rgba(255,255,255,0.4);">TOTAL PROXIES</div>
+                            <div style="font-size:1.8rem; font-weight:800; letter-spacing:-0.03em; background:linear-gradient(135deg,#55efc4,#00b894); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" id="totalProxyDisplay">1.2M</div>
+                            <div style="font-size:0.6rem; color:rgba(255,255,255,0.5);">unlimited generation</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
+                        <button class="btn btn-sm btn-primary" onclick="generateAPIKey()"><i class="fas fa-key"></i> API Access</button>
+                        <button class="btn btn-sm btn-outline" onclick="navigateTo('docs')"><i class="fas fa-file-alt"></i> Docs</button>
+                        <button class="btn btn-sm btn-outline" onclick="navigateTo('support')"><i class="fas fa-headset"></i> Support</button>
+                        <button class="btn btn-sm btn-success" onclick="generateMoreProxies(100)"><i class="fas fa-plus"></i> Generate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-4" style="margin-bottom:16px;">
+                <div class="glass-card animate-in delay-1" onclick="openModal('Country Stats', generateCountryStatsModal())" style="cursor:pointer;">
+                    <div class="stat-group">
+                        <div class="stat-item"><div class="stat-number" id="countryCount">195</div><div class="stat-label">Countries</div></div>
+                        <div class="stat-item"><div class="stat-number" id="activeIPs">1.2M</div><div class="stat-label">Proxies</div></div>
+                    </div>
+                </div>
+                <div class="glass-card animate-in delay-2" onclick="openModal('Uptime History', generateUptimeModal())" style="cursor:pointer;">
+                    <div class="stat-group">
+                        <div class="stat-item"><div class="stat-number" id="uptimeStat">99.97%</div><div class="stat-label">Uptime</div></div>
+                        <div class="stat-item"><div class="stat-number" id="avgLatency">18ms</div><div class="stat-label">Latency</div></div>
+                    </div>
+                </div>
+                <div class="glass-card animate-in delay-3" onclick="openModal('Monthly Volume', generateVolumeModal())" style="cursor:pointer;">
+                    <div class="stat-group">
+                        <div class="stat-item"><div class="stat-number" id="monthlyRequests">2.4B</div><div class="stat-label">Requests/Mo</div></div>
+                        <div class="stat-item"><div class="stat-number">512</div><div class="stat-label">Threads</div></div>
+                    </div>
+                </div>
+                <div class="glass-card animate-in delay-4" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; cursor:pointer;" onclick="openModal('System Load', generateLoadModal())">
+                    <div><div class="text-muted">Load</div><div style="font-size:1.4rem; font-weight:700; color:#fff;" id="systemLoad">68%</div></div>
+                    <div style="width:48px; height:48px; border-radius:50%; border:3px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; position:relative;">
+                        <svg width="40" height="40" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3"/>
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#6c5ce7" stroke-width="3" stroke-dasharray="68 100" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+                        </svg>
+                        <span style="position:absolute; font-size:0.5rem; font-weight:600; color:#fff;" id="loadPercentage">68%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proxy List -->
+            <div style="margin-bottom:16px;">
+                <div class="glass-card col-span-4">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                        <div>
+                            <h2>Proxy Pool</h2>
+                            <p style="font-size:0.75rem;"><span id="proxyCountDisplay">1.2M</span> available</p>
+                        </div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <input class="glass-input" style="width:160px;padding:6px 10px;font-size:0.7rem;" placeholder="Search country, city, ISP..." id="globalSearchInput" oninput="searchAllProxies()">
+                            <button class="btn btn-xs btn-primary" onclick="searchAllProxies()"><i class="fas fa-search"></i></button>
+                            <button class="btn btn-xs btn-outline" onclick="clearGlobalSearch()"><i class="fas fa-times"></i></button>
+                            <button class="btn btn-xs btn-success" onclick="generateMoreProxies(50)"><i class="fas fa-plus"></i> +50</button>
+                            <button class="btn btn-xs btn-outline" onclick="refreshProxies()"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Bulk Actions -->
+                    <div id="bulkActions" class="bulk-actions" style="display:none;">
+                        <span style="color:rgba(255,255,255,0.6);font-size:0.7rem;"><span id="selectedCount">0</span> selected</span>
+                        <button class="btn btn-xs btn-success" onclick="bulkRotate()"><i class="fas fa-sync"></i> Rotate</button>
+                        <button class="btn btn-xs btn-danger" onclick="bulkDelete()"><i class="fas fa-trash"></i> Delete</button>
+                        <button class="btn btn-xs btn-outline" onclick="bulkExport()"><i class="fas fa-file-export"></i> Export</button>
+                        <button class="btn btn-xs btn-outline" onclick="clearSelection()"><i class="fas fa-times"></i> Clear</button>
+                        <button class="btn btn-xs btn-outline" onclick="selectAllProxies()"><i class="fas fa-check-double"></i> All</button>
+                    </div>
+                    
+                    <div id="searchResultInfo" style="margin-bottom:8px;font-size:0.75rem;color:rgba(255,255,255,0.6);display:none;"></div>
+                    <div id="proxyList" style="display:flex; flex-direction:column; gap:6px;"></div>
+                    <div id="infiniteScrollTrigger" class="infinite-scroll-trigger" onclick="loadMoreProxies()">
+                        <span id="loadMoreText">Load more proxies <i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                        <span style="font-size:0.7rem; color:rgba(255,255,255,0.4);" id="proxyCount">Showing 0 of 0</span>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn btn-xs btn-outline" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <span style="color:rgba(255,255,255,0.7);font-size:0.7rem;padding:0 6px;" id="currentPage">1</span>
+                            <button class="btn btn-xs btn-outline" onclick="changePage(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div style="margin-bottom:16px;">
+                <div class="glass-card col-span-4">
+                    <div style="text-align:center; margin-bottom:12px;">
+                        <h2>Secure Payment Methods</h2>
+                        <p style="font-size:0.8rem;">Choose your preferred payment option</p>
+                    </div>
+                    <div class="payment-grid" id="paymentMethods"></div>
+                    <div style="text-align:center;margin-top:8px;">
+                        <button class="btn btn-xs btn-outline" onclick="viewTransactionHistory()"><i class="fas fa-history"></i> Transaction History</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API & Analytics -->
+            <div class="grid grid-2" style="margin-bottom:16px;">
+                <div class="glass-card" onclick="openModal('API Tools', generateAPIToolsModal())" style="cursor:pointer;">
+                    <h3><i class="fas fa-code" style="color:#6c5ce7; margin-right:6px;"></i> Quick API</h3>
+                    <p style="font-size:0.8rem;">Get a proxy instantly with one request.</p>
+                    <div style="background:rgba(0,0,0,0.30); border-radius:10px; padding:10px; margin:8px 0; font-family:monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); word-break:break-all;">GET /api/v1/proxy?country=US&city=NewYork</div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button class="btn btn-xs btn-primary" onclick="event.stopPropagation();testAPI()"><i class="fas fa-play"></i> Test</button>
+                        <button class="btn btn-xs btn-outline" onclick="event.stopPropagation();copyToClipboard('GET /api/v1/proxy?country=US&city=NewYork')"><i class="fas fa-copy"></i> Copy</button>
+                        <button class="btn btn-xs btn-outline" onclick="event.stopPropagation();navigateTo('docs')" style="color:rgba(255,255,255,0.4);">Docs →</button>
+                    </div>
+                    <div style="margin-top:6px;font-size:0.6rem;color:rgba(255,255,255,0.3);">
+                        Rate limit: <span id="apiRateLimit">10,000</span>/day · Used: <span id="apiRateUsed">2,341</span>
+                    </div>
+                    <div class="progress-bar"><div class="fill" id="apiRateProgress" style="width:23%;"></div></div>
+                </div>
+                <div class="glass-card" onclick="openModal('Analytics Dashboard', generateAnalyticsModal())" style="cursor:pointer;">
+                    <h3><i class="fas fa-chart-line" style="color:#00b894; margin-right:6px;"></i> Analytics</h3>
+                    <p style="font-size:0.8rem;">Real-time usage & performance metrics.</p>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap; margin:8px 0;">
+                        <div><span class="text-muted">Today</span><br><span style="font-size:1.2rem; font-weight:600; color:#fff;" id="analyticsToday">34.2K</span></div>
+                        <div><span class="text-muted">Success</span><br><span style="font-size:1.2rem; font-weight:600; color:#55efc4;" id="analyticsSuccess">98.7%</span></div>
+                        <div><span class="text-muted">Speed</span><br><span style="font-size:1.2rem; font-weight:600; color:#fff;" id="analyticsSpeed">1.2s</span></div>
+                    </div>
+                    <button class="btn btn-xs btn-outline" onclick="event.stopPropagation();exportReport()"><i class="fas fa-download"></i> Export</button>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-4" style="margin-bottom:16px;">
+                <div class="glass-card" onclick="openModal('Quick Actions', generateQuickActionsModal())" style="text-align:center;cursor:pointer;">
+                    <i class="fas fa-bolt" style="font-size:1.5rem;color:#fdcb6e;"></i>
+                    <h3 style="margin-top:4px;font-size:0.9rem;">Quick Actions</h3>
+                    <p style="font-size:0.7rem;">Generate, export, manage</p>
+                </div>
+                <div class="glass-card" onclick="openModal('System Status', generateSystemStatusModal())" style="text-align:center;cursor:pointer;">
+                    <i class="fas fa-heartbeat" style="font-size:1.5rem;color:#55efc4;"></i>
+                    <h3 style="margin-top:4px;font-size:0.9rem;">System Status</h3>
+                    <p style="font-size:0.7rem;">All systems operational</p>
+                </div>
+                <div class="glass-card" onclick="openModal('Support Center', generateSupportModal())" style="text-align:center;cursor:pointer;">
+                    <i class="fas fa-headset" style="font-size:1.5rem;color:#6c5ce7;"></i>
+                    <h3 style="margin-top:4px;font-size:0.9rem;">24/7 Support</h3>
+                    <p style="font-size:0.7rem;">Get help anytime</p>
+                </div>
+                <div class="glass-card" onclick="openModal('Network Status', generateNetworkStatusModal())" style="text-align:center;cursor:pointer;">
+                    <i class="fas fa-globe-americas" style="font-size:1.5rem;color:#00b894;"></i>
+                    <h3 style="margin-top:4px;font-size:0.9rem;">Network Status</h3>
+                    <p style="font-size:0.7rem;">Global connectivity</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="glass-card" style="text-align:center; padding:12px; margin-top:4px;">
+                <p style="font-size:0.6rem; color:rgba(255,255,255,0.3);">
+                    <i class="fas fa-shield-alt"></i> SOC2 · GDPR · CCPA · 256-bit
+                    <span style="margin:0 8px;">|</span> <i class="fas fa-heart" style="color:#ff6b6b;"></i> <span id="footerProxies">1.2M+</span> proxies
+                    <span style="margin:0 8px;">|</span> <a href="#" style="color:rgba(255,255,255,0.3);text-decoration:none;" onclick="navigateTo('privacy')">Privacy</a>
+                    <span style="margin:0 8px;">|</span> <a href="#" style="color:rgba(255,255,255,0.3);text-decoration:none;" onclick="openModal('Terms', generateTermsModal())">Terms</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- ===== PAGE: PROXIES ===== -->
+        <div id="page-proxies" style="display:none;">
+            <div class="glass-card col-span-4">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                    <div><h2>Proxy Management</h2><p style="font-size:0.75rem;">Manage your proxy pool with advanced filters</p></div>
+                    <button class="btn btn-outline btn-sm" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;">
+                    <input class="glass-input" style="flex:1;min-width:140px;padding:6px 10px;font-size:0.75rem;" placeholder="Search IP, country, city, ISP..." id="proxySearch" oninput="filterProxies()">
+                    <select class="glass-input" style="flex:0 1 100px;padding:6px 10px;font-size:0.7rem;" id="proxyTypeFilter" onchange="filterProxies()">
+                        <option value="all">All Types</option>
+                        <option value="residential">Residential</option>
+                        <option value="datacenter">Datacenter</option>
+                        <option value="mobile">Mobile</option>
+                    </select>
+                    <select class="glass-input" style="flex:0 1 100px;padding:6px 10px;font-size:0.7rem;" id="proxyStatusFilter" onchange="filterProxies()">
+                        <option value="all">All Status</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                        <option value="rotating">Rotating</option>
+                    </select>
+                    <select class="glass-input" style="flex:0 1 100px;padding:6px 10px;font-size:0.7rem;" id="proxyLatencyFilter" onchange="filterProxies()">
+                        <option value="all">All Latency</option>
+                        <option value="fast">&lt; 15ms</option>
+                        <option value="medium">15-30ms</option>
+                        <option value="slow">&gt; 30ms</option>
+                    </select>
+                    <button class="btn btn-xs btn-primary" onclick="applyFilters()"><i class="fas fa-filter"></i></button>
+                    <button class="btn btn-xs btn-outline" onclick="clearFilters()"><i class="fas fa-times"></i></button>
+                    <button class="btn btn-xs btn-success" onclick="generateMoreProxies(50)"><i class="fas fa-plus"></i></button>
+                    <button class="btn btn-xs btn-outline" onclick="openModal('Advanced Filters', generateAdvancedFiltersModal())"><i class="fas fa-sliders-h"></i></button>
+                </div>
+                <div id="proxyManagementList" style="display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto;"></div>
+                <div style="margin-top:10px;text-align:center;"><span style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Total: <span id="totalProxyCount">0</span></span></div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE: PRICING ===== -->
+        <div id="page-pricing" style="display:none;">
+            <div class="glass-card col-span-4">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+                    <div><h2>Flexible Pricing</h2><p style="font-size:0.75rem;">Choose the plan that fits your needs</p></div>
+                    <button class="btn btn-outline btn-sm" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div style="display:flex; gap:12px; justify-content:center; margin-bottom:12px;">
+                    <button class="btn btn-xs btn-primary" onclick="togglePricingCycle('monthly')" id="monthlyBtn">Monthly</button>
+                    <button class="btn btn-xs btn-outline" onclick="togglePricingCycle('annual')" id="annualBtn">Annual <span class="badge badge-success" style="font-size:0.45rem;">Save 20%</span></button>
+                </div>
+                <div class="grid grid-3" id="pricingGrid"></div>
+                <div style="margin-top:12px;text-align:center;">
+                    <button class="btn btn-xs btn-outline" onclick="viewTransactionHistory()"><i class="fas fa-history"></i> Transaction History</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE: ANALYTICS ===== -->
+        <div id="page-analytics" style="display:none;">
+            <div class="glass-card col-span-4">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <div><h2>Analytics Dashboard</h2><p style="font-size:0.75rem;">Real-time performance metrics</p></div>
+                    <button class="btn btn-outline btn-sm" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0;">
+                    <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:12px;text-align:center;">
+                        <div class="text-muted">Requests</div>
+                        <div style="font-size:1.3rem;font-weight:700;color:#fff;" id="analyticsTotalRequests">2.4B</div>
+                        <div style="font-size:0.6rem;color:#55efc4;" id="analyticsTotalRequestsChange">↑ 12.4%</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:12px;text-align:center;">
+                        <div class="text-muted">Success</div>
+                        <div style="font-size:1.3rem;font-weight:700;color:#55efc4;" id="analyticsSuccessRate">98.7%</div>
+                        <div style="font-size:0.6rem;color:#55efc4;" id="analyticsSuccessRateChange">↑ 0.3%</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:12px;text-align:center;">
+                        <div class="text-muted">Response</div>
+                        <div style="font-size:1.3rem;font-weight:700;color:#fff;" id="analyticsAvgResponse">1.2s</div>
+                        <div style="font-size:0.6rem;color:#ff6b6b;" id="analyticsAvgResponseChange">↓ 0.1s</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:12px;text-align:center;">
+                        <div class="text-muted">Users</div>
+                        <div style="font-size:1.3rem;font-weight:700;color:#fff;" id="analyticsActiveUsers">847</div>
+                        <div style="font-size:0.6rem;color:#55efc4;" id="analyticsActiveUsersChange">↑ 5.2%</div>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;">
+                    <div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:12px;">
+                        <p style="color:rgba(255,255,255,0.4);font-size:0.7rem;margin-bottom:8px;">📊 Performance Chart</p>
+                        <div class="chart-container" id="chartContainer"></div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:12px;">
+                        <p style="color:rgba(255,255,255,0.4);font-size:0.7rem;margin-bottom:8px;">🏆 Top Performers</p>
+                        <div id="topPerformers" style="font-size:0.7rem;"></div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+                    <button class="btn btn-xs btn-outline" onclick="exportReport('csv')"><i class="fas fa-file-csv"></i> CSV</button>
+                    <button class="btn btn-xs btn-outline" onclick="exportReport('json')"><i class="fas fa-file-code"></i> JSON</button>
+                    <button class="btn btn-xs btn-outline" onclick="refreshAnalytics()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button class="btn btn-xs btn-outline" onclick="generateCryptoAnalytics()"><i class="fas fa-random"></i> Crypto Pattern</button>
+                    <div style="display:flex;gap:6px;align-items:center;margin-left:auto;">
+                        <span style="font-size:0.6rem;color:rgba(255,255,255,0.3);">Date:</span>
+                        <input type="date" class="glass-input" style="width:110px;padding:2px 6px;font-size:0.6rem;" id="dateFrom" onchange="updateAnalyticsDateRange()">
+                        <input type="date" class="glass-input" style="width:110px;padding:2px 6px;font-size:0.6rem;" id="dateTo" onchange="updateAnalyticsDateRange()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE: SETTINGS ===== -->
+        <div id="page-settings" style="display:none;">
+            <div class="glass-card col-span-4">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <div><h2>Settings</h2><p style="font-size:0.75rem;">Account preferences and security</p></div>
+                    <button class="btn btn-outline btn-sm" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div class="settings-grid">
+                    <div class="settings-group">
+                        <h4>👤 Profile</h4>
+                        <div class="settings-row"><span class="label">Username</span><span class="value" id="settingsUsername">proxynest_user</span></div>
+                        <div class="settings-row"><span class="label">Email</span><span class="value" id="settingsEmail">user@proxynest.com</span></div>
+                        <div class="settings-row"><span class="label">Plan</span><span class="value"><span class="badge badge-accent">Enterprise</span></span></div>
+                        <div class="settings-row"><span class="label">Member Since</span><span class="value" id="settingsMemberSince">January 2024</span></div>
+                    </div>
+                    <div class="settings-group">
+                        <h4>🔐 Security</h4>
+                        <div class="settings-row"><span class="label">Two-Factor Auth</span><div class="toggle-switch" onclick="toggle2FA()" id="twoFAToggle"><div class="toggle-knob"></div></div></div>
+                        <div class="settings-row"><span class="label">API Key</span><span class="value"><button class="btn btn-xs btn-primary" onclick="generateAPIKey()">Regenerate</button></span></div>
+                        <div class="settings-row"><span class="label">Session Timeout</span><span class="value"><select class="glass-input" style="width:80px;padding:2px 6px;font-size:0.65rem;" id="sessionTimeout" onchange="updateSetting('sessionTimeout')"><option value="30">30 min</option><option value="60" selected>1 hour</option><option value="120">2 hours</option></select></span></div>
+                    </div>
+                    <div class="settings-group">
+                        <h4>🔔 Notifications</h4>
+                        <div class="settings-row"><span class="label">Email</span><div class="toggle-switch active" onclick="toggleSetting('emailNotifications')"><div class="toggle-knob"></div></div></div>
+                        <div class="settings-row"><span class="label">Push</span><div class="toggle-switch" onclick="toggleSetting('pushNotifications')"><div class="toggle-knob"></div></div></div>
+                        <div class="settings-row"><span class="label">Proxy Alerts</span><div class="toggle-switch active" onclick="toggleSetting('proxyAlerts')"><div class="toggle-knob"></div></div></div>
+                        <div class="settings-row"><span class="label">Billing Updates</span><div class="toggle-switch active" onclick="toggleSetting('billingUpdates')"><div class="toggle-knob"></div></div></div>
+                    </div>
+                    <div class="settings-group">
+                        <h4>🌐 Preferences</h4>
+                        <div class="settings-row"><span class="label">Theme</span><span class="value"><select class="glass-input" style="width:90px;padding:2px 6px;font-size:0.65rem;" id="themeSelect" onchange="updateSetting('theme')"><option value="dark" selected>Dark</option><option value="light">Light</option><option value="system">System</option></select></span></div>
+                        <div class="settings-row"><span class="label">Language</span><span class="value"><select class="glass-input" style="width:90px;padding:2px 6px;font-size:0.65rem;" id="languageSelect" onchange="updateSetting('language')"><option value="en" selected>English</option><option value="es">Español</option><option value="fr">Français</option></select></span></div>
+                        <div class="settings-row"><span class="label">Currency</span><span class="value"><select class="glass-input" style="width:90px;padding:2px 6px;font-size:0.65rem;" id="currencySelect" onchange="updateSetting('currency')"><option value="USD" selected>USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></span></div>
+                        <div class="settings-row"><span class="label">Timezone</span><span class="value"><select class="glass-input" style="width:90px;padding:2px 6px;font-size:0.65rem;" id="timezoneSelect" onchange="updateSetting('timezone')"><option value="UTC">UTC</option><option value="EST" selected>EST</option><option value="PST">PST</option></select></span></div>
+                    </div>
+                </div>
+                <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+                    <button class="btn btn-sm btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button>
+                    <button class="btn btn-sm btn-danger" onclick="if(confirm('Are you sure? This will delete all your data.')){deleteAccount();}"><i class="fas fa-trash"></i> Delete Account</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE: DOCS ===== -->
+        <div id="page-docs" style="display:none;">
+            <div class="glass-card col-span-4">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <div><h2>Documentation</h2><p style="font-size:0.75rem;">Complete API reference with 100+ endpoints</p></div>
+                    <button class="btn btn-outline btn-sm" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:10px 0;">
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;cursor:pointer;" onclick="openModal('Authentication', generateAuthModal())">
+                        <h3 style="font-size:0.85rem;">🔐 Auth</h3>
+                        <p style="font-size:0.65rem;">API keys & 2FA</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;cursor:pointer;" onclick="openModal('Endpoints', generateEndpointsModal())">
+                        <h3 style="font-size:0.85rem;">📡 Endpoints</h3>
+                        <p style="font-size:0.65rem;">100+ APIs</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;cursor:pointer;" onclick="openModal('SDKs', generateSDKsModal())">
+                        <h3 style="font-size:0.85rem;">📦 SDKs</h3>
+                        <p style="font-size:0.65rem;">All languages</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;cursor:pointer;" onclick="openModal('Tutorials', generateTutorialsModal())">
+                        <h3 style="font-size:0.85rem;">📘 Tutorials</h3>
+                        <p style="font-size:0.65rem;">Step-by-step</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;cursor:pointer;" onclick="openModal('Webhooks', generateWebhooksModal())">
+                        <h3 style="font-size:0.85rem;">🔔 Webhooks</h3>
+                        <p style="font-size:0.65rem;">Real-time</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;cursor:pointer;" onclick="openModal('Rate Limits', generateRateLimitsModal())">
+                        <h3 style="font-size:0.85rem;">⚡ Limits</h3>
+                        <p style="font-size:0.65rem;">Usage policies</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;cursor:pointer;" onclick="openModal('Knowledge Base', generateKnowledgeBaseModal())">
+                        <h3 style="font-size:0.85rem;">📚 Knowledge</h3>
+                        <p style="font-size:0.65rem;">FAQs & guides</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;cursor:pointer;" onclick="openModal('Changelog', generateChangelogModal())">
+                        <h3 style="font-size:0.85rem;">📋 Changelog</h3>
+                        <p style="font-size:0.65rem;">Version history</p>
+                    </div>
+                </div>
+                <div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:12px;">
+                    <p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Quick Start</p>
+                    <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:8px;font-family:monospace;font-size:0.65rem;color:rgba(255,255,255,0.7);word-break:break-all;">
+                        curl -X GET "https://api.proxynest.com/v1/proxy?country=US&city=NewYork"
+                    </div>
+                    <button class="btn btn-xs btn-primary" style="margin-top:6px;" onclick="copyToClipboard('curl -X GET \"https://api.proxynest.com/v1/proxy?country=US&city=NewYork\"')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE: SUPPORT ===== -->
+        <div id="page-support" style="display:none;">
+            <div class="glass-card col-span-4">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <div><h2>Support Center</h2><p style="font-size:0.75rem;">Complete support with AI chat agent</p></div>
+                    <button class="btn btn-outline btn-sm" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:10px 0;">
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="startChat()">
+                        <i class="fas fa-comment" style="font-size:1.5rem;color:#6c5ce7;"></i>
+                        <h3 style="font-size:0.85rem;margin-top:4px;">AI Chat</h3>
+                        <p style="font-size:0.65rem;">24/7 intelligent support</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openModal('Email Support', generateEmailSupportModal())">
+                        <i class="fas fa-envelope" style="font-size:1.5rem;color:#00b894;"></i>
+                        <h3 style="font-size:0.85rem;margin-top:4px;">Email</h3>
+                        <p style="font-size:0.65rem;">24h response</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openModal('Knowledge Base', generateKnowledgeBaseModal())">
+                        <i class="fas fa-book" style="font-size:1.5rem;color:#fdcb6e;"></i>
+                        <h3 style="font-size:0.85rem;margin-top:4px;">Knowledge</h3>
+                        <p style="font-size:0.65rem;">FAQs & guides</p>
+                    </div>
+                </div>
+                <div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:12px;">
+                    <h4 style="font-size:0.85rem;">📋 Tickets</h4>
+                    <div id="ticketList" style="margin-top:6px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE: PRIVACY ===== -->
+        <div id="page-privacy" style="display:none;">
+            <div class="glass-card col-span-4">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <h2>Privacy Policy</h2>
+                    <button class="btn btn-outline btn-sm" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <p style="font-size:0.85rem;">We take your privacy seriously.</p>
+                <div style="margin:10px 0;padding:12px;background:rgba(255,255,255,0.02);border-radius:12px;">
+                    <p style="font-size:0.8rem;">ProxyNest is committed to protecting your privacy. We collect minimal data and never share your information with third parties.</p>
+                    <ul style="margin-top:8px;list-style:none;">
+                        <li style="padding:2px 0;font-size:0.75rem;">✅ GDPR Compliant</li>
+                        <li style="padding:2px 0;font-size:0.75rem;">✅ CCPA Compliant</li>
+                        <li style="padding:2px 0;font-size:0.75rem;">✅ 256-bit AES Encryption</li>
+                        <li style="padding:2px 0;font-size:0.75rem;">✅ Zero-logging policy</li>
+                    </ul>
+                </div>
+                <button class="btn btn-sm btn-primary" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i> Home</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT - COMPLETE v8.0 - ALL FEATURES                    -->
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        //  COMPLETE DATA LAYER
+        // ================================================================
+
+        var STORAGE_KEY = 'proxynest_v80_data';
+        
+        var COUNTRIES = [
+            { code: 'US', name: 'United States', cities: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'Austin', 'San Francisco', 'Miami', 'Atlanta', 'Denver', 'Seattle'], timezone: 'America/New_York', dialing: '+1', currency: 'USD', languages: ['English'], population: 331000000 },
+            { code: 'GB', name: 'United Kingdom', cities: ['London', 'Manchester', 'Birmingham', 'Leeds', 'Glasgow', 'Liverpool', 'Newcastle', 'Sheffield', 'Bristol', 'Nottingham'], timezone: 'Europe/London', dialing: '+44', currency: 'GBP', languages: ['English'], population: 67800000 },
+            { code: 'DE', name: 'Germany', cities: ['Berlin', 'Hamburg', 'Munich', 'Cologne', 'Frankfurt', 'Stuttgart', 'Düsseldorf', 'Leipzig', 'Dortmund', 'Essen'], timezone: 'Europe/Berlin', dialing: '+49', currency: 'EUR', languages: ['German'], population: 83100000 },
+            { code: 'FR', name: 'France', cities: ['Paris', 'Marseille', 'Lyon', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier', 'Bordeaux', 'Lille'], timezone: 'Europe/Paris', dialing: '+33', currency: 'EUR', languages: ['French'], population: 67300000 },
+            { code: 'JP', name: 'Japan', cities: ['Tokyo', 'Osaka', 'Nagoya', 'Sapporo', 'Fukuoka', 'Kobe', 'Kyoto', 'Kawasaki', 'Saitama', 'Hiroshima'], timezone: 'Asia/Tokyo', dialing: '+81', currency: 'JPY', languages: ['Japanese'], population: 125800000 },
+            { code: 'CA', name: 'Canada', cities: ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Edmonton', 'Ottawa', 'Winnipeg', 'Quebec City', 'Hamilton', 'Halifax'], timezone: 'America/Toronto', dialing: '+1', currency: 'CAD', languages: ['English', 'French'], population: 38000000 },
+            { code: 'AU', name: 'Australia', cities: ['Sydney', 'Melbourne', 'Brisbane', 'Perth', 'Adelaide', 'Gold Coast', 'Canberra', 'Newcastle', 'Wollongong', 'Hobart'], timezone: 'Australia/Sydney', dialing: '+61', currency: 'AUD', languages: ['English'], population: 25700000 },
+            { code: 'BR', name: 'Brazil', cities: ['São Paulo', 'Rio de Janeiro', 'Brasília', 'Salvador', 'Fortaleza', 'Belo Horizonte', 'Manaus', 'Curitiba', 'Recife', 'Porto Alegre'], timezone: 'America/Sao_Paulo', dialing: '+55', currency: 'BRL', languages: ['Portuguese'], population: 213000000 },
+            { code: 'IN', name: 'India', cities: ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow'], timezone: 'Asia/Kolkata', dialing: '+91', currency: 'INR', languages: ['Hindi', 'English'], population: 1380000000 },
+            { code: 'ZA', name: 'South Africa', cities: ['Cape Town', 'Johannesburg', 'Durban', 'Pretoria', 'Port Elizabeth', 'Bloemfontein', 'East London', 'Kimberley'], timezone: 'Africa/Johannesburg', dialing: '+27', currency: 'ZAR', languages: ['Zulu', 'Xhosa', 'Afrikaans', 'English'], population: 59300000 },
+            { code: 'EG', name: 'Egypt', cities: ['Cairo', 'Alexandria', 'Giza', 'Port Said', 'Suez', 'Luxor', 'Aswan', 'Mansoura'], timezone: 'Africa/Cairo', dialing: '+20', currency: 'EGP', languages: ['Arabic'], population: 102000000 },
+            { code: 'MX', name: 'Mexico', cities: ['Mexico City', 'Guadalajara', 'Monterrey', 'Puebla', 'Tijuana', 'León', 'Ciudad Juárez', 'Torreón'], timezone: 'America/Mexico_City', dialing: '+52', currency: 'MXN', languages: ['Spanish'], population: 128900000 },
+            { code: 'KR', name: 'South Korea', cities: ['Seoul', 'Busan', 'Incheon', 'Daegu', 'Daejeon', 'Gwangju', 'Suwon', 'Ulsan'], timezone: 'Asia/Seoul', dialing: '+82', currency: 'KRW', languages: ['Korean'], population: 51780000 },
+            { code: 'IT', name: 'Italy', cities: ['Rome', 'Milan', 'Naples', 'Turin', 'Palermo', 'Genoa', 'Bologna', 'Florence'], timezone: 'Europe/Rome', dialing: '+39', currency: 'EUR', languages: ['Italian'], population: 59550000 },
+            { code: 'ES', name: 'Spain', cities: ['Madrid', 'Barcelona', 'Valencia', 'Seville', 'Zaragoza', 'Málaga', 'Murcia', 'Palma'], timezone: 'Europe/Madrid', dialing: '+34', currency: 'EUR', languages: ['Spanish'], population: 47350000 },
+            { code: 'NL', name: 'Netherlands', cities: ['Amsterdam', 'Rotterdam', 'The Hague', 'Utrecht', 'Eindhoven', 'Groningen', 'Tilburg', 'Almere'], timezone: 'Europe/Amsterdam', dialing: '+31', currency: 'EUR', languages: ['Dutch'], population: 17400000 },
+            { code: 'SE', name: 'Sweden', cities: ['Stockholm', 'Gothenburg', 'Malmö', 'Uppsala', 'Västerås', 'Örebro', 'Linköping', 'Helsingborg'], timezone: 'Europe/Stockholm', dialing: '+46', currency: 'SEK', languages: ['Swedish'], population: 10350000 },
+            { code: 'NO', name: 'Norway', cities: ['Oslo', 'Bergen', 'Stavanger', 'Trondheim', 'Drammen', 'Fredrikstad', 'Kristiansand', 'Sandnes'], timezone: 'Europe/Oslo', dialing: '+47', currency: 'NOK', languages: ['Norwegian'], population: 5400000 },
+            { code: 'CN', name: 'China', cities: ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Chengdu', 'Wuhan', 'Xi\'an', 'Hangzhou'], timezone: 'Asia/Shanghai', dialing: '+86', currency: 'CNY', languages: ['Chinese'], population: 1412000000 },
+            { code: 'RU', name: 'Russia', cities: ['Moscow', 'Saint Petersburg', 'Novosibirsk', 'Yekaterinburg', 'Kazan', 'Nizhny Novgorod', 'Chelyabinsk', 'Samara'], timezone: 'Europe/Moscow', dialing: '+7', currency: 'RUB', languages: ['Russian'], population: 144100000 },
+        ];
+
+        var ISPS = [
+            'Comcast', 'AT&T', 'Verizon', 'Spectrum', 'Cox', 'CenturyLink', 'Frontier', 'Mediacom', 'Windstream', 'Optimum',
+            'BT Group', 'Virgin Media', 'TalkTalk', 'Sky UK', 'EE Limited', 'Plusnet', 'Zen Internet', 'Andrews & Arnold',
+            'Deutsche Telekom', 'Vodafone', '1&1', 'Telefonica', 'Unitymedia', 'M-net', 'NetCologne',
+            'Orange', 'SFR', 'Bouygues Telecom', 'Free', 'Numericable', 'Darty', 'Alice',
+            'SoftBank', 'KDDI', 'NTT Communications', 'Rakuten', 'au', 'docomo', 'So-net',
+            'Rogers', 'Bell', 'Telus', 'Shaw', 'Videotron', 'SaskTel', 'MTS', 'Tbaytel',
+            'Telstra', 'Optus', 'TPG', 'iiNet', 'Vocus', 'Aussie Broadband', 'Superloop',
+            'Claro', 'Vivo', 'TIM', 'Oi', 'Algar Telecom', 'Copel', 'Sercomtel',
+            'Reliance Jio', 'Airtel', 'Vi', 'BSNL', 'Tata Play', 'ACT Fibernet', 'Hathaway',
+            'Samsung Networks', 'LG Uplus', 'SK Telecom', 'KT Corporation', 'LG Networks',
+            'TIM', 'Fastweb', 'Vodafone Italia', 'WindTre', 'Tiscali', 'Liberty Global',
+            'Movistar', 'Orange Spain', 'Vodafone Spain', 'Masmovil', 'Euskaltel', 'R',
+            'KPN', 'Ziggo', 'T-Mobile Netherlands', 'Telfort', 'Caiway', 'Delta Fiber',
+            'Telia Company', 'Tele2', 'Telenor', '3 Sweden', 'Bahnhof', 'Com Hem',
+            'Telenor Norge', 'Ice.net', 'Altibox', 'Get', 'Ventelo', 'NextGenTel',
+            'China Telecom', 'China Unicom', 'China Mobile', 'China Netcom', 'CNC Group',
+            'Rostelecom', 'MTS Russia', 'Beeline', 'Megafon', 'Tele2 Russia', 'ER-Telecom'
+        ];
+
+        var PAYMENT_METHODS = [
+            { name: 'Visa', icon: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/visa.svg' },
+            { name: 'Mastercard', icon: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/mastercard.svg' },
+            { name: 'PayPal', icon: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/paypal.svg' },
+            { name: 'Stripe', icon: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stripe.svg' },
+            { name: 'Bitcoin', icon: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bitcoin.svg' },
+            { name: 'Ethereum', icon: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/ethereum.svg' },
+        ];
+
+        // ================================================================
+        //  CRYPTO HELPERS
+        // ================================================================
+
+        function cryptoRandom(min, max) {
+            try {
+                var array = new Uint32Array(1);
+                crypto.getRandomValues(array);
+                var random = array[0] / (0xffffffff + 1);
+                return Math.floor(random * (max - min + 1)) + min;
+            } catch (e) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+        }
+
+        function cryptoRandomFloat(min, max) {
+            try {
+                var array = new Uint32Array(1);
+                crypto.getRandomValues(array);
+                var random = array[0] / (0xffffffff + 1);
+                return random * (max - min) + min;
+            } catch (e) {
+                return Math.random() * (max - min) + min;
+            }
+        }
+
+        function generateSecureToken() {
+            try {
+                var array = new Uint32Array(4);
+                crypto.getRandomValues(array);
+                return array.map(function(v) { return v.toString(16).padStart(8, '0'); }).join('');
+            } catch (e) {
+                return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            }
+        }
+
+        function getCountryData(code) {
+            for (var i = 0; i < COUNTRIES.length; i++) {
+                if (COUNTRIES[i].code === code) return COUNTRIES[i];
+            }
+            return COUNTRIES[0];
+        }
+
+        function getRandomCountry() {
+            return COUNTRIES[cryptoRandom(0, COUNTRIES.length - 1)];
+        }
+
+        function getRandomCity(countryCode) {
+            var country = getCountryData(countryCode);
+            return country.cities[cryptoRandom(0, country.cities.length - 1)];
+        }
+
+        function getRandomISP() {
+            return ISPS[cryptoRandom(0, ISPS.length - 1)];
+        }
+
+        function generateExitNodeKey() {
+            return 'en_' + generateSecureToken().substring(0, 16);
+        }
+
+        function generateProxyWithPreciseData() {
+            var country = getRandomCountry();
+            var city = getRandomCity(country.code);
+            var isp = getRandomISP();
+            var types = ['residential', 'residential', 'residential', 'datacenter', 'mobile'];
+            var statuses = ['online', 'online', 'online', 'online', 'rotating'];
+            
+            return {
+                id: Date.now() + cryptoRandom(0, 999999),
+                ip: cryptoRandom(10, 255) + '.' + cryptoRandom(10, 255) + '.' + cryptoRandom(10, 255) + '.' + cryptoRandom(10, 255) + ':' + cryptoRandom(1000, 9999),
+                type: types[cryptoRandom(0, types.length - 1)],
+                country: country.code,
+                countryName: country.name,
+                city: city,
+                isp: isp,
+                status: statuses[cryptoRandom(0, statuses.length - 1)],
+                latency: cryptoRandom(5, 45) + 'ms',
+                exitNodeKey: generateExitNodeKey(),
+                createdAt: Date.now() - cryptoRandom(0, 86400000 * 30),
+                lastChecked: Date.now() - cryptoRandom(0, 3600000),
+                uptime: 95 + cryptoRandomFloat(0, 4.9),
+                successRate: 96 + cryptoRandomFloat(0, 3.9),
+                totalRequests: cryptoRandom(1000, 100000),
+                connectionCount: cryptoRandom(50, 500),
+                bandwidthUsed: cryptoRandom(100, 10000),
+                blacklisted: cryptoRandom(0, 100) > 95,
+                lastRotation: Date.now() - cryptoRandom(0, 86400000),
+                responseHistory: Array.from({length: 10}, function() { return cryptoRandom(5, 45); })
+            };
+        }
+
+        function generateInitialProxyPool(size) {
+            size = size || 300;
+            var proxies = [];
+            for (var i = 0; i < size; i++) {
+                proxies.push(generateProxyWithPreciseData());
+            }
+            return proxies;
+        }
+
+        // ================================================================
+        //  DATABASE
+        // ================================================================
+
+        function loadFromStorage() {
+            try {
+                var data = localStorage.getItem(STORAGE_KEY);
+                if (data) {
+                    var parsed = JSON.parse(data);
+                    if (parsed && parsed.proxies && parsed.proxies.length > 0) {
+                        return parsed;
+                    }
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        function saveToStorage(data) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {}
+        }
+
+        var defaultData = {
+            proxies: generateInitialProxyPool(300),
+            apiKeys: ['pk_live_9876543210abcdef'],
+            transactions: [],
+            tickets: [
+                { id: 'T-1024', subject: 'API connection issue', status: 'resolved', priority: 'high', date: Date.now() - 86400000, comments: [] },
+                { id: 'T-1025', subject: 'Billing question', status: 'in-progress', priority: 'medium', date: Date.now() - 43200000, comments: [] },
+            ],
+            subscriptions: [],
+            analytics: {
+                totalRequests: 2400000000,
+                successRate: 98.7,
+                avgResponse: 1.2,
+                activeUsers: 847,
+                dailyRequests: 34200,
+                monthlyRequests: 2400000000,
+                uptime: 99.97,
+                countries: 195,
+                activeIPs: 1000000,
+                latency: 18,
+                history: [],
+                ispCount: 2847
+            },
+            chatHistory: [],
+            settings: {
+                username: 'proxynest_user',
+                email: 'user@proxynest.com',
+                accountType: 'Enterprise',
+                memberSince: 'January 2024',
+                twoFA: false,
+                sessionTimeout: 60,
+                emailNotifications: true,
+                pushNotifications: false,
+                proxyAlerts: true,
+                billingUpdates: true,
+                theme: 'dark',
+                language: 'en',
+                timezone: 'EST',
+                currency: 'USD',
+                pricingCycle: 'monthly'
+            },
+            savedPaymentMethods: [],
+            invoices: [],
+            notifications: []
+        };
+
+        var DB = loadFromStorage();
+        if (!DB || !DB.proxies || DB.proxies.length < 50) {
+            DB = JSON.parse(JSON.stringify(defaultData));
+            saveToStorage(DB);
+        }
+
+        // ================================================================
+        //  STATE
+        // ================================================================
+
+        var currentPage = 1;
+        var pageSize = 8;
+        var filteredProxies = [];
+        var currentPageName = 'dashboard';
+        var notificationTimeout = null;
+        var apiKey = DB.apiKeys[0] || 'pk_live_9876543210abcdef';
+        var searchQuery = '';
+        var isLoadingMore = false;
+        var selectedProxies = [];
+        var pricingCycle = 'monthly';
+
+        // ================================================================
+        //  UI HELPERS
+        // ================================================================
+
+        function showNotification(message, type) {
+            type = type || 'info';
+            var notification = document.getElementById('notification');
+            var messageEl = document.getElementById('notificationMessage');
+            var icon = notification.querySelector('i');
+            
+            messageEl.textContent = message;
+            notification.className = 'notification show';
+            
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 
+                           type === 'error' ? 'fas fa-exclamation-circle' : 
+                           'fas fa-info-circle';
+            
+            if (notificationTimeout) clearTimeout(notificationTimeout);
+            
+            notificationTimeout = setTimeout(function() {
+                notification.classList.remove('show');
+            }, 3500);
+        }
+
+        function openModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('modal')?.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showNotification('📋 Copied!', 'success');
+                }).catch(function() {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            try {
+                var textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showNotification('📋 Copied!', 'success');
+            } catch (e) {
+                showNotification('❌ Failed to copy', 'error');
+            }
+        }
+
+        // ================================================================
+        //  NAVIGATION
+        // ================================================================
+
+        function navigateTo(page) {
+            var pages = ['dashboard', 'proxies', 'pricing', 'analytics', 'settings', 'docs', 'support', 'privacy'];
+            for (var i = 0; i < pages.length; i++) {
+                var p = pages[i];
+                var el = document.getElementById('page-' + p);
+                if (el) el.style.display = p === page ? 'block' : 'none';
+            }
+            var links = document.querySelectorAll('.nav-links a');
+            for (var j = 0; j < links.length; j++) {
+                var link = links[j];
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + page) {
+                    link.classList.add('active');
+                }
+            }
+            currentPageName = page;
+            window.location.hash = page;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (page === 'analytics') { renderChart(); updateTopPerformers(); }
+            if (page === 'proxies') updateProxyManagementList();
+            if (page === 'settings') loadSettings();
+            if (page === 'pricing') renderPricing();
+        }
+
+        // ================================================================
+        //  RENDER PROXIES
+        // ================================================================
+
+        function renderProxies() {
+            var list = document.getElementById('proxyList');
+            var count = document.getElementById('proxyCount');
+            var total = filteredProxies.length;
+            var start = (currentPage - 1) * pageSize;
+            var end = start + pageSize;
+            var pageItems = filteredProxies.slice(start, end);
+            
+            var countDisplay = document.getElementById('proxyCountDisplay');
+            if (countDisplay) countDisplay.textContent = total.toLocaleString();
+            
+            if (pageItems.length === 0) {
+                list.innerHTML = '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.4);font-size:0.85rem;">' +
+                    '<i class="fas fa-inbox" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>' +
+                    'No proxies found' +
+                '</div>';
+            } else {
+                var html = '';
+                for (var i = 0; i < pageItems.length; i++) {
+                    var p = pageItems[i];
+                    var isSelected = selectedProxies.indexOf(p.id) > -1;
+                    html += '<div class="proxy-item' + (isSelected ? ' selected' : '') + '" onclick="toggleProxySelection(' + p.id + ')">' +
+                        '<div style="display:flex;align-items:center;gap:8px;">' +
+                            '<input type="checkbox" class="proxy-checkbox" ' + (isSelected ? 'checked' : '') + ' onclick="event.stopPropagation();toggleProxySelection(' + p.id + ')">' +
+                            '<span class="proxy-ip">' + p.ip + '</span>' +
+                        '</div>' +
+                        '<div class="proxy-meta">' +
+                            '<span class="badge ' + (p.type === 'residential' ? 'badge-success' : p.type === 'datacenter' ? 'badge-warning' : 'badge-accent') + '">' + p.type + '</span>' +
+                            '<span class="proxy-location-detail"><i class="fas fa-map-pin"></i> ' + p.countryName + '</span>' +
+                            '<span class="proxy-isp">' + p.isp + '</span>' +
+                            '<span class="proxy-status"><span class="dot ' + (p.status === 'online' ? 'dot-green' : p.status === 'rotating' ? 'dot-yellow' : 'dot-red') + '"></span> ' + p.status + '</span>' +
+                            '<span>' + p.latency + '</span>' +
+                            '<span style="font-size:0.55rem;color:rgba(255,255,255,0.3);">' + p.uptime.toFixed(1) + '%</span>' +
+                            '<span class="exit-node-hidden"><i class="fas fa-lock"></i> 🔑</span>' +
+                            '<button class="btn btn-xs btn-primary" onclick="event.stopPropagation();copyToClipboard(\'' + p.ip + '\')"><i class="fas fa-copy"></i></button>' +
+                            '<button class="btn btn-xs btn-danger" onclick="event.stopPropagation();removeProxy(' + p.id + ')"><i class="fas fa-trash"></i></button>' +
+                            '<button class="btn btn-xs btn-success" onclick="event.stopPropagation();toggleProxyStatus(' + p.id + ')"><i class="fas fa-power-off"></i></button>' +
+                        '</div>' +
+                    '</div>';
+                }
+                list.innerHTML = html;
+            }
+            
+            count.textContent = 'Showing ' + pageItems.length + ' of ' + total.toLocaleString();
+            document.getElementById('currentPage').textContent = currentPage;
+            updateProxyManagementList();
+            updateInfiniteScroll();
+            updateBulkActions();
+        }
+
+        function toggleProxySelection(id) {
+            var idx = selectedProxies.indexOf(id);
+            if (idx > -1) {
+                selectedProxies.splice(idx, 1);
+            } else {
+                selectedProxies.push(id);
+            }
+            renderProxies();
+        }
+
+        function selectAllProxies() {
+            var start = (currentPage - 1) * pageSize;
+            var end = start + pageSize;
+            var pageItems = filteredProxies.slice(start, end);
+            for (var i = 0; i < pageItems.length; i++) {
+                if (selectedProxies.indexOf(pageItems[i].id) === -1) {
+                    selectedProxies.push(pageItems[i].id);
+                }
+            }
+            renderProxies();
+        }
+
+        function clearSelection() {
+            selectedProxies = [];
+            renderProxies();
+        }
+
+        function updateBulkActions() {
+            var el = document.getElementById('bulkActions');
+            if (!el) return;
+            if (selectedProxies.length > 0) {
+                el.style.display = 'flex';
+                document.getElementById('selectedCount').textContent = selectedProxies.length;
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        function updateInfiniteScroll() {
+            var trigger = document.getElementById('infiniteScrollTrigger');
+            var total = filteredProxies.length;
+            if (total > 0 && !isLoadingMore) {
+                trigger.style.display = 'block';
+                document.getElementById('loadMoreText').innerHTML = 'Load more proxies <i class="fas fa-chevron-down"></i>';
+            } else if (isLoadingMore) {
+                trigger.style.display = 'block';
+                document.getElementById('loadMoreText').innerHTML = '<span class="spinner"></span> Loading...';
+            } else {
+                trigger.style.display = 'none';
+            }
+        }
+
+        function loadMoreProxies() {
+            if (isLoadingMore) return;
+            isLoadingMore = true;
+            document.getElementById('loadMoreText').innerHTML = '<span class="spinner"></span> Loading...';
+            
+            setTimeout(function() {
+                var count = cryptoRandom(15, 30);
+                var newProxies = [];
+                for (var i = 0; i < count; i++) {
+                    newProxies.push(generateProxyWithPreciseData());
+                }
+                
+                DB.proxies = DB.proxies.concat(newProxies);
+                filteredProxies = DB.proxies.slice();
+                saveToStorage(DB);
+                renderProxies();
+                updateStats();
+                
+                isLoadingMore = false;
+                showNotification('✅ Loaded ' + count + ' more proxies!', 'success');
+                updateInfiniteScroll();
+            }, 600);
+        }
+
+        // ================================================================
+        //  SEARCH
+        // ================================================================
+
+        function searchAllProxies() {
+            var input = document.getElementById('globalSearchInput');
+            var query = input ? input.value.trim().toLowerCase() : '';
+            searchQuery = query;
+            
+            var resultInfo = document.getElementById('searchResultInfo');
+            if (!query) {
+                filteredProxies = DB.proxies.slice();
+                resultInfo.style.display = 'none';
+            } else {
+                filteredProxies = DB.proxies.filter(function(p) {
+                    return p.countryName.toLowerCase().includes(query) ||
+                        p.country.toLowerCase().includes(query) ||
+                        p.city.toLowerCase().includes(query) ||
+                        p.isp.toLowerCase().includes(query) ||
+                        p.ip.includes(query) ||
+                        p.type.includes(query) ||
+                        p.status.includes(query);
+                });
+                
+                if (filteredProxies.length > 0) {
+                    var countries = [];
+                    for (var i = 0; i < filteredProxies.length; i++) {
+                        var c = filteredProxies[i].countryName;
+                        if (countries.indexOf(c) === -1) countries.push(c);
+                    }
+                    var cities = [];
+                    for (var j = 0; j < filteredProxies.length && j < 5; j++) {
+                        var city = filteredProxies[j].city;
+                        if (cities.indexOf(city) === -1) cities.push(city);
+                    }
+                    resultInfo.innerHTML = '🔍 Found <strong>' + filteredProxies.length.toLocaleString() + '</strong> proxies in <strong>' + countries.join(', ') + '</strong>' +
+                        (cities.length > 0 ? ' · Cities: ' + cities.join(', ') : '');
+                    resultInfo.style.display = 'block';
+                } else {
+                    resultInfo.innerHTML = '🔍 No proxies found for "' + query + '"';
+                    resultInfo.style.display = 'block';
+                }
+            }
+            
+            currentPage = 1;
+            renderProxies();
+        }
+
+        function clearGlobalSearch() {
+            var input = document.getElementById('globalSearchInput');
+            if (input) input.value = '';
+            filteredProxies = DB.proxies.slice();
+            searchQuery = '';
+            var resultInfo = document.getElementById('searchResultInfo');
+            if (resultInfo) resultInfo.style.display = 'none';
+            currentPage = 1;
+            renderProxies();
+        }
+
+        // ================================================================
+        //  PROXY OPERATIONS
+        // ================================================================
+
+        function generateMoreProxies(count) {
+            count = count || 50;
+            showNotification('🔄 Generating ' + count + ' proxies...', 'info');
+            
+            var newProxies = [];
+            for (var i = 0; i < count; i++) {
+                newProxies.push(generateProxyWithPreciseData());
+            }
+            
+            DB.proxies = DB.proxies.concat(newProxies);
+            filteredProxies = DB.proxies.slice();
+            saveToStorage(DB);
+            renderProxies();
+            updateStats();
+            showNotification('✅ Generated ' + count + ' new proxies!', 'success');
+        }
+
+        function removeProxy(id) {
+            if (confirm('Remove this proxy?')) {
+                var proxy = null;
+                for (var i = 0; i < DB.proxies.length; i++) {
+                    if (DB.proxies[i].id === id) {
+                        proxy = DB.proxies[i];
+                        break;
+                    }
+                }
+                DB.proxies = DB.proxies.filter(function(p) { return p.id !== id; });
+                filteredProxies = DB.proxies.slice();
+                saveToStorage(DB);
+                renderProxies();
+                updateStats();
+                showNotification('🗑️ Proxy ' + (proxy ? proxy.ip : '') + ' removed.', 'info');
+            }
+        }
+
+        function toggleProxyStatus(id) {
+            for (var i = 0; i < DB.proxies.length; i++) {
+                if (DB.proxies[i].id === id) {
+                    DB.proxies[i].status = DB.proxies[i].status === 'online' ? 'offline' : 'online';
+                    break;
+                }
+            }
+            filteredProxies = DB.proxies.slice();
+            saveToStorage(DB);
+            renderProxies();
+            updateStats();
+        }
+
+        function refreshProxies() {
+            var count = cryptoRandom(5, 15);
+            var newProxies = [];
+            for (var i = 0; i < count; i++) {
+                newProxies.push(generateProxyWithPreciseData());
+            }
+            DB.proxies = DB.proxies.concat(newProxies);
+            filteredProxies = DB.proxies.slice();
+            saveToStorage(DB);
+            renderProxies();
+            updateStats();
+            showNotification('🔄 Added ' + count + ' new proxies.', 'success');
+        }
+
+        function rotateAllProxies() {
+            showNotification('🔄 Rotating all proxies...', 'info');
+            setTimeout(function() {
+                for (var i = 0; i < DB.proxies.length; i++) {
+                    DB.proxies[i].status = cryptoRandom(0, 100) > 20 ? 'online' : 'rotating';
+                    DB.proxies[i].latency = cryptoRandom(5, 45) + 'ms';
+                    DB.proxies[i].lastRotation = Date.now();
+                }
+                filteredProxies = DB.proxies.slice();
+                saveToStorage(DB);
+                renderProxies();
+                updateStats();
+                showNotification('✅ All proxies rotated!', 'success');
+            }, 1000);
+        }
+
+        // ================================================================
+        //  BULK OPERATIONS
+        // ================================================================
+
+        function bulkRotate() {
+            if (selectedProxies.length === 0) return;
+            showNotification('🔄 Rotating ' + selectedProxies.length + ' proxies...', 'info');
+            for (var i = 0; i < DB.proxies.length; i++) {
+                if (selectedProxies.indexOf(DB.proxies[i].id) > -1) {
+                    DB.proxies[i].status = cryptoRandom(0, 100) > 20 ? 'online' : 'rotating';
+                    DB.proxies[i].latency = cryptoRandom(5, 45) + 'ms';
+                    DB.proxies[i].lastRotation = Date.now();
+                }
+            }
+            saveToStorage(DB);
+            filteredProxies = DB.proxies.slice();
+            renderProxies();
+            showNotification('✅ ' + selectedProxies.length + ' proxies rotated!', 'success');
+            clearSelection();
+        }
+
+        function bulkDelete() {
+            if (selectedProxies.length === 0) return;
+            if (confirm('Delete ' + selectedProxies.length + ' proxies?')) {
+                DB.proxies = DB.proxies.filter(function(p) { return selectedProxies.indexOf(p.id) === -1; });
+                saveToStorage(DB);
+                filteredProxies = DB.proxies.slice();
+                renderProxies();
+                updateStats();
+                showNotification('🗑️ ' + selectedProxies.length + ' proxies deleted.', 'info');
+                clearSelection();
+            }
+        }
+
+        function bulkExport() {
+            if (selectedProxies.length === 0) return;
+            var data = DB.proxies.filter(function(p) { return selectedProxies.indexOf(p.id) > -1; });
+            var csv = 'IP,Type,Country,City,ISP,Status,Latency,Uptime,Success Rate\n';
+            for (var i = 0; i < data.length; i++) {
+                csv += data[i].ip + ',' + data[i].type + ',' + data[i].countryName + ',' + data[i].city + ',' + data[i].isp + ',' + data[i].status + ',' + data[i].latency + ',' + data[i].uptime.toFixed(1) + '%' + ',' + data[i].successRate.toFixed(1) + '%\n';
+            }
+            var blob = new Blob([csv], { type: 'text/csv' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'proxies-export-' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('📊 Exported ' + selectedProxies.length + ' proxies!', 'success');
+            clearSelection();
+        }
+
+        // ================================================================
+        //  FILTERS
+        // ================================================================
+
+        function filterProxies() {
+            var search = document.getElementById('proxySearch')?.value?.toLowerCase() || '';
+            var type = document.getElementById('proxyTypeFilter')?.value || 'all';
+            var status = document.getElementById('proxyStatusFilter')?.value || 'all';
+            var latency = document.getElementById('proxyLatencyFilter')?.value || 'all';
+            
+            filteredProxies = DB.proxies.filter(function(p) {
+                var matchSearch = p.ip.includes(search) || 
+                    p.countryName.toLowerCase().includes(search) || 
+                    p.country.toLowerCase().includes(search) ||
+                    p.city.toLowerCase().includes(search) ||
+                    p.isp.toLowerCase().includes(search);
+                var matchType = type === 'all' || p.type === type;
+                var matchStatus = status === 'all' || p.status === status;
+                var matchLatency = true;
+                var latencyMs = parseInt(p.latency);
+                if (latency === 'fast') matchLatency = latencyMs < 15;
+                else if (latency === 'medium') matchLatency = latencyMs >= 15 && latencyMs <= 30;
+                else if (latency === 'slow') matchLatency = latencyMs > 30;
+                return matchSearch && matchType && matchStatus && matchLatency;
+            });
+            
+            currentPage = 1;
+            renderProxies();
+        }
+
+        function applyFilters() { filterProxies(); showNotification('🔍 Filters applied.', 'info'); }
+
+        function clearFilters() {
+            var search = document.getElementById('proxySearch');
+            if (search) search.value = '';
+            var type = document.getElementById('proxyTypeFilter');
+            if (type) type.value = 'all';
+            var status = document.getElementById('proxyStatusFilter');
+            if (status) status.value = 'all';
+            var latency = document.getElementById('proxyLatencyFilter');
+            if (latency) latency.value = 'all';
+            filteredProxies = DB.proxies.slice();
+            currentPage = 1;
+            renderProxies();
+            showNotification('🧹 Filters cleared.', 'info');
+        }
+
+        function changePage(delta) {
+            var maxPage = Math.ceil(filteredProxies.length / pageSize);
+            var newPage = currentPage + delta;
+            if (newPage < 1 || newPage > maxPage) return;
+            currentPage = newPage;
+            renderProxies();
+        }
+
+        // ================================================================
+        //  PROXY MANAGEMENT LIST
+        // ================================================================
+
+        function updateProxyManagementList() {
+            var list = document.getElementById('proxyManagementList');
+            var count = document.getElementById('totalProxyCount');
+            if (!list) return;
+            
+            var displayProxies = filteredProxies.slice(0, 50);
+            var html = '';
+            for (var i = 0; i < displayProxies.length; i++) {
+                var p = displayProxies[i];
+                html += '<div class="proxy-item" style="padding:8px 10px;">' +
+                    '<div class="proxy-ip" style="font-size:0.8rem;">' + p.ip + '</div>' +
+                    '<div class="proxy-meta" style="font-size:0.7rem;">' +
+                        '<span class="badge ' + (p.type === 'residential' ? 'badge-success' : p.type === 'datacenter' ? 'badge-warning' : 'badge-accent') + '">' + p.type + '</span>' +
+                        '<span>' + p.countryName + '</span>' +
+                        '<span style="font-size:0.6rem;color:rgba(255,255,255,0.4);">' + p.city + '</span>' +
+                        '<span class="proxy-status"><span class="dot ' + (p.status === 'online' ? 'dot-green' : p.status === 'rotating' ? 'dot-yellow' : 'dot-red') + '"></span></span>' +
+                        '<span style="font-size:0.55rem;color:rgba(255,255,255,0.3);">' + p.uptime.toFixed(1) + '%</span>' +
+                        '<button class="btn btn-xs btn-danger" onclick="removeProxy(' + p.id + ')"><i class="fas fa-trash"></i></button>' +
+                    '</div>' +
+                '</div>';
+            }
+            list.innerHTML = html;
+            if (count) count.textContent = DB.proxies.length.toLocaleString();
+        }
+
+        // ================================================================
+        //  STATS
+        // ================================================================
+
+        function updateStats() {
+            var total = DB.proxies.length;
+            var online = 0;
+            var rotating = 0;
+            for (var i = 0; i < DB.proxies.length; i++) {
+                if (DB.proxies[i].status === 'online') online++;
+                else if (DB.proxies[i].status === 'rotating') rotating++;
+            }
+            
+            var totalDisplay = document.getElementById('totalProxyDisplay');
+            if (totalDisplay) totalDisplay.textContent = total.toLocaleString();
+            var activeIPs = document.getElementById('activeIPs');
+            if (activeIPs) activeIPs.textContent = total.toLocaleString();
+            var liveCount = document.getElementById('liveCount');
+            if (liveCount) liveCount.textContent = total.toLocaleString();
+            var footerProxies = document.getElementById('footerProxies');
+            if (footerProxies) footerProxies.textContent = total.toLocaleString();
+            var heroProxyCount = document.getElementById('heroProxyCount');
+            if (heroProxyCount) heroProxyCount.textContent = total.toLocaleString();
+            
+            var uniqueCountries = new Set();
+            var uniqueISPs = new Set();
+            for (var j = 0; j < DB.proxies.length; j++) {
+                uniqueCountries.add(DB.proxies[j].country);
+                uniqueISPs.add(DB.proxies[j].isp);
+            }
+            
+            var countryCount = document.getElementById('countryCount');
+            if (countryCount) countryCount.textContent = uniqueCountries.size;
+            var countryCountDisplay = document.getElementById('countryCountDisplay');
+            if (countryCountDisplay) countryCountDisplay.textContent = uniqueCountries.size;
+            var ispCountDisplay = document.getElementById('ispCountDisplay');
+            if (ispCountDisplay) ispCountDisplay.textContent = uniqueISPs.size;
+            
+            var stats = DB.analytics;
+            var uptimeDisplay = document.getElementById('uptimeDisplay');
+            if (uptimeDisplay) uptimeDisplay.textContent = stats.uptime + '%';
+            var uptimeStat = document.getElementById('uptimeStat');
+            if (uptimeStat) uptimeStat.textContent = stats.uptime + '%';
+            var avgLatency = document.getElementById('avgLatency');
+            if (avgLatency) avgLatency.textContent = stats.latency + 'ms';
+            var monthlyRequests = document.getElementById('monthlyRequests');
+            if (monthlyRequests) {
+                monthlyRequests.textContent = stats.monthlyRequests >= 1000000000 ? 
+                    (stats.monthlyRequests / 1000000000).toFixed(1) + 'B' : 
+                    (stats.monthlyRequests / 1000000).toFixed(1) + 'M';
+            }
+        }
+
+        // ================================================================
+        //  LIVE SIMULATION
+        // ================================================================
+
+        function setupLiveSimulation() {
+            setInterval(function() {
+                var load = cryptoRandom(60, 85);
+                var systemLoad = document.getElementById('systemLoad');
+                if (systemLoad) systemLoad.textContent = load + '%';
+                var loadPercentage = document.getElementById('loadPercentage');
+                if (loadPercentage) loadPercentage.textContent = load + '%';
+                
+                var today = cryptoRandom(30000, 45000);
+                var analyticsToday = document.getElementById('analyticsToday');
+                if (analyticsToday) analyticsToday.textContent = (today/1000).toFixed(1) + 'K';
+                
+                var success = cryptoRandomFloat(97, 99.5);
+                var analyticsSuccess = document.getElementById('analyticsSuccess');
+                if (analyticsSuccess) analyticsSuccess.textContent = success.toFixed(1) + '%';
+                DB.analytics.successRate = success;
+                
+                var speed = cryptoRandomFloat(0.8, 2.0);
+                var analyticsSpeed = document.getElementById('analyticsSpeed');
+                if (analyticsSpeed) analyticsSpeed.textContent = speed.toFixed(1) + 's';
+                
+                if (cryptoRandom(0, 100) > 70 && DB.proxies.length > 0) {
+                    var idx = cryptoRandom(0, DB.proxies.length - 1);
+                    if (DB.proxies[idx]) {
+                        DB.proxies[idx].status = ['online', 'online', 'online', 'rotating'][cryptoRandom(0, 3)];
+                        DB.proxies[idx].latency = cryptoRandom(5, 45) + 'ms';
+                        DB.proxies[idx].uptime = 95 + cryptoRandomFloat(0, 4.9);
+                    }
+                    filteredProxies = DB.proxies.slice();
+                    if (currentPageName === 'dashboard') renderProxies();
+                }
+                
+                updateAnalyticsPage();
+                updateApiRateLimit();
+            }, 3000);
+        }
+
+        function updateAnalyticsPage() {
+            var stats = DB.analytics;
+            var totalRequests = stats.totalRequests + cryptoRandom(100000, 500000);
+            stats.totalRequests = totalRequests;
+            
+            var analyticsTotalRequests = document.getElementById('analyticsTotalRequests');
+            if (analyticsTotalRequests) {
+                analyticsTotalRequests.textContent = totalRequests >= 1000000000 ? 
+                    (totalRequests/1000000000).toFixed(1) + 'B' : 
+                    (totalRequests/1000000).toFixed(1) + 'M';
+            }
+            var analyticsTotalRequestsChange = document.getElementById('analyticsTotalRequestsChange');
+            if (analyticsTotalRequestsChange) analyticsTotalRequestsChange.textContent = '↑ ' + cryptoRandomFloat(10, 15).toFixed(1) + '%';
+            
+            var success = cryptoRandomFloat(97, 99.5);
+            var analyticsSuccessRate = document.getElementById('analyticsSuccessRate');
+            if (analyticsSuccessRate) analyticsSuccessRate.textContent = success.toFixed(1) + '%';
+            var analyticsSuccessRateChange = document.getElementById('analyticsSuccessRateChange');
+            if (analyticsSuccessRateChange) analyticsSuccessRateChange.textContent = '↑ ' + cryptoRandomFloat(0.2, 0.5).toFixed(1) + '%';
+            
+            var response = cryptoRandomFloat(0.8, 2.0);
+            var analyticsAvgResponse = document.getElementById('analyticsAvgResponse');
+            if (analyticsAvgResponse) analyticsAvgResponse.textContent = response.toFixed(1) + 's';
+            var analyticsAvgResponseChange = document.getElementById('analyticsAvgResponseChange');
+            if (analyticsAvgResponseChange) analyticsAvgResponseChange.textContent = '↓ ' + cryptoRandomFloat(0.05, 0.2).toFixed(1) + 's';
+            
+            var users = cryptoRandom(700, 1000);
+            var analyticsActiveUsers = document.getElementById('analyticsActiveUsers');
+            if (analyticsActiveUsers) analyticsActiveUsers.textContent = users;
+            var analyticsActiveUsersChange = document.getElementById('analyticsActiveUsersChange');
+            if (analyticsActiveUsersChange) analyticsActiveUsersChange.textContent = '↑ ' + cryptoRandomFloat(3, 7).toFixed(1) + '%';
+        }
+
+        function updateApiRateLimit() {
+            var used = cryptoRandom(1000, 9000);
+            var limit = 10000;
+            var apiRateUsed = document.getElementById('apiRateUsed');
+            if (apiRateUsed) apiRateUsed.textContent = used.toLocaleString();
+            var apiRateLimit = document.getElementById('apiRateLimit');
+            if (apiRateLimit) apiRateLimit.textContent = limit.toLocaleString();
+            var apiRateProgress = document.getElementById('apiRateProgress');
+            if (apiRateProgress) apiRateProgress.style.width = (used/limit)*100 + '%';
+        }
+
+        function updateTopPerformers() {
+            var container = document.getElementById('topPerformers');
+            if (!container) return;
+            
+            var sorted = DB.proxies.slice().sort(function(a, b) { return (b.successRate || 0) - (a.successRate || 0); }).slice(0, 5);
+            var html = '';
+            for (var i = 0; i < sorted.length; i++) {
+                var p = sorted[i];
+                html += '<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);">' +
+                    '<span style="font-size:0.65rem;color:rgba(255,255,255,0.6);">' + p.ip + '</span>' +
+                    '<span style="font-size:0.65rem;color:#55efc4;">' + (p.successRate || 98).toFixed(1) + '%</span>' +
+                '</div>';
+            }
+            container.innerHTML = html || '<p style="font-size:0.65rem;color:rgba(255,255,255,0.3);">No data</p>';
+        }
+
+        function updateAnalyticsDateRange() {
+            showNotification('📊 Date range updated', 'info');
+            renderChart();
+        }
+
+        // ================================================================
+        //  CHART
+        // ================================================================
+
+        function renderChart() {
+            var container = document.getElementById('chartContainer');
+            if (!container) return;
+            
+            var data = [];
+            for (var i = 0; i < 14; i++) {
+                data.push(cryptoRandom(30, 90));
+            }
+            
+            var html = '';
+            for (var j = 0; j < data.length; j++) {
+                html += '<div class="chart-bar" style="height:' + data[j] + '%;"></div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function refreshAnalytics() {
+            showNotification('🔄 Refreshing analytics...', 'info');
+            setTimeout(function() {
+                renderChart();
+                updateTopPerformers();
+                updateAnalyticsPage();
+                showNotification('✅ Analytics refreshed!', 'success');
+            }, 500);
+        }
+
+        function generateCryptoAnalytics() {
+            showNotification('🔐 Generating crypto pattern...', 'info');
+            var array = new Uint32Array(2);
+            crypto.getRandomValues(array);
+            var seed = array[0] / (0xffffffff + 1);
+            
+            DB.analytics.totalRequests = 2000000000 + Math.floor(seed * 1000000000);
+            DB.analytics.successRate = 97 + cryptoRandomFloat(0, 2.5);
+            DB.analytics.avgResponse = 0.8 + cryptoRandomFloat(0, 1.2);
+            DB.analytics.activeUsers = 700 + cryptoRandom(0, 300);
+            DB.analytics.uptime = 99.9 + cryptoRandomFloat(0, 0.09);
+            
+            saveToStorage(DB);
+            updateStats();
+            renderChart();
+            updateAnalyticsPage();
+            showNotification('✅ Crypto pattern generated!', 'success');
+        }
+
+        // ================================================================
+        //  PRICING
+        // ================================================================
+
+        function renderPricing() {
+            var container = document.getElementById('pricingGrid');
+            if (!container) return;
+            
+            var plans = [
+                { key: 'starter', name: 'Starter', monthly: 49, annual: 470, features: ['1,000 proxies', '50 countries', '5 concurrent threads', 'Email support'], badge: 'badge-accent' },
+                { key: 'popular', name: 'Popular', monthly: 199, annual: 1910, features: ['10,000 proxies', '120 countries', '25 concurrent threads', 'Priority support', 'Full API access'], badge: 'badge-success', popular: true },
+                { key: 'enterprise', name: 'Enterprise', monthly: 999, annual: 9590, features: ['Unlimited proxies', '195 countries', 'Unlimited threads', '24/7 dedicated support', 'SLA 99.97%', 'Dedicated IPs'], badge: 'badge-warning' }
+            ];
+            
+            var html = '';
+            for (var i = 0; i < plans.length; i++) {
+                var p = plans[i];
+                var price = pricingCycle === 'monthly' ? p.monthly : p.annual;
+                var cycleLabel = pricingCycle === 'monthly' ? '/mo' : '/year';
+                var isPopular = p.popular || false;
+                html += '<div class="pricing-tier" style="' + (isPopular ? 'border-color:rgba(108,92,231,0.20);background:rgba(108,92,231,0.04);' : '') + '" onclick="openModal(\'' + p.name + ' Plan\', generatePricingModal(\'' + p.key + '\'))">' +
+                    '<span class="badge ' + p.badge + '">' + (isPopular ? 'Popular' : p.name) + '</span>' +
+                    '<div class="price">$' + price + ' <span>' + cycleLabel + '</span></div>' +
+                    '<div style="font-size:0.7rem;color:rgba(255,255,255,0.4);">' + (pricingCycle === 'monthly' ? 'Billed monthly' : 'Billed annually') + '</div>' +
+                    '<ul>' + p.features.map(function(f) { return '<li><i class="fas fa-check"></i> ' + f + '</li>'; }).join('') + 
+                    (pricingCycle === 'annual' ? '<li><i class="fas fa-check" style="color:#fdcb6e;"></i> Save 20% with annual billing</li>' : '') +
+                    '</ul>' +
+                    '<button class="btn ' + (isPopular ? 'btn-primary' : 'btn-outline') + '" style="width:100%;justify-content:center;font-size:0.7rem;padding:6px 12px;" onclick="event.stopPropagation();startCheckout(\'' + p.key + '\')">' +
+                        (isPopular ? 'Start Trial' : 'Get Started') +
+                    '</button>' +
+                '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function togglePricingCycle(cycle) {
+            pricingCycle = cycle;
+            DB.settings.pricingCycle = cycle;
+            saveToStorage(DB);
+            renderPricing();
+            var monthlyBtn = document.getElementById('monthlyBtn');
+            var annualBtn = document.getElementById('annualBtn');
+            if (monthlyBtn) monthlyBtn.className = 'btn btn-xs ' + (cycle === 'monthly' ? 'btn-primary' : 'btn-outline');
+            if (annualBtn) annualBtn.className = 'btn btn-xs ' + (cycle === 'annual' ? 'btn-primary' : 'btn-outline');
+        }
+
+        // ================================================================
+        //  PAYMENT
+        // ================================================================
+
+        function renderPaymentMethods() {
+            var container = document.getElementById('paymentMethods');
+            if (!container) return;
+            var html = '';
+            for (var i = 0; i < PAYMENT_METHODS.length; i++) {
+                var m = PAYMENT_METHODS[i];
+                html += '<div class="payment-method" onclick="processPayment(\'' + m.name + '\',\'starter\')">' +
+                    '<img src="' + m.icon + '" alt="' + m.name + '" style="width:32px;height:32px;" onerror="this.style.display=\'none\'">' +
+                    '<span class="name">' + m.name + '</span>' +
+                '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function startCheckout(plan) {
+            var plans = { starter: 49, popular: 199, enterprise: 999 };
+            var planNames = { starter: 'Starter', popular: 'Popular', enterprise: 'Enterprise' };
+            var price = pricingCycle === 'monthly' ? plans[plan] : plans[plan] * 12 * 0.8;
+            
+            showNotification('💳 Loading checkout...', 'info');
+            setTimeout(function() {
+                openModal('Payment Checkout', 
+                    '<h3>' + planNames[plan] + ' Plan</h3>' +
+                    '<p>Amount: $' + Math.round(price) + (pricingCycle === 'monthly' ? '/month' : '/year') + '</p>' +
+                    '<div style="margin:12px 0;">' +
+                        '<div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;margin:4px 0;font-size:0.8rem;">✅ 7-day free trial</div>' +
+                        '<div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;margin:4px 0;font-size:0.8rem;">✅ Cancel anytime</div>' +
+                        (pricingCycle === 'annual' ? '<div style="background:rgba(253,203,110,0.05);padding:8px;border-radius:8px;margin:4px 0;font-size:0.8rem;color:#fdcb6e;">✅ Save 20% with annual billing</div>' : '') +
+                    '</div>' +
+                    '<div class="payment-grid" style="grid-template-columns:repeat(2,1fr);">' +
+                    PAYMENT_METHODS.map(function(m) {
+                        return '<div class="payment-method" onclick="processPayment(\'' + m.name + '\',\'' + plan + '\')">' +
+                            '<img src="' + m.icon + '" alt="' + m.name + '" style="width:32px;height:32px;" onerror="this.style.display=\'none\'">' +
+                            '<span class="name">' + m.name + '</span>' +
+                        '</div>';
+                    }).join('') +
+                    '</div>' +
+                    '<p style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:8px;">🔒 Secured by Stripe · 256-bit encryption</p>' +
+                    '<button class="btn btn-xs btn-outline" style="margin-top:6px;" onclick="viewTransactionHistory()"><i class="fas fa-history"></i> History</button>'
+                );
+            }, 500);
+        }
+
+        function processPayment(method, plan) {
+            var plans = { starter: 49, popular: 199, enterprise: 999 };
+            var planNames = { starter: 'Starter', popular: 'Popular', enterprise: 'Enterprise' };
+            var price = pricingCycle === 'monthly' ? plans[plan] : plans[plan] * 12 * 0.8;
+            
+            showNotification('💳 Processing ' + method + '...', 'info');
+            
+            setTimeout(function() {
+                var transaction = {
+                    id: 'txn_' + generateSecureToken().substring(0, 10),
+                    method: method,
+                    plan: plan,
+                    planName: planNames[plan] || 'Plan',
+                    amount: Math.round(price),
+                    currency: 'USD',
+                    status: 'completed',
+                    date: Date.now(),
+                    receipt: 'rcpt_' + generateSecureToken().substring(0, 8),
+                    cycle: pricingCycle
+                };
+                DB.transactions.push(transaction);
+                
+                // Update subscription
+                var existingSub = null;
+                for (var i = 0; i < DB.subscriptions.length; i++) {
+                    if (DB.subscriptions[i].plan === plan) {
+                        existingSub = DB.subscriptions[i];
+                        break;
+                    }
+                }
+                if (existingSub) {
+                    existingSub.renewalDate = Date.now() + (pricingCycle === 'monthly' ? 30 : 365) * 24 * 60 * 60 * 1000;
+                    existingSub.status = 'active';
+                    existingSub.lastPayment = transaction.id;
+                } else {
+                    DB.subscriptions.push({
+                        plan: plan,
+                        planName: planNames[plan] || 'Plan',
+                        startDate: Date.now(),
+                        renewalDate: Date.now() + (pricingCycle === 'monthly' ? 30 : 365) * 24 * 60 * 60 * 1000,
+                        status: 'active',
+                        transactionId: transaction.id,
+                        lastPayment: transaction.id,
+                        cycle: pricingCycle
+                    });
+                }
+                
+                saveToStorage(DB);
+                closeModal();
+                showNotification('✅ Payment successful! ' + planNames[plan] + ' plan activated.', 'success');
+                
+                setTimeout(function() {
+                    openModal('Payment Confirmation', 
+                        '<div style="text-align:center;padding:20px;">' +
+                            '<i class="fas fa-check-circle" style="font-size:3rem;color:#55efc4;"></i>' +
+                            '<h2 style="margin:12px 0;">Payment Successful</h2>' +
+                            '<p>Your <strong>' + planNames[plan] + '</strong> plan is now active.</p>' +
+                            '<p style="font-size:0.7rem;color:rgba(255,255,255,0.4);margin:6px 0;">Transaction: ' + transaction.id + '</p>' +
+                            '<p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Receipt: ' + transaction.receipt + '</p>' +
+                            '<div style="display:flex;gap:6px;justify-content:center;margin-top:12px;">' +
+                                '<button class="btn btn-xs btn-primary" onclick="closeModal()">Continue</button>' +
+                                '<button class="btn btn-xs btn-outline" onclick="copyToClipboard(\'' + transaction.id + '\')"><i class="fas fa-copy"></i> Copy</button>' +
+                                '<button class="btn btn-xs btn-outline" onclick="viewTransactionHistory()"><i class="fas fa-history"></i> History</button>' +
+                            '</div>' +
+                        '</div>'
+                    );
+                }, 500);
+            }, 1500);
+        }
+
+        function viewTransactionHistory() {
+            if (DB.transactions.length === 0) {
+                showNotification('📭 No transactions.', 'info');
+                return;
+            }
+            var html = '<p>Your transactions (' + DB.transactions.length + ')</p><div style="max-height:250px;overflow-y:auto;margin:10px 0;">';
+            for (var i = DB.transactions.length - 1; i >= 0; i--) {
+                var t = DB.transactions[i];
+                html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.02);">' +
+                    '<div><div style="font-size:0.75rem;font-weight:600;">' + (t.planName || 'Plan') + '</div>' +
+                    '<div style="font-size:0.55rem;color:rgba(255,255,255,0.4);">' + t.method + ' · ' + new Date(t.date).toLocaleDateString() + (t.cycle === 'annual' ? ' · Annual' : '') + '</div></div>' +
+                    '<div style="text-align:right;"><div style="font-size:0.75rem;font-weight:600;color:#55efc4;">$' + t.amount + '</div>' +
+                    '<div style="font-size:0.55rem;color:rgba(255,255,255,0.4);">' + t.id + '</div></div>' +
+                '</div>';
+            }
+            html += '</div><button class="btn btn-xs btn-outline" onclick="closeModal()">Close</button>';
+            openModal('Transaction History', html);
+        }
+
+        // ================================================================
+        //  SETTINGS
+        // ================================================================
+
+        function loadSettings() {
+            var s = DB.settings || defaultData.settings;
+            var username = document.getElementById('settingsUsername');
+            if (username) username.textContent = s.username || 'proxynest_user';
+            var email = document.getElementById('settingsEmail');
+            if (email) email.textContent = s.email || 'user@proxynest.com';
+            var memberSince = document.getElementById('settingsMemberSince');
+            if (memberSince) memberSince.textContent = s.memberSince || 'January 2024';
+            
+            var twoFAToggle = document.getElementById('twoFAToggle');
+            if (twoFAToggle) {
+                twoFAToggle.className = 'toggle-switch' + (s.twoFA ? ' active' : '');
+            }
+            
+            var theme = document.getElementById('themeSelect');
+            if (theme) theme.value = s.theme || 'dark';
+            var language = document.getElementById('languageSelect');
+            if (language) language.value = s.language || 'en';
+            var currency = document.getElementById('currencySelect');
+            if (currency) currency.value = s.currency || 'USD';
+            var timezone = document.getElementById('timezoneSelect');
+            if (timezone) timezone.value = s.timezone || 'EST';
+            var sessionTimeout = document.getElementById('sessionTimeout');
+            if (sessionTimeout) sessionTimeout.value = s.sessionTimeout || 60;
+        }
+
+        function toggleSetting(setting) {
+            var s = DB.settings || defaultData.settings;
+            s[setting] = !s[setting];
+            DB.settings = s;
+            saveToStorage(DB);
+            loadSettings();
+            showNotification('⚙️ ' + setting + ' updated', 'info');
+        }
+
+        function toggle2FA() {
+            var s = DB.settings || defaultData.settings;
+            s.twoFA = !s.twoFA;
+            DB.settings = s;
+            saveToStorage(DB);
+            loadSettings();
+            showNotification(s.twoFA ? '🔐 2FA enabled' : '🔓 2FA disabled', 'info');
+        }
+
+        function updateSetting(setting) {
+            var el = document.getElementById(setting);
+            if (!el) {
+                el = document.getElementById(setting + 'Select');
+            }
+            if (!el) return;
+            var s = DB.settings || defaultData.settings;
+            s[setting] = el.value;
+            DB.settings = s;
+            saveToStorage(DB);
+        }
+
+        function saveSettings() {
+            var s = DB.settings || defaultData.settings;
+            var username = document.getElementById('settingsUsername');
+            if (username) s.username = username.textContent;
+            var email = document.getElementById('settingsEmail');
+            if (email) s.email = email.textContent;
+            DB.settings = s;
+            saveToStorage(DB);
+            showNotification('✅ Settings saved!', 'success');
+        }
+
+        function deleteAccount() {
+            if (confirm('⚠️ Delete all data? This cannot be undone.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                DB = JSON.parse(JSON.stringify(defaultData));
+                saveToStorage(DB);
+                filteredProxies = DB.proxies.slice();
+                renderProxies();
+                updateStats();
+                showNotification('🗑️ Account deleted.', 'error');
+                setTimeout(function() { window.location.reload(); }, 1000);
+            }
+        }
+
+        // ================================================================
+        //  API FUNCTIONS
+        // ================================================================
+
+        function generateAPIKey() {
+            var key = 'pk_live_' + generateSecureToken();
+            apiKey = key;
+            DB.apiKeys.push(key);
+            saveToStorage(DB);
+            showNotification('🔑 New API key generated!', 'success');
+            closeModal();
+            openModal('API Key Generated', 
+                '<p>Your new API key:</p>' +
+                '<code style="background:rgba(255,255,255,0.05);padding:10px;border-radius:8px;display:block;word-break:break-all;margin:10px 0;">' + key + '</code>' +
+                '<button class="btn btn-xs btn-primary" onclick="copyToClipboard(\'' + key + '\')"><i class="fas fa-copy"></i> Copy</button>' +
+                ' <button class="btn btn-xs btn-outline" onclick="closeModal()">Done</button>'
+            );
+        }
+
+        function generateAPIKeyModal() {
+            return '<p>Your API key:</p>' +
+                '<code style="background:rgba(255,255,255,0.05);padding:8px 10px;border-radius:8px;display:block;word-break:break-all;margin:10px 0;">' + apiKey + '</code>' +
+                '<button class="btn btn-xs btn-primary" onclick="copyToClipboard(\'' + apiKey + '\')"><i class="fas fa-copy"></i> Copy</button>' +
+                ' <button class="btn btn-xs btn-outline" onclick="generateAPIKey()"><i class="fas fa-sync-alt"></i> Regenerate</button>' +
+                ' <button class="btn btn-xs btn-outline" onclick="openModal(\'API Permissions\', generateAPIPermissionsModal())"><i class="fas fa-shield-alt"></i> Permissions</button>';
+        }
+
+        function generateAPIPermissionsModal() {
+            return '<p>API Key Permissions</p>' +
+                '<div style="margin:10px 0;">' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.8rem;"><span>Read proxies</span><span class="badge badge-success">Allowed</span></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.8rem;"><span>Write proxies</span><span class="badge badge-success">Allowed</span></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.8rem;"><span>Delete proxies</span><span class="badge badge-warning">Restricted</span></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.8rem;"><span>Billing access</span><span class="badge badge-danger">Denied</span></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.8rem;"><span>Webhook management</span><span class="badge badge-warning">Restricted</span></div>' +
+                '</div>' +
+                '<button class="btn btn-xs btn-outline" onclick="closeModal()">Close</button>';
+        }
+
+        function testAPI() {
+            showNotification('🔌 Testing API...', 'info');
+            var endpoints = ['/api/v1/proxy', '/api/v1/stats', '/api/v1/health', '/api/v1/countries'];
+            var randomEndpoint = endpoints[cryptoRandom(0, endpoints.length - 1)];
+            setTimeout(function() {
+                var status = cryptoRandom(0, 100) > 10 ? 200 : 500;
+                var responseTime = cryptoRandomFloat(0.02, 0.5);
+                if (status === 200) {
+                    showNotification('✅ API: 200 OK (' + randomEndpoint + ') [' + responseTime.toFixed(2) + 's]', 'success');
+                } else {
+                    showNotification('⚠️ API: 500 Error (' + randomEndpoint + ')', 'error');
+                }
+            }, 800);
+        }
+
+        function exportReport(format) {
+            format = format || 'json';
+            showNotification('📊 Generating ' + format.toUpperCase() + '...', 'info');
+            setTimeout(function() {
+                var uniqueCountries = new Set();
+                var uniqueISPs = new Set();
+                for (var i = 0; i < DB.proxies.length; i++) {
+                    uniqueCountries.add(DB.proxies[i].country);
+                    uniqueISPs.add(DB.proxies[i].isp);
+                }
+                var report = {
+                    timestamp: new Date().toISOString(),
+                    reportId: 'rpt_' + generateSecureToken().substring(0, 8),
+                    totalProxies: DB.proxies.length,
+                    activeProxies: DB.proxies.filter(function(p) { return p.status === 'online'; }).length,
+                    uniqueCountries: uniqueCountries.size,
+                    uniqueISPs: uniqueISPs.size,
+                    successRate: DB.analytics.successRate,
+                    uptime: DB.analytics.uptime,
+                    transactions: DB.transactions.length,
+                    avgLatency: DB.analytics.latency
+                };
+                
+                var content, filename, mimeType;
+                if (format === 'csv') {
+                    content = 'Metric,Value\n' + Object.entries(report).map(function(kv) { return kv[0] + ',' + kv[1]; }).join('\n');
+                    filename = 'report-' + new Date().toISOString().split('T')[0] + '.csv';
+                    mimeType = 'text/csv';
+                } else {
+                    content = JSON.stringify(report, null, 2);
+                    filename = 'report-' + new Date().toISOString().split('T')[0] + '.json';
+                    mimeType = 'application/json';
+                }
+                
+                var blob = new Blob([content], { type: mimeType });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                showNotification('✅ Report downloaded!', 'success');
+            }, 800);
+        }
+
+        function clearCache() {
+            if (confirm('Clear all cached data?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                DB = JSON.parse(JSON.stringify(defaultData));
+                saveToStorage(DB);
+                filteredProxies = DB.proxies.slice();
+                renderProxies();
+                updateStats();
+                renderChart();
+                showNotification('🧹 Cache cleared!', 'success');
+                closeModal();
+            }
+        }
+
+        // ================================================================
+        //  SUPPORT
+        // ================================================================
+
+        function submitSupport() {
+            var ticketId = 'T-' + (1000 + DB.tickets.length + 1);
+            DB.tickets.push({
+                id: ticketId,
+                subject: 'Support ticket',
+                status: 'new',
+                priority: 'medium',
+                date: Date.now(),
+                comments: []
+            });
+            saveToStorage(DB);
+            showNotification('🎫 Ticket submitted!', 'success');
+            closeModal();
+            updateTicketList();
+        }
+
+        function updateTicketList() {
+            var list = document.getElementById('ticketList');
+            if (!list) return;
+            var html = '';
+            for (var i = 0; i < DB.tickets.length; i++) {
+                var t = DB.tickets[i];
+                html += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.7rem;">' +
+                    '<span>' + t.id + ' - ' + t.subject + '</span>' +
+                    '<span class="badge ' + (t.status === 'resolved' ? 'badge-success' : t.status === 'new' ? 'badge-accent' : 'badge-warning') + '">' + t.status + '</span>' +
+                '</div>';
+            }
+            list.innerHTML = html || '<p style="font-size:0.7rem;color:rgba(255,255,255,0.3);">No tickets</p>';
+        }
+
+        function toggleNotifications() {
+            var count = DB.tickets.filter(function(t) { return t.status === 'new'; }).length;
+            var unread = count + DB.transactions.filter(function(t) { return !t.read; }).length;
+            var dot = document.getElementById('notificationDot');
+            if (dot) {
+                if (unread > 0) {
+                    dot.style.display = 'inline-block';
+                } else {
+                    dot.style.display = 'none';
+                }
+            }
+            showNotification('🔔 ' + (unread > 0 ? unread + ' unread' : 'No new') + ' notifications', 'info');
+        }
+
+        // ================================================================
+        //  CHAT
+        // ================================================================
+
+        function startChat() {
+            showNotification('💬 Starting chat...', 'info');
+            setTimeout(function() {
+                var history = '';
+                if (DB.chatHistory && DB.chatHistory.length > 0) {
+                    var recent = DB.chatHistory.slice(-4);
+                    for (var i = 0; i < recent.length; i++) {
+                        history += '<div class="chat-message user"><div class="sender">👤 You</div><div class="text">' + recent[i].user + '</div></div>';
+                        history += '<div class="chat-message bot"><div class="sender">🤖 AI Agent</div><div class="text">' + recent[i].bot + '</div></div>';
+                    }
+                }
+                openModal('AI Chat Agent', 
+                    '<div class="chat-container" id="chatContainer">' +
+                        '<div class="chat-message bot"><div class="sender">🤖 AI Agent</div><div class="text">Hello! How can I help you today? I can assist with proxy selection, API integration, billing, and more.</div></div>' +
+                        history +
+                    '</div>' +
+                    '<div style="display:flex;gap:6px;margin-top:8px;">' +
+                        '<input class="glass-input" placeholder="Type your question..." style="flex:1;padding:6px 10px;font-size:0.8rem;" id="chatInput" onkeypress="if(event.key===\'Enter\') sendChatMessage()">' +
+                        '<button class="btn btn-xs btn-primary" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>' +
+                        '<button class="btn btn-xs btn-outline" onclick="clearChat()"><i class="fas fa-eraser"></i></button>' +
+                    '</div>' +
+                    '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;">' +
+                        '<button class="btn btn-xs btn-outline" onclick="quickChatQuestion(\'How do I get a proxy?\')">Get proxy</button>' +
+                        '<button class="btn btn-xs btn-outline" onclick="quickChatQuestion(\'What is proxy rotation?\')">Rotation</button>' +
+                        '<button class="btn btn-xs btn-outline" onclick="quickChatQuestion(\'How much does it cost?\')">Pricing</button>' +
+                        '<button class="btn btn-xs btn-outline" onclick="quickChatQuestion(\'Troubleshooting API\')">API help</button>' +
+                        '<button class="btn btn-xs btn-outline" onclick="quickChatQuestion(\'Security best practices\')">Security</button>' +
+                    '</div>'
+                );
+                setTimeout(function() {
+                    var input = document.getElementById('chatInput');
+                    if (input) input.focus();
+                }, 100);
+            }, 500);
+        }
+
+        function sendChatMessage() {
+            var input = document.getElementById('chatInput');
+            var container = document.getElementById('chatContainer');
+            if (!input || !container || !input.value.trim()) return;
+            
+            var message = input.value.trim();
+            input.value = '';
+            
+            container.innerHTML += '<div class="chat-message user"><div class="sender">👤 You</div><div class="text">' + message + '</div></div>';
+            container.innerHTML += '<div class="chat-typing" id="typingIndicator">🤖 Typing...</div>';
+            container.scrollTop = container.scrollHeight;
+            
+            setTimeout(function() {
+                var typing = document.getElementById('typingIndicator');
+                if (typing) typing.remove();
+                var response = generateAIResponse(message);
+                container.innerHTML += '<div class="chat-message bot"><div class="sender">🤖 AI Agent</div><div class="text">' + response + '</div></div>';
+                container.scrollTop = container.scrollHeight;
+                
+                if (!DB.chatHistory) DB.chatHistory = [];
+                DB.chatHistory.push({ user: message, bot: response, timestamp: Date.now() });
+                saveToStorage(DB);
+            }, 800 + cryptoRandom(0, 800));
+        }
+
+        function quickChatQuestion(question) {
+            var input = document.getElementById('chatInput');
+            if (input) input.value = question;
+            sendChatMessage();
+        }
+
+        function clearChat() {
+            var container = document.getElementById('chatContainer');
+            if (container) {
+                container.innerHTML = '<div class="chat-message bot"><div class="sender">🤖 AI Agent</div><div class="text">Chat cleared. How can I help you?</div></div>';
+            }
+            DB.chatHistory = [];
+            saveToStorage(DB);
+        }
+
+        function generateAIResponse(message) {
+            var msg = message.toLowerCase();
+            
+            if (msg.includes('proxy') && (msg.includes('get') || msg.includes('how') || msg.includes('obtain'))) {
+                return 'To get a proxy:\n1. Use our API: GET /api/v1/proxy?country=US&city=NewYork\n2. Generate from the dashboard (click +50 or +100)\n3. Search for specific proxies by country or city\n4. Contact support for dedicated proxies\n\nWhich method would you like help with?';
+            }
+            if (msg.includes('rotation') || msg.includes('rotate')) {
+                return 'Proxy rotation automatically changes your IP address:\n• Manual: Click "Rotate All" in the dashboard\n• Automatic: Set rotation via API parameters\n• Bulk: Select multiple proxies and rotate together\n• Smart rotation: System automatically rotates based on performance\n\nNeed help setting up rotation?';
+            }
+            if (msg.includes('price') || msg.includes('cost') || msg.includes('pricing') || msg.includes('plan')) {
+                return '💰 Pricing Plans:\n• Starter: $49/mo - 1,000 proxies, 50 countries\n• Popular: $199/mo - 10,000 proxies, 120 countries\n• Enterprise: $999/mo - Unlimited proxies, 195 countries\n\n💡 Save 20% with annual billing!\nAll plans include 7-day free trial.';
+            }
+            if (msg.includes('api') && (msg.includes('trouble') || msg.includes('error') || msg.includes('issue'))) {
+                return '🔧 Common API issues:\n• Authentication Error: Check your API key header\n• Connection Issues: Verify network and firewall\n• Timeout Errors: Increase timeout or use batch\n• Rate Limits: Check usage in dashboard\n\nNeed step-by-step troubleshooting?';
+            }
+            if (msg.includes('security') || msg.includes('safe') || msg.includes('protect')) {
+                return '🔒 Security Best Practices:\n• Use HTTPS for all API calls\n• Rotate API keys regularly\n• Enable 2FA for account protection\n• Never share exit-node keys (they are hidden)\n• Monitor proxy usage regularly\n\nYour exit-node keys are locked and not copyable.';
+            }
+            if (msg.includes('payment') || msg.includes('pay') || msg.includes('card') || msg.includes('invoice')) {
+                return '💳 Payment Information:\n• Accepted: Visa, Mastercard, PayPal, Stripe, BTC, ETH\n• All payments are 256-bit encrypted\n• Invoices available in transaction history\n• Annual billing saves 20%\n• 7-day free trial for all plans\n\nNeed help with a specific payment?';
+            }
+            if (msg.includes('country') || msg.includes('location') || msg.includes('geo')) {
+                return '🌍 Geo-Targeting:\n• 195 countries available\n• Precise city-level targeting\n• ISP-specific filtering\n• Timezone and currency data included\n• Real-time availability tracking\n\nTry searching for a country in the search bar!';
+            }
+            if (msg.includes('isp') || msg.includes('provider')) {
+                return '🌐 ISP Targeting:\n• 2,847+ ISPs worldwide\n• Major providers: Comcast, AT&T, BT, Deutsche Telekom, Orange, SoftBank, and more\n• Filter by ISP in the Proxies page\n• Search for specific ISPs\n\nWhich ISP are you looking for?';
+            }
+            if (msg.includes('tutorial') || msg.includes('guide') || msg.includes('learn')) {
+                return '📘 Tutorials Available:\n• Getting Started - First proxy in 5 minutes\n• Proxy Rotation - Automatic strategies\n• Performance Optimization - Max throughput\n• Web Scraping - Best practices\n• API Integration - Connect your app\n• Security - Keep proxies secure\n\nWhich tutorial would you like?';
+            }
+            if (msg.includes('webhook') || msg.includes('event')) {
+                return '🔔 Webhook Events:\n• proxy.created - New proxy added\n• proxy.status_changed - Status updates\n• subscription.updated - Plan changes\n• payment.received - Successful payments\n• alert.triggered - System alerts\n• proxy.rotated - Rotation events\n\nConfigure webhooks in Settings > Webhooks.';
+            }
+            if (msg.includes('thanks') || msg.includes('thank')) {
+                return 'You\'re welcome! 😊\n\nIs there anything else I can help with?\n• Proxy selection\n• API integration\n• Billing questions\n• Technical support\n• Security guidance\n\nJust ask! 🤖';
+            }
+            if (msg.includes('subscription') || msg.includes('subscribe')) {
+                var sub = DB.subscriptions.length > 0 ? DB.subscriptions[DB.subscriptions.length - 1] : null;
+                if (sub) {
+                    return '📋 Your Subscription:\n• Plan: ' + sub.planName + '\n• Status: ' + sub.status + '\n• Renewal: ' + new Date(sub.renewalDate).toLocaleDateString() + '\n• Cycle: ' + (sub.cycle || 'monthly') + '\n\nTo manage your subscription, go to Pricing or contact support.';
+                }
+                return '📋 You don\'t have an active subscription. Choose a plan from Pricing to get started!';
+            }
+            
+            return '🤖 I can help you with:\n\n🔑 API Authentication - Keys & permissions\n🌐 Proxy Selection - Residential, datacenter, mobile\n💰 Billing - Plans, pricing, payments\n⚡ Performance - Optimization tips\n🔔 Webhooks - Real-time events\n🛡️ Security - Best practices\n📚 Tutorials - Learning resources\n📍 Geo-Targeting - Country, city, ISP\n💳 Payment - Methods & invoices\n📋 Subscriptions - Plan management\n\nWhat would you like to know?';
+        }
+
+        // ================================================================
+        //  ADVANCED FILTERS
+        // ================================================================
+
+        function generateAdvancedFiltersModal() {
+            return '<p>Advanced Filtering Options</p>' +
+                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;">' +
+                    '<div><label style="font-size:0.6rem;color:rgba(255,255,255,0.3);">Min Latency</label><input class="glass-input" type="number" placeholder="ms" style="padding:4px 8px;font-size:0.7rem;"></div>' +
+                    '<div><label style="font-size:0.6rem;color:rgba(255,255,255,0.3);">Max Latency</label><input class="glass-input" type="number" placeholder="ms" style="padding:4px 8px;font-size:0.7rem;"></div>' +
+                    '<div><label style="font-size:0.6rem;color:rgba(255,255,255,0.3);">Min Uptime %</label><input class="glass-input" type="number" placeholder="95" style="padding:4px 8px;font-size:0.7rem;"></div>' +
+                    '<div><label style="font-size:0.6rem;color:rgba(255,255,255,0.3);">Min Success %</label><input class="glass-input" type="number" placeholder="95" style="padding:4px 8px;font-size:0.7rem;"></div>' +
+                    '<div><label style="font-size:0.6rem;color:rgba(255,255,255,0.3);">Created After</label><input class="glass-input" type="date" style="padding:4px 8px;font-size:0.7rem;"></div>' +
+                    '<div><label style="font-size:0.6rem;color:rgba(255,255,255,0.3);">Created Before</label><input class="glass-input" type="date" style="padding:4px 8px;font-size:0.7rem;"></div>' +
+                '</div>' +
+                '<button class="btn btn-xs btn-primary" onclick="showNotification(\'✅ Advanced filters applied!\',\'success\');closeModal();"><i class="fas fa-filter"></i> Apply</button>';
+        }
+
+        // ================================================================
+        //  MODAL GENERATORS
+        // ================================================================
+
+        function generateCountryStatsModal() {
+            var countryMap = {};
+            for (var i = 0; i < DB.proxies.length; i++) {
+                var p = DB.proxies[i];
+                if (!countryMap[p.country]) {
+                    countryMap[p.country] = { name: p.countryName, count: 0 };
+                }
+                countryMap[p.country].count++;
+            }
+            var sorted = Object.entries(countryMap).sort(function(a, b) { return b[1].count - a[1].count; });
+            
+            var html = '<p>Proxies in <strong>' + sorted.length + '</strong> countries</p><div style="max-height:200px;overflow-y:auto;margin:8px 0;">';
+            for (var j = 0; j < Math.min(sorted.length, 30); j++) {
+                var c = sorted[j];
+                html += '<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.75rem;">' +
+                    '<span><span class="badge badge-accent">' + c[0] + '</span> ' + c[1].name + '</span>' +
+                    '<span style="color:rgba(255,255,255,0.5);">' + c[1].count.toLocaleString() + '</span>' +
+                '</div>';
+            }
+            html += '</div><div style="margin-top:6px;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;">' +
+                '<div style="display:flex;justify-content:space-between;font-size:0.7rem;"><span>Coverage</span><span style="color:#55efc4;">' + Math.round((sorted.length / 195) * 100) + '%</span></div>' +
+                '<div class="progress-bar"><div class="fill" style="width:' + Math.round((sorted.length / 195) * 100) + '%;"></div></div></div>';
+            return html;
+        }
+
+        function generateUptimeModal() {
+            return '<p><strong>' + DB.analytics.uptime + '%</strong> uptime over 30 days</p>' +
+                '<div style="height:80px;background:rgba(255,255,255,0.02);border-radius:10px;padding:10px;margin:8px 0;">' +
+                '<div style="display:flex;gap:3px;height:60px;align-items:flex-end;">' +
+                Array.from({length: 30}, function() {
+                    var h = 60 + cryptoRandom(0, 20);
+                    var down = cryptoRandom(0, 100) > 95;
+                    return '<div style="flex:1;background:' + (down ? '#ff6b6b' : '#55efc4') + ';height:' + h + '%;border-radius:2px;"></div>';
+                }).join('') +
+                '</div></div><p style="font-size:0.65rem;color:rgba(255,255,255,0.3);">Last incident: ' + cryptoRandom(0, 30) + ' days ago</p>';
+        }
+
+        function generateVolumeModal() {
+            var monthly = DB.analytics.monthlyRequests;
+            var display = monthly >= 1000000000 ? (monthly/1000000000).toFixed(1) + 'B' : (monthly/1000000).toFixed(1) + 'M';
+            return '<p><strong>' + display + '</strong> requests this month</p>' +
+                '<div class="progress-bar"><div class="fill" style="width:' + Math.min(100, (monthly / 3000000000) * 100) + '%;"></div></div>' +
+                '<p style="font-size:0.65rem;color:rgba(255,255,255,0.3);">' + Math.round((monthly / 3000000000) * 100) + '% used</p>' +
+                '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px;">' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:4px;border-radius:6px;text-align:center;"><div style="font-size:0.5rem;color:rgba(255,255,255,0.3);">Week</div><div style="font-size:0.8rem;font-weight:600;">' + Math.floor(monthly/4).toLocaleString() + '</div></div>' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:4px;border-radius:6px;text-align:center;"><div style="font-size:0.5rem;color:rgba(255,255,255,0.3);">Month</div><div style="font-size:0.8rem;font-weight:600;">' + monthly.toLocaleString() + '</div></div>' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:4px;border-radius:6px;text-align:center;"><div style="font-size:0.5rem;color:rgba(255,255,255,0.3);">Projected</div><div style="font-size:0.8rem;font-weight:600;color:#55efc4;">' + (monthly * 1.12).toLocaleString() + '</div></div>' +
+                '</div>';
+        }
+
+        function generateLoadModal() {
+            var load = cryptoRandom(60, 85);
+            return '<p>Current load: <strong>' + load + '%</strong></p>' +
+                '<div class="progress-bar"><div class="fill" style="width:' + load + '%;background:linear-gradient(90deg,' + (load < 70 ? '#55efc4' : '#fdcb6e') + ',#ff6b6b);"></div></div>' +
+                '<p style="font-size:0.65rem;color:rgba(255,255,255,0.3);">' + load + '% capacity · ' + (100 - load) + '% available</p>' +
+                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;">' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:4px;border-radius:6px;text-align:center;"><div style="font-size:0.5rem;color:rgba(255,255,255,0.3);">CPU</div><div style="font-size:0.7rem;font-weight:600;">' + cryptoRandom(40, 80) + '%</div></div>' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:4px;border-radius:6px;text-align:center;"><div style="font-size:0.5rem;color:rgba(255,255,255,0.3);">Memory</div><div style="font-size:0.7rem;font-weight:600;">' + cryptoRandom(50, 80) + '%</div></div>' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:4px;border-radius:6px;text-align:center;"><div style="font-size:0.5rem;color:rgba(255,255,255,0.3);">Network</div><div style="font-size:0.7rem;font-weight:600;">' + cryptoRandom(30, 60) + '%</div></div>' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:4px;border-radius:6px;text-align:center;"><div style="font-size:0.5rem;color:rgba(255,255,255,0.3);">Disk I/O</div><div style="font-size:0.7rem;font-weight:600;">' + cryptoRandom(20, 45) + '%</div></div>' +
+                '</div>';
+        }
+
+        function generatePricingModal(plan) {
+            var plans = {
+                starter: { name: 'Starter', price: pricingCycle === 'monthly' ? 49 : 470, features: ['1,000 proxies', '50 countries', '5 concurrent threads', 'Email support'] },
+                popular: { name: 'Popular', price: pricingCycle === 'monthly' ? 199 : 1910, features: ['10,000 proxies', '120 countries', '25 concurrent threads', 'Priority support', 'Full API access'] },
+                enterprise: { name: 'Enterprise', price: pricingCycle === 'monthly' ? 999 : 9590, features: ['Unlimited proxies', '195 countries', 'Unlimited threads', '24/7 dedicated support', 'SLA 99.97%', 'Dedicated IPs'] }
+            };
+            var data = plans[plan];
+            return '<h3>' + data.name + ' Plan</h3>' +
+                '<div style="font-size:2rem;font-weight:800;color:#fff;margin:6px 0;">$' + data.price + ' <span style="font-size:0.8rem;font-weight:400;color:rgba(255,255,255,0.4);">' + (pricingCycle === 'monthly' ? '/month' : '/year') + '</span></div>' +
+                (pricingCycle === 'annual' ? '<span class="badge badge-success" style="font-size:0.5rem;">Save 20% with annual billing</span>' : '') +
+                '<ul style="list-style:none;padding:0;text-align:left;margin-top:8px;">' +
+                data.features.map(function(f) { return '<li style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.8rem;"><i class="fas fa-check" style="color:#55efc4;margin-right:6px;"></i> ' + f + '</li>'; }).join('') +
+                '</ul><button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;font-size:0.8rem;padding:8px 16px;" onclick="startCheckout(\'' + plan + '\')"><i class="fas fa-credit-card"></i> Subscribe Now</button>' +
+                '<p style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:6px;">7-day free trial · Cancel anytime</p>';
+        }
+
+        function generateAPIToolsModal() {
+            return '<p>Quick API endpoints for proxy management.</p>' +
+                '<div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;margin:6px 0;font-size:0.7rem;color:rgba(255,255,255,0.7);">' +
+                    '<div style="padding:2px 0;">GET /api/v1/proxy?country=US&city=NewYork</div>' +
+                    '<div style="padding:2px 0;">GET /api/v1/proxy?isp=Comcast</div>' +
+                    '<div style="padding:2px 0;">POST /api/v1/proxy/generate</div>' +
+                    '<div style="padding:2px 0;">GET /api/v1/stats</div>' +
+                    '<div style="padding:2px 0;">GET /api/v1/health</div>' +
+                    '<div style="padding:2px 0;">GET /api/v1/countries</div>' +
+                    '<div style="padding:2px 0;">POST /api/v1/proxy/validate</div>' +
+                '</div>' +
+                '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+                    '<button class="btn btn-xs btn-primary" onclick="testAPI()"><i class="fas fa-play"></i> Test</button>' +
+                    '<button class="btn btn-xs btn-outline" onclick="copyToClipboard(\'https://api.proxynest.com/v1\')"><i class="fas fa-copy"></i> Base URL</button>' +
+                '</div>' +
+                '<div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:6px 10px;margin-top:6px;font-size:0.6rem;color:rgba(255,255,255,0.3);">AUTH: Bearer ' + apiKey + '</div>';
+        }
+
+        function generateAnalyticsModal() {
+            return '<p>Real-time usage & performance metrics.</p>' +
+                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;">' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;"><div class="text-muted">Today</div><div style="font-size:1.2rem;font-weight:700;color:#fff;">' + (DB.analytics.dailyRequests/1000).toFixed(1) + 'K</div></div>' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;"><div class="text-muted">Success</div><div style="font-size:1.2rem;font-weight:700;color:#55efc4;">' + DB.analytics.successRate + '%</div></div>' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;"><div class="text-muted">Speed</div><div style="font-size:1.2rem;font-weight:700;color:#fff;">' + DB.analytics.avgResponse + 's</div></div>' +
+                    '<div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;"><div class="text-muted">Users</div><div style="font-size:1.2rem;font-weight:700;color:#fff;">' + DB.analytics.activeUsers + '</div></div>' +
+                '</div>' +
+                '<button class="btn btn-xs btn-outline" onclick="exportReport()"><i class="fas fa-download"></i> Export</button>';
+        }
+
+        function generateQuickActionsModal() {
+            return '<div style="display:flex;flex-direction:column;gap:6px;">' +
+                '<button class="btn btn-xs btn-primary" onclick="generateMoreProxies(100)"><i class="fas fa-plus"></i> Generate 100</button>' +
+                '<button class="btn btn-xs btn-primary" onclick="generateMoreProxies(500)"><i class="fas fa-plus-circle"></i> Generate 500</button>' +
+                '<button class="btn btn-xs btn-success" onclick="rotateAllProxies()"><i class="fas fa-sync"></i> Rotate All</button>' +
+                '<button class="btn btn-xs btn-success" onclick="generateAPIKey()"><i class="fas fa-key"></i> New API Key</button>' +
+                '<button class="btn btn-xs btn-outline" onclick="exportReport(\'csv\')"><i class="fas fa-file-csv"></i> Export CSV</button>' +
+                '<button class="btn btn-xs btn-outline" onclick="viewTransactionHistory()"><i class="fas fa-history"></i> History</button>' +
+                '<button class="btn btn-xs btn-danger" onclick="clearCache()"><i class="fas fa-trash"></i> Clear Cache</button>' +
+            '</div>';
+        }
+
+        function generateSystemStatusModal() {
+            var services = [
+                { name: 'API Gateway', status: 'operational' },
+                { name: 'Proxy Pool', status: 'operational' },
+                { name: 'Billing System', status: 'operational' },
+                { name: 'Database', status: cryptoRandom(0, 100) > 90 ? 'degraded' : 'operational' },
+                { name: 'Cache Layer', status: 'operational' },
+                { name: 'Load Balancer', status: 'operational' },
+                { name: 'Payment Processor', status: 'operational' },
+                { name: 'Webhook Service', status: 'operational' },
+            ];
+            var html = '<p>All systems operational</p><div style="margin:8px 0;">';
+            for (var i = 0; i < services.length; i++) {
+                var s = services[i];
+                html += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.75rem;">' +
+                    '<span>' + s.name + '</span>' +
+                    '<span class="badge ' + (s.status === 'operational' ? 'badge-success' : 'badge-warning') + '">' + s.status.charAt(0).toUpperCase() + s.status.slice(1) + '</span>' +
+                '</div>';
+            }
+            html += '</div><div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;text-align:center;font-size:0.7rem;color:#55efc4;">✅ All Systems Operational</div>';
+            return html;
+        }
+
+        function generateNetworkStatusModal() {
+            var regions = [
+                { name: 'North America', latency: cryptoRandom(5, 20) + 'ms', status: 'online' },
+                { name: 'Europe', latency: cryptoRandom(5, 15) + 'ms', status: 'online' },
+                { name: 'Asia', latency: cryptoRandom(15, 35) + 'ms', status: cryptoRandom(0, 100) > 85 ? 'rotating' : 'online' },
+                { name: 'South America', latency: cryptoRandom(10, 25) + 'ms', status: 'online' },
+                { name: 'Africa', latency: cryptoRandom(30, 60) + 'ms', status: 'online' },
+                { name: 'Oceania', latency: cryptoRandom(20, 40) + 'ms', status: cryptoRandom(0, 100) > 85 ? 'rotating' : 'online' },
+            ];
+            var html = '<p>Global proxy network status</p><div style="margin:8px 0;">';
+            for (var i = 0; i < regions.length; i++) {
+                var r = regions[i];
+                html += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.75rem;">' +
+                    '<span>' + r.name + '</span>' +
+                    '<span style="color:' + (r.status === 'online' ? '#55efc4' : '#fdcb6e') + ';">● ' + r.latency + '</span>' +
+                '</div>';
+            }
+            html += '</div><div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;text-align:center;font-size:0.7rem;">' +
+                '<span style="color:rgba(255,255,255,0.3);">Global Avg:</span> <span style="font-weight:600;">' + cryptoRandom(10, 30) + 'ms</span></div>';
+            return html;
+        }
+
+        function generateSupportModal() {
+            return '<p>How can we help you?</p>' +
+                '<input class="glass-input" placeholder="Your email" style="margin:4px 0;padding:6px 10px;font-size:0.8rem;">' +
+                '<input class="glass-input" placeholder="Subject" style="margin:4px 0;padding:6px 10px;font-size:0.8rem;">' +
+                '<textarea class="glass-input" placeholder="Describe your issue..." style="margin:4px 0;min-height:80px;padding:6px 10px;font-size:0.8rem;"></textarea>' +
+                '<select class="glass-input" style="margin:4px 0;padding:6px 10px;font-size:0.8rem;"><option>Technical Issue</option><option>Billing Question</option><option>Feature Request</option><option>Other</option></select>' +
+                '<select class="glass-input" style="margin:4px 0;padding:6px 10px;font-size:0.8rem;"><option value="low">Low Priority</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="critical">Critical</option></select>' +
+                '<button class="btn btn-xs btn-primary" style="margin-top:6px;" onclick="submitSupport()"><i class="fas fa-paper-plane"></i> Submit</button>';
+        }
+
+        function generateEmailSupportModal() {
+            return '<p>Send us an email:</p>' +
+                '<input class="glass-input" placeholder="Your email" style="margin:4px 0;padding:6px 10px;font-size:0.8rem;">' +
+                '<textarea class="glass-input" placeholder="Describe your issue..." style="margin:4px 0;min-height:80px;padding:6px 10px;font-size:0.8rem;"></textarea>' +
+                '<button class="btn btn-xs btn-primary" onclick="submitSupport()"><i class="fas fa-paper-plane"></i> Send</button>';
+        }
+
+        function generateAuthModal() {
+            return '<p>Authorization Header:</p>' +
+                '<code style="background:rgba(0,0,0,0.2);padding:6px 10px;border-radius:6px;display:block;margin:6px 0;font-size:0.7rem;">Authorization: Bearer ' + apiKey + '</code>' +
+                '<button class="btn btn-xs btn-primary" onclick="copyToClipboard(\'Bearer ' + apiKey + '\')"><i class="fas fa-copy"></i> Copy</button>' +
+                ' <button class="btn btn-xs btn-outline" onclick="openModal(\'API Permissions\', generateAPIPermissionsModal())"><i class="fas fa-shield-alt"></i> Permissions</button>';
+        }
+
+        function generateEndpointsModal() {
+            var endpoints = [
+                'GET /api/v1/proxy', 'POST /api/v1/proxy/batch', 'GET /api/v1/stats',
+                'GET /api/v1/health', 'GET /api/v1/countries', 'GET /api/v1/types',
+                'POST /api/v1/webhooks', 'GET /api/v1/webhooks', 'DELETE /api/v1/webhooks/:id',
+                'GET /api/v1/subscriptions', 'POST /api/v1/subscriptions', 'DELETE /api/v1/subscriptions/:id',
+                'GET /api/v1/transactions', 'GET /api/v1/transactions/:id', 'GET /api/v1/analytics',
+                'POST /api/v1/proxy/rotate', 'POST /api/v1/proxy/refresh', 'GET /api/v1/proxy/:id',
+                'DELETE /api/v1/proxy/:id', 'PUT /api/v1/proxy/:id', 'GET /api/v1/status',
+                'POST /api/v1/auth/refresh', 'GET /api/v1/limits', 'POST /api/v1/report',
+                'GET /api/v1/proxy/search', 'POST /api/v1/proxy/generate', 'GET /api/v1/proxy/country/:code',
+                'GET /api/v1/proxy/isp/:name', 'GET /api/v1/proxy/city/:city', 'POST /api/v1/proxy/validate',
+                'GET /api/v1/websocket', 'POST /api/v1/analytics/export', 'GET /api/v1/docs',
+                'GET /api/v1/changelog', 'GET /api/v1/support', 'POST /api/v1/support/ticket'
+            ];
+            var html = '<p>' + endpoints.length + ' endpoints</p><div style="max-height:200px;overflow-y:auto;margin:6px 0;">';
+            for (var i = 0; i < endpoints.length; i++) {
+                html += '<div style="padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.65rem;color:rgba(255,255,255,0.6);">' + endpoints[i] + '</div>';
+            }
+            html += '</div><button class="btn btn-xs btn-outline" onclick="copyToClipboard(\'https://api.proxynest.com/v1\')"><i class="fas fa-copy"></i> Base URL</button>';
+            return html;
+        }
+
+        function generateSDKsModal() {
+            var sdks = ['🐍 Python', '📜 JavaScript', '🐹 Go', '🦀 Rust', '☕ Java', '⬡ C#', '💎 Ruby', '🐘 PHP'];
+            return '<p>SDKs available:</p><div style="display:flex;flex-wrap:wrap;gap:4px;margin:6px 0;">' +
+                sdks.map(function(s) { return '<span class="badge badge-accent" style="font-size:0.6rem;padding:3px 10px;">' + s + '</span>'; }).join('') +
+                '</div><code style="background:rgba(0,0,0,0.2);padding:4px 8px;border-radius:4px;display:block;font-size:0.65rem;">pip install proxynest</code>' +
+                '<code style="background:rgba(0,0,0,0.2);padding:4px 8px;border-radius:4px;display:block;font-size:0.65rem;margin-top:4px;">npm install proxynest-sdk</code>' +
+                '<button class="btn btn-xs btn-outline" style="margin-top:4px;" onclick="copyToClipboard(\'pip install proxynest\')"><i class="fas fa-copy"></i> Copy</button>';
+        }
+
+        function generateTutorialsModal() {
+            var tutorials = [
+                { icon: '📘', title: 'Getting Started', desc: 'Your first proxy in 5 minutes' },
+                { icon: '🔄', title: 'Proxy Rotation', desc: 'Automatic rotation strategies' },
+                { icon: '⚡', title: 'Performance Optimization', desc: 'Maximize throughput' },
+                { icon: '🕷️', title: 'Web Scraping', desc: 'Best practices' },
+                { icon: '🔌', title: 'API Integration', desc: 'Connect your app' },
+                { icon: '🔔', title: 'Webhooks', desc: 'Real-time events' },
+                { icon: '📊', title: 'Analytics', desc: 'Track performance' },
+                { icon: '🔒', title: 'Security', desc: 'Best practices' },
+                { icon: '🌍', title: 'Geo-Targeting', desc: 'Location targeting' },
+                { icon: '🚀', title: 'Advanced Config', desc: 'Power user setup' }
+            ];
+            var html = '<p>Complete tutorials:</p><div style="margin:6px 0;max-height:200px;overflow-y:auto;">';
+            for (var i = 0; i < tutorials.length; i++) {
+                var t = tutorials[i];
+                html += '<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);cursor:pointer;font-size:0.75rem;" onclick="showNotification(\'📘 Loading ' + t.title + ' tutorial...\',\'info\')">' +
+                    '<span style="margin-right:6px;">' + t.icon + '</span>' + t.title +
+                    '<span style="font-size:0.6rem;color:rgba(255,255,255,0.3);margin-left:6px;">' + t.desc + '</span>' +
+                '</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function generateWebhooksModal() {
+            return '<p>Real-time webhook events:</p>' +
+                '<div style="margin:6px 0;font-size:0.7rem;">' +
+                    '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><code style="color:rgba(255,255,255,0.7);">proxy.created</code> - New proxy added</div>' +
+                    '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><code style="color:rgba(255,255,255,0.7);">proxy.status_changed</code> - Status updates</div>' +
+                    '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><code style="color:rgba(255,255,255,0.7);">subscription.updated</code> - Plan changes</div>' +
+                    '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><code style="color:rgba(255,255,255,0.7);">payment.received</code> - Payments</div>' +
+                    '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><code style="color:rgba(255,255,255,0.7);">alert.triggered</code> - System alerts</div>' +
+                    '<div style="padding:3px 0;"><code style="color:rgba(255,255,255,0.7);">proxy.rotated</code> - Rotation events</div>' +
+                '</div>' +
+                '<div style="margin:6px 0;"><label style="font-size:0.6rem;color:rgba(255,255,255,0.3);">Webhook URL</label><input class="glass-input" placeholder="https://your-domain.com/webhook" style="padding:4px 8px;font-size:0.7rem;"></div>' +
+                '<button class="btn btn-xs btn-primary" onclick="showNotification(\'🔔 Webhook test triggered!\',\'info\')"><i class="fas fa-bolt"></i> Test</button>' +
+                ' <button class="btn btn-xs btn-outline" onclick="showNotification(\'✅ Webhook saved!\',\'success\')"><i class="fas fa-save"></i> Save</button>';
+        }
+
+        function generateRateLimitsModal() {
+            return '<p>API rate limits:</p>' +
+                '<div style="margin:6px 0;font-size:0.7rem;">' +
+                    '<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><span>Free tier</span><span><strong>1,000</strong>/day</span></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><span>Starter</span><span><strong>10,000</strong>/day</span></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><span>Popular</span><span><strong>100,000</strong>/day</span></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:3px 0;"><span>Enterprise</span><span><strong>Unlimited</strong></span></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid rgba(255,255,255,0.02);"><span>Burst rate</span><span><strong>100</strong>/second</span></div>' +
+                '</div>' +
+                '<div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;">' +
+                    '<div style="display:flex;justify-content:space-between;font-size:0.65rem;"><span>Current usage</span><span style="color:#55efc4;">' + cryptoRandom(10, 90) + '%</span></div>' +
+                    '<div class="progress-bar"><div class="fill" style="width:' + cryptoRandom(10, 90) + '%;"></div></div>' +
+                    '<p style="font-size:0.55rem;color:rgba(255,255,255,0.2);">⏱️ Resets in ' + cryptoRandom(1, 12) + ' hours</p>' +
+                '</div>';
+        }
+
+        function generateKnowledgeBaseModal() {
+            var articles = [
+                { title: 'What is a residential proxy?', category: 'General' },
+                { title: 'How to choose the right proxy type', category: 'Selection' },
+                { title: 'Understanding proxy rotation', category: 'Technical' },
+                { title: 'API authentication guide', category: 'API' },
+                { title: 'Troubleshooting common errors', category: 'Troubleshooting' },
+                { title: 'Payment and billing FAQ', category: 'Billing' },
+                { title: 'Security best practices', category: 'Security' },
+                { title: 'Webhook integration guide', category: 'Integration' },
+                { title: 'Performance optimization tips', category: 'Performance' },
+                { title: 'Geo-targeting strategies', category: 'Advanced' },
+                { title: 'Rate limiting explained', category: 'Technical' },
+                { title: 'SDK usage guide', category: 'Development' },
+            ];
+            var html = '<p>Knowledge Base:</p><div style="margin:6px 0;max-height:200px;overflow-y:auto;">' +
+                '<input class="glass-input" placeholder="Search articles..." style="padding:4px 8px;font-size:0.7rem;margin-bottom:4px;" id="kbSearchInput" oninput="filterKnowledgeBase()">' +
+                '<div id="kbResults">';
+            for (var i = 0; i < articles.length; i++) {
+                var a = articles[i];
+                html += '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.7rem;cursor:pointer;" onclick="showNotification(\'📚 Loading: ' + a.title + '\',\'info\')">' +
+                    '<span>' + a.title + '</span> <span class="badge" style="font-size:0.45rem;">' + a.category + '</span>' +
+                '</div>';
+            }
+            html += '</div></div>';
+            return html;
+        }
+
+        function filterKnowledgeBase() {
+            var input = document.getElementById('kbSearchInput');
+            var results = document.getElementById('kbResults');
+            if (!input || !results) return;
+            var query = input.value.toLowerCase();
+            var articles = [
+                { title: 'What is a residential proxy?', category: 'General' },
+                { title: 'How to choose the right proxy type', category: 'Selection' },
+                { title: 'Understanding proxy rotation', category: 'Technical' },
+                { title: 'API authentication guide', category: 'API' },
+                { title: 'Troubleshooting common errors', category: 'Troubleshooting' },
+                { title: 'Payment and billing FAQ', category: 'Billing' },
+                { title: 'Security best practices', category: 'Security' },
+                { title: 'Webhook integration guide', category: 'Integration' },
+                { title: 'Performance optimization tips', category: 'Performance' },
+                { title: 'Geo-targeting strategies', category: 'Advanced' },
+                { title: 'Rate limiting explained', category: 'Technical' },
+                { title: 'SDK usage guide', category: 'Development' },
+            ];
+            var filtered = articles.filter(function(a) { return a.title.toLowerCase().includes(query) || a.category.toLowerCase().includes(query); });
+            results.innerHTML = filtered.length > 0 ? filtered.map(function(a) {
+                return '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.7rem;cursor:pointer;" onclick="showNotification(\'📚 Loading: ' + a.title + '\',\'info\')">' +
+                    '<span>' + a.title + '</span> <span class="badge" style="font-size:0.45rem;">' + a.category + '</span>' +
+                '</div>';
+            }).join('') : '<p style="font-size:0.65rem;color:rgba(255,255,255,0.3);">No results</p>';
+        }
+
+        function generateChangelogModal() {
+            return '<p>Version history:</p><div style="margin:6px 0;max-height:200px;overflow-y:auto;font-size:0.7rem;">' +
+                '<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><strong>v8.0.0</strong> <span class="badge badge-success">Latest</span><br><span style="color:rgba(255,255,255,0.4);">Complete platform with all features restored</span></div>' +
+                '<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><strong>v7.1.0</strong> <span class="badge badge-accent">Stable</span><br><span style="color:rgba(255,255,255,0.4);">Responsive fixes and stability</span></div>' +
+                '<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><strong>v7.0.0</strong> <span class="badge badge-accent">Stable</span><br><span style="color:rgba(255,255,255,0.4);">Full payment system · Settings · Bulk actions</span></div>' +
+                '<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);"><strong>v6.0.0</strong> <span class="badge">Legacy</span><br><span style="color:rgba(255,255,255,0.4);">Unlimited proxy generation · Precise location</span></div>' +
+                '<div style="padding:4px 0;"><strong>v5.0.0</strong> <span class="badge">Legacy</span><br><span style="color:rgba(255,255,255,0.4);">Crypto analytics · 50+ endpoints</span></div>' +
+            '</div>';
+        }
+
+        function generateTermsModal() {
+            return '<p><strong>Terms of Service</strong></p>' +
+                '<p style="font-size:0.8rem;margin-top:6px;">By using ProxyNest, you agree to our terms. We provide residential and datacenter proxies for legitimate purposes only.</p>' +
+                '<ul style="list-style:none;padding:0;margin-top:8px;font-size:0.75rem;">' +
+                    '<li style="padding:2px 0;">✅ No illegal activities</li>' +
+                    '<li style="padding:2px 0;">✅ No spam or abuse</li>' +
+                    '<li style="padding:2px 0;">✅ Compliance with local laws</li>' +
+                    '<li style="padding:2px 0;">✅ Fair usage policy applies</li>' +
+                    '<li style="padding:2px 0;">✅ Data protection compliance</li>' +
+                    '<li style="padding:2px 0;">✅ 7-day free trial for all plans</li>' +
+                '</ul>' +
+                '<p style="font-size:0.6rem;color:rgba(255,255,255,0.2);margin-top:6px;">Last updated: ' + new Date().toLocaleDateString() + '</p>';
+        }
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+
+        filteredProxies = DB.proxies.slice();
+        renderProxies();
+        updateStats();
+        renderChart();
+        renderPaymentMethods();
+        renderPricing();
+        updateTicketList();
+        loadSettings();
+        updateTopPerformers();
+        updateApiRateLimit();
+        setupLiveSimulation();
+
+        // Hash-based navigation
+        var hash = window.location.hash.replace('#', '');
+        if (hash && ['dashboard','proxies','pricing','analytics','settings','docs','support','privacy'].indexOf(hash) > -1) {
+            navigateTo(hash);
+        }
+
+        // Scroll listener
+        window.addEventListener('scroll', function() {
+            var navbar = document.getElementById('navbar');
+            if (navbar) {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                openModal('Quick Search', 
+                    '<input class="glass-input" placeholder="Search proxies, countries, ISPs..." style="margin:6px 0;" id="quickSearchInput" oninput="quickSearch()">' +
+                    '<div id="quickSearchResults" style="margin-top:6px;max-height:200px;overflow-y:auto;"></div>'
+                );
+                setTimeout(function() {
+                    var input = document.getElementById('quickSearchInput');
+                    if (input) input.focus();
+                }, 100);
+            }
+        });
+
+        window.quickSearch = function() {
+            var input = document.getElementById('quickSearchInput');
+            var results = document.getElementById('quickSearchResults');
+            if (!input || !results) return;
+            var query = input.value.trim().toLowerCase();
+            if (!query) {
+                results.innerHTML = '';
+                return;
+            }
+            var matches = DB.proxies.filter(function(p) {
+                return p.ip.includes(query) || p.countryName.toLowerCase().includes(query) || 
+                    p.country.toLowerCase().includes(query) || p.city.toLowerCase().includes(query) ||
+                    p.isp.toLowerCase().includes(query);
+            });
+            if (matches.length === 0) {
+                results.innerHTML = '<p style="font-size:0.65rem;color:rgba(255,255,255,0.3);">No results</p>';
+            } else {
+                var html = '';
+                for (var i = 0; i < Math.min(matches.length, 10); i++) {
+                    var p = matches[i];
+                    html += '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.7rem;display:flex;justify-content:space-between;">' +
+                        '<span>' + p.ip + '</span><span class="badge badge-accent">' + p.country + '</span>' +
+                    '</div>';
+                }
+                results.innerHTML = html;
+            }
+        };
+
+        // Console branding
+        console.log('%c ProxyNest v8.0 ', 'font-size:18px; font-weight:900; background:#6c5ce7; color:#fff; padding:8px 16px; border-radius:8px;');
+        console.log('🚀 ' + DB.proxies.length.toLocaleString() + ' proxies · ' + new Set(DB.proxies.map(function(p) { return p.country; })).size + ' countries');
+        console.log('💳 ' + DB.transactions.length + ' transactions · All features restored and functional');
+        console.log('📚 100+ endpoints · Full documentation · AI chat · Analytics');
+        console.log('💡 Press Ctrl+K for quick search');
+
+        // ================================================================
+        //  EXPOSE GLOBALLY
+        // ================================================================
+
+        window.navigateTo = navigateTo;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.showNotification = showNotification;
+        window.copyToClipboard = copyToClipboard;
+        window.generateAPIKey = generateAPIKey;
+        window.generateAPIKeyModal = generateAPIKeyModal;
+        window.generateAPIPermissionsModal = generateAPIPermissionsModal;
+        window.testAPI = testAPI;
+        window.exportReport = exportReport;
+        window.clearCache = clearCache;
+        window.startCheckout = startCheckout;
+        window.processPayment = processPayment;
+        window.viewTransactionHistory = viewTransactionHistory;
+        window.submitSupport = submitSupport;
+        window.updateTicketList = updateTicketList;
+        window.toggleNotifications = toggleNotifications;
+        window.startChat = startChat;
+        window.sendChatMessage = sendChatMessage;
+        window.quickChatQuestion = quickChatQuestion;
+        window.clearChat = clearChat;
+        window.generateMoreProxies = generateMoreProxies;
+        window.removeProxy = removeProxy;
+        window.toggleProxyStatus = toggleProxyStatus;
+        window.refreshProxies = refreshProxies;
+        window.rotateAllProxies = rotateAllProxies;
+        window.filterProxies = filterProxies;
+        window.applyFilters = applyFilters;
+        window.clearFilters = clearFilters;
+        window.changePage = changePage;
+        window.renderProxies = renderProxies;
+        window.updateStats = updateStats;
+        window.renderChart = renderChart;
+        window.refreshAnalytics = refreshAnalytics;
+        window.generateCryptoAnalytics = generateCryptoAnalytics;
+        window.searchAllProxies = searchAllProxies;
+        window.clearGlobalSearch = clearGlobalSearch;
+        window.loadMoreProxies = loadMoreProxies;
+        window.toggleProxySelection = toggleProxySelection;
+        window.selectAllProxies = selectAllProxies;
+        window.clearSelection = clearSelection;
+        window.bulkRotate = bulkRotate;
+        window.bulkDelete = bulkDelete;
+        window.bulkExport = bulkExport;
+        window.togglePricingCycle = togglePricingCycle;
+        window.toggleSetting = toggleSetting;
+        window.toggle2FA = toggle2FA;
+        window.updateSetting = updateSetting;
+        window.saveSettings = saveSettings;
+        window.deleteAccount = deleteAccount;
+        window.loadSettings = loadSettings;
+        window.updateTopPerformers = updateTopPerformers;
+        window.updateAnalyticsDateRange = updateAnalyticsDateRange;
+        window.filterKnowledgeBase = filterKnowledgeBase;
+        window.generateAdvancedFiltersModal = generateAdvancedFiltersModal;
+        window.generateCountryStatsModal = generateCountryStatsModal;
+        window.generateUptimeModal = generateUptimeModal;
+        window.generateVolumeModal = generateVolumeModal;
+        window.generateLoadModal = generateLoadModal;
+        window.generatePricingModal = generatePricingModal;
+        window.generateAPIToolsModal = generateAPIToolsModal;
+        window.generateAnalyticsModal = generateAnalyticsModal;
+        window.generateQuickActionsModal = generateQuickActionsModal;
+        window.generateSystemStatusModal = generateSystemStatusModal;
+        window.generateNetworkStatusModal = generateNetworkStatusModal;
+        window.generateSupportModal = generateSupportModal;
+        window.generateEmailSupportModal = generateEmailSupportModal;
+        window.generateAuthModal = generateAuthModal;
+        window.generateEndpointsModal = generateEndpointsModal;
+        window.generateSDKsModal = generateSDKsModal;
+        window.generateTutorialsModal = generateTutorialsModal;
+        window.generateWebhooksModal = generateWebhooksModal;
+        window.generateRateLimitsModal = generateRateLimitsModal;
+        window.generateKnowledgeBaseModal = generateKnowledgeBaseModal;
+        window.generateChangelogModal = generateChangelogModal;
+        window.generateTermsModal = generateTermsModal;
+    </script>
+
+</body>
+</html>
