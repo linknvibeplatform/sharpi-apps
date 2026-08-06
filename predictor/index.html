@@ -1694,7 +1694,7 @@
   </div>
 
   <!-- Clickable Video Container -->
-  <a href="https://youtube.com/shorts/pePRsmVkui0?si=lUC9hicXqpppG2SD " target="_blank" style="text-decoration:none;display:block;">
+  <a href="https://youtu.be/YOUR_VIDEO_ID" target="_blank" style="text-decoration:none;display:block;">
     <div style="
       background:rgba(0,0,0,0.3);
       border-radius:12px;
@@ -3012,11 +3012,29 @@ text-align: center;
 
     <!-- Floating Button -->
     <div class="floating-button" id="floatingBtn">
-      <button class="get-started-btn" onclick="goToPurchase()">CONTINUE</button>
+      <button onclick="goToPurchase()" style="
+      background: darkred;
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 9px 25px;
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(245,158,11,1);
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      width: 100%;
+      max-width: 300px;
+      font-family: inherit;
+    " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 40px rgba(245,158,11,1)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 24px rgba(245,158,11,0.4)';" onmousedown="this.style.transform='scale(0.95)';" onmouseup="this.style.transform='scale(1.05)';">
+      CONTINUE >>
+    </button>
     </div>
   </div>
 </div>
-  
+
 
 
 
@@ -3141,107 +3159,528 @@ text-align: center;
       <button onclick="copyUserId()" style="padding:8px 20px; background:transparent; border:1px solid #ff3333; color:#ff3333; border-radius:6px; cursor:pointer; font-size:12px;">📋 Copy ID</button>
       </div>
       
-      <!-- Packages -->
-      <div class="panel" style="border-color:rgba(255,215,0,0.3);">
-      <div style="color:#ffd700; font-weight:bold; margin-bottom:15px;">BROWSE AVAILABLE PACKAGES</div>
-      <div style="color:greenyellow; font-weight:bold; font-size:10px; margin-bottom:15px;"> </div>
-      
-      <!-- Silver Package -->
-      <div class="package-card" id="packageSilver" style="background:rgba(255,255,255,0.03); border-radius:10px; padding:12px 15px; margin-bottom:10px; border:1px solid rgba(255,255,255,0.05); cursor:pointer; position:relative;" onclick="togglePackage('silver')">
-      <div id="silverTick" style="position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:#00cc44;display:none;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,204,68,0.3);">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-      <div><span style="font-weight:bold; color:white; font-size:16px;">🥈 Starter-Member</span><span style="color:#888; font-size:12px; margin-left:10px;">41,000UGX</span></div>
-      <span id="silverArrow" style="color:#888; transition:transform 0.3s;">▼</span>
-      </div>
-      <div id="silverDetails" style="display:none; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.05);">
-      <div style="color:#ccc; font-size:13px; line-height:1.8;">
-      <div>✅ 41 predictions daily for 30 days</div>
-      <div>✅ 24/7 whatsapp support</div>
-      <div>✅ Basic signal - 18mbps</div>
-      <div>✅ 91.99% ACCURACY - Estimated : 27 successes / 41 rounds Daily</div>
-      <div style="color:#888; font-size:11px; margin-top:5px;">Starter Package</div>
-      </div>
-      </div>
-      </div>
-      
-      <!-- Gold Package -->
-      <div class="package-card" id="packageGold" style="background:rgba(255,215,0,0.05); border-radius:10px; padding:12px 15px; margin-bottom:10px; border:1px solid rgba(255,215,0,0.15); cursor:pointer; position:relative;" onclick="togglePackage('gold')">
-      <div id="goldTick" style="position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:#00cc44;display:none;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,204,68,0.3);">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-      <div><span style="font-weight:bold; color:#ffd700; font-size:16px;">🥇 Gold Member</span><span style="color:#888; font-size:14px; margin-left:10px;">67,000UGX</span><span style="background:#ffd700; color:#000; font-size:9px; padding:2px 8px; border-radius:10px; margin-left:8px;">Best performance</span></div>
-      <span id="goldArrow" style="color:#888; transition:transform 0.3s;">▼</span>
-      </div>
-      <div id="goldDetails" style="display:none; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,215,0,0.1);">
-      <div style="color:#ccc; font-size:13px; line-height:1.8;">
-      <div>✅ 140 predictions daily for 55 days</div>
-      <div>✅ 24/7 Whatsapp support</div>
-      <div>✅ Fast Signal - 34mbps</div>
-      <div>✅ Extra Club Membership and Benefits</div>
-      <div>✅ Early access to new features</div>
-      <div>✅ 99.99% ACCURACY - Estimated : 130+ successes / 140 rounds Daily</div>
-      <div style="color:#ffd700; font-size:15px; margin-top:5px;">⭐ Most popular choice</div>
-      </div>
-      </div>
-      </div>
-      
-      <!-- Platinum Package - SOLD OUT -->
-      <div class="package-card" id="packagePlatinum" style="background:rgba(160,216,255,0.05); border-radius:10px; padding:12px 15px; margin-bottom:10px; border:1px solid rgba(160,216,255,0.15); cursor:pointer; position:relative; overflow:hidden;" onclick="togglePackage('platinum')">
-      <div style="position:absolute;top:4px;right:4px;background:#dc2626;color:white;font-size:12px;font-weight:800;text-transform:uppercase;padding:4px 14px;border-radius:6px;letter-spacing:1px;box-shadow:0 2px 12px rgba(220,38,38,0.4);z-index:10;">SOLD OUT</div>
-      <div id="platinumTick" style="position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:#00cc44;display:none;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,204,68,0.3);z-index:6;">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-      <div><span style="font-weight:bold; color:#a0d8ff; font-size:16px;">💠 Platinum</span><span style="color:#888; font-size:16px; margin-left:10px;">277,000UGX</span><span style="background:#a0d8ff; color:#000; font-size:9px; padding:2px 8px; border-radius:10px; margin-left:8px;">VIP</span></div>
-      <span id="platinumArrow" style="color:#888; transition:transform 0.3s;">▼</span>
-      </div>
-      <div id="platinumDetails" style="display:none; margin-top:10px; padding-top:10px; border-top:1px solid rgba(160,216,255,0.1); position:relative; overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:5;">
-      <div style="font-size:52px;font-weight:900;color:rgba(220,38,38,0.7);white-space:nowrap;letter-spacing:8px;text-transform:uppercase;transform:rotate(-25deg);text-shadow:0 2px 12px rgba(220,38,38,0.1);">SOLD OUT</div>
-      </div>
-      <div style="position:relative;z-index:1;opacity:0.5;">
-      <div style="color:#ccc; font-size:13px; line-height:1.8;">
-      <div>✅ Unlimited predictions/day for 60 Days</div>
-      <div>✅ VIP support team</div>
-      <div>✅ Early access to all new features</div>
-      <div>✅ Signal - 43mbps</div>
-      
-
-      <div>✅ 99.99% ACCURACY Estimated : 9930+ successes / 1000rounds</div>
-      <div style="color:#a0d8ff; font-size:11px; margin-top:5px;">👑 Maximum power , Maximum Cashout</div>
-      </div>
-      </div>
-      </div>
-      </div>
-      
-      <!-- Payment Section -->
-      <div style="margin-top:15px;">
-      <div style="color:white; font-size:12px; margin-bottom:14px;">PAY VIA AIRTEL MERCHANT CODE</div>
-      <div class="merchant-row">
-      <code id="merchantCodeDisplay">7049771</code>
-      <button class="copy-btn" onclick="copyMerchantCode()">Copy</button>
-      </div>
-      <input type="text" id="paymentRef" placeholder="YOUR PHONE NUMBER HERE (REFERENCE SECTION) , USE THE SAME NUMBER ON YOUR MOBILE MONEY REFERENCE " style="width:100%; padding:10px; background:rgba(34,34,34,0.9); border:1px solid rgba(255,215,0,0.2); border-radius:6px; color:white; margin-bottom:8px; outline:none;" />
      
-      <!-- PAYMENT BUTTON -->
-<button onclick="verifyPayment()" style="width:100%; padding:12px; background:#ffd700; color:black; border:none; border-radius:8px; font-weight:bold; cursor:pointer;"> CLICK HERE AFTER PAYMENT TO GET VERIFIED NOW</button>
-
-<!-- ✅ ADD THIS LOADING SCREEN RIGHT AFTER THE BUTTON -->
-<div id="paymentLoading" style="display:none; text-align:center; padding:20px 0;">
-    <div style="display:inline-block; width:30px; height:30px; border:3px solid rgba(255,255,255,0.1); border-top-color:#ffd700; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
-    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
-    <p style="color:#ffd700; margin-top:10px; font-size:14px; font-weight:600;">⏳ Processing...</p>
-    <p style="color:#888; font-size:12px;">This takes 1-2 minutes. Auto-unlock when ready.</p>
+<!-- ============================================================
+     PACKAGES SECTION - LUXURY MODERN DESIGN
+     ============================================================ -->
+     <div class="panel" style="
+     border-color: rgba(255,255, 255,1);
+     background: rgba(255,255,255,0.07);
+     backdrop-filter: blur(0px);
+     -webkit-backdrop-filter: blur(0px);
+     border-radius: 24px;
+     padding: 28px 20px 32px;
+     margin: 0 12px 14px 12px;
+     border: 2px solid rgba(255,215,0,0.08);
+     box-shadow: 0 8px 60px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,215,0,0.05);
+     position: relative;
+     overflow: hidden;
+   ">
+   
+     <!-- ============================================================
+          FLOATING STARS BACKGROUND
+          ============================================================ -->
+     <div style="
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       pointer-events: none;
+       overflow: hidden;
+       z-index: 0;
+     ">
+       <div style="
+         position: absolute;
+         top: 10%;
+         left: 5%;
+         font-size: 47px;
+         opacity: 1;
+         animation: floatStar 8s ease-in-out infinite;
+       ">✦</div>
+       <div style="
+         position: absolute;
+         top: 30%;
+         right: 8%;
+         font-size: 48px;
+         opacity: 1;
+         animation: floatStar 10s ease-in-out infinite 2s;
+       ">✧</div>
+       <div style="
+         position: absolute;
+         bottom: 25%;
+         left: 10%;
+         font-size: 46px;
+         opacity: 0.04;
+         animation: floatStar 12s ease-in-out infinite 1s;
+       ">✦</div>
+       <div style="
+         position: absolute;
+         bottom: 10%;
+         right: 15%;
+         font-size: 46px;
+         opacity: 0.05;
+         animation: floatStar 9s ease-in-out infinite 3s;
+       ">✧</div>
+       <div style="
+         position: absolute;
+         top: 55%;
+         left: 50%;
+         font-size: 46px;
+         opacity: 0.03;
+         animation: floatStar 14s ease-in-out infinite 0.5s;
+       ">✦</div>
+       <div style="
+         position: absolute;
+         top: 15%;
+         left: 45%;
+         font-size: 46px;
+         opacity: 0.06;
+         animation: floatStar 7s ease-in-out infinite 4s;
+       ">✧</div>
+       <div style="
+         position: absolute;
+         bottom: 40%;
+         right: 5%;
+         font-size: 46px;
+         opacity: 0.04;
+         animation: floatStar 11s ease-in-out infinite 2.5s;
+       ">✦</div>
+       <div style="
+         position: absolute;
+         top: 80%;
+         left: 25%;
+         font-size: 46px;
+         opacity: 0.05;
+         animation: floatStar 13s ease-in-out infinite 1.5s;
+       ">✧</div>
+     </div>
+   
+     <style>
+       @keyframes floatStar {
+         0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.04; }
+         25% { transform: translateY(-15px) rotate(5deg); opacity: 0.07; }
+         50% { transform: translateY(-30px) rotate(-3deg); opacity: 0.05; }
+         75% { transform: translateY(-10px) rotate(4deg); opacity: 0.08; }
+       }
+     </style>
+   
+     <!-- ============================================================
+          HEADING
+          ============================================================ -->
+     <div style="text-align: center; margin-bottom: 4px; position: relative; z-index: 1;">
+       <div style="color: #ffffff; font-size: 24px; font-weight: 900; letter-spacing: -0.3px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+         Browse Available Predictor <span style="color: #dc2626;">Servers in your Country</span>
+       </div>
+     </div>
+   
+     <!-- ============================================================
+          SUBHEADING WITH CASH ICON
+          ============================================================ -->
+     <div style="text-align: center; margin-bottom: 18px; padding: 0 8px; position: relative; z-index: 1;">
+       <div style="
+         background: rgba(139,0,0,1);
+         border-radius: 16px;
+         padding: 12px 18px;
+         border: 1px solid rgba(255,215,0,0.06);
+         display: inline-block;
+         max-width: 360px;
+         min-height: 100px;
+         margin: 0 auto;
+       ">
+         <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          
+           
+           <span style="color: #ffffff; font-size: 14px; font-weight: 600; line-height: 1.4;">
+             All our servers are built to deliver accurate predictions, Advanced servers carry significant performance increase and results.</span>
+         </div>
+       </div>
+     </div>
+  
+   
+   
+     <!-- ============================================================
+          SLIDER SECTION
+          ============================================================ -->
+     <div style="padding: 0 4px; position: relative; z-index: 1;">
+   
+      <!-- Price Display with PREMIUM DOLLAR SIGN SVG -->
+<div style="
+background: rgba(139,0,0,1);
+border-radius: 16px;
+padding: 14px 18px;
+border: 1px solid rgba(255,215,0,0.06);
+margin-bottom: 12px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+">
+<div style="display: flex; align-items: center; gap: 14px;">
+  <!-- PREMIUM DOLLAR SIGN SVG -->
+  <svg width="42" height="42" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Glow circle -->
+    <circle cx="22" cy="22" r="20" stroke="#f59e0b" stroke-width="1.5" opacity="0.15"/>
+    <circle cx="22" cy="22" r="16" stroke="#f59e0b" stroke-width="2" fill="rgba(245,158,11,0.03)"/>
+    <!-- Inner ring -->
+    <circle cx="22" cy="22" r="11" stroke="#f59e0b" stroke-width="0.8" opacity="0.2" stroke-dasharray="3 3"/>
+    <!-- Dollar Sign - Premium style -->
+    <text x="22" y="29" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="28" font-weight="900" fill="#f59e0b" letter-spacing="0">$</text>
+    <!-- Sparkle dots -->
+    <circle cx="22" cy="4" r="1.2" fill="#f59e0b" opacity="0.4"/>
+    <circle cx="22" cy="40" r="1.2" fill="#f59e0b" opacity="0.4"/>
+    <circle cx="4" cy="22" r="1.2" fill="#f59e0b" opacity="0.4"/>
+    <circle cx="40" cy="22" r="1.2" fill="#f59e0b" opacity="0.4"/>
+    <!-- Diagonal sparkles -->
+    <circle cx="10" cy="10" r="0.8" fill="#f59e0b" opacity="0.2"/>
+    <circle cx="34" cy="10" r="0.8" fill="#f59e0b" opacity="0.2"/>
+    <circle cx="10" cy="34" r="0.8" fill="#f59e0b" opacity="0.2"/>
+    <circle cx="34" cy="34" r="0.8" fill="#f59e0b" opacity="0.2"/>
+  </svg>
+  <div>
+    <span style="color: #f2; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Your Budget</span>
+    <div style="display: flex; align-items: baseline; gap: 6px;">
+      <span id="sliderPriceDisplay" style="color: #ffd300; font-size: 28px; font-weight: 900; letter-spacing: -0.5px;">44,000</span>
+      <span style="color: #6b7280; font-size: 14px; font-weight: 700;"></span>
+    </div>
+  </div>
 </div>
-      <div id="paymentStatus" style="margin-top:8px; font-size:12px; color:#888;"></div>
-      </div>
-      
-      <div style="margin-top:10px; text-align:center; font-size:11px; color:#666;"></div>
-      </div>
-      
+<div style="text-align: right;">
+  <span style="color: #f2; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Max</span>
+  <div style="color: #9ca3af; font-size: 12px; font-weight: 700;">332,000</div>
+</div>
+</div>
+   
+  <!-- ============================================================
+          DRAG INDICATOR WITH CASH ICON
+          ============================================================ -->
+          <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; position: relative; z-index: 1;">
+            <span style="color: #6b7280; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">Drag with your finger</span>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: pnArrowPulse 1.8s ease-in-out infinite;">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            
+          </div>
+
+
+
+       <!-- Slider Bar -->
+       <div style="position: relative; padding: 8px 0;">
+         <input type="range" id="serverSlider" min="0" max="96" value="24" step="1" style="
+           -webkit-appearance: none;
+           appearance: none;
+           width: 100%;
+           height: 8px;
+           border-radius: 10px;
+           background: linear-gradient(to right, #fca5a5, #fbbf24, #f59e0b);
+           outline: none;
+           transition: background 0.2s;
+           cursor: pointer;
+         ">
+         <style>
+           #serverSlider::-webkit-slider-thumb {
+             -webkit-appearance: none;
+             appearance: none;
+             width: 26px;
+             height: 26px;
+             border-radius: 50%;
+             background: radial-gradient(circle at 30% 30%, #dc2626, #991b1b);
+             cursor: pointer;
+             box-shadow: 0 0 30px rgba(220,38,38,0.3), 0 2px 12px rgba(0,0,0,0.2);
+             border: 3px solid rgba(255,255,255,0.3);
+             transition: all 0.15s;
+           }
+           #serverSlider::-webkit-slider-thumb:hover {
+             transform: scale(1.08);
+             box-shadow: 0 0 40px rgba(220,38,38,0.4), 0 2px 16px rgba(0,0,0,0.2);
+           }
+           #serverSlider::-moz-range-thumb {
+             width: 26px;
+             height: 26px;
+             border-radius: 50%;
+             background: radial-gradient(circle at 30% 30%, #dc2626, #991b1b);
+             cursor: pointer;
+             border: 3px solid rgba(255,255,255,0.3);
+             box-shadow: 0 0 30px rgba(220,38,38,0.3);
+           }
+           @keyframes pnArrowPulse {
+             0%, 100% { transform: translateX(0); opacity: 0.3; }
+             50% { transform: translateX(6px); opacity: 0.8; }
+           }
+         </style>
+   
+         <!-- Tick Marks -->
+         <div style="display: flex; justify-content: space-between; padding: 0 4px; margin-top: 8px;">
+           <span style="color: #9ca3af; font-size: 9px; font-weight: 700;"></span>
+           <span style="color: #9ca3af; font-size: 9px; font-weight: 700;"></span>
+           <span style="color: #9ca3af; font-size: 9px; font-weight: 700;"></span>
+           <span style="color: #9ca3af; font-size: 9px; font-weight: 700;"></span>
+           <span style="color: #9ca3af; font-size: 9px; font-weight: 700;"></span>
+         </div>
+       </div>
+   
+       <!-- + and - Buttons -->
+       <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin: 10px 0 14px 0;">
+         <button onclick="adjustSlider(-1)" style="
+           background: #f3f4f6;
+           border: 2px solid #e5e7eb;
+           color: #374151;
+           width: 48px;
+           height: 48px;
+           border-radius: 50%;
+           font-size: 24px;
+           font-weight: 700;
+           cursor: pointer;
+           transition: all 0.2s;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+         " onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">−</button>
+   
+         <div style="
+           background: rgba(139,0,0,0.7);
+           border-radius: 12px;
+           padding: 6px 16px;
+           border: 1px solid rgba(255,215,0,0.06);
+         ">
+           <span style="color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">SERVERS & BENEFITS</span>
+         </div>
+   
+         <button onclick="adjustSlider(1)" style="
+           background: #f3f4f6;
+           border: 2px solid #e5e7eb;
+           color: #374151;
+           width: 48px;
+           height: 48px;
+           border-radius: 50%;
+           font-size: 24px;
+           font-weight: 700;
+           cursor: pointer;
+           transition: all 0.2s;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+         " onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">+</button>
+       </div>
+       
+       <!-- ============================================================
+            SERVER INFO CARD
+            ============================================================ -->
+       <div id="serverInfoCard" style="
+         background : rgba(0, 136, 204, 1);     
+           border-radius: 16px;
+         padding: 18px 16px 16px;
+         margin-top: 6px;
+         border: 2px solid #e2e8f0;
+         transition: all 0.4s ease;
+         position: relative;
+         overflow: hidden;
+       ">
+         <!-- Server Name with CASH ICON -->
+         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+           <div id="serverIcon" style="
+             width: 52px;
+             height: 52px;
+             border-radius: 12px;
+             background: #000;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             flex-shrink: 0;
+             border: 2px solid #e2e8f0;
+             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+           ">
+             <!-- SVG Icon injected by JS -->
+           </div>
+           <div style="flex: 1;">
+             <div style="display: flex; align-items: center; gap: 8px;">
+            
+               <div id="serverName" style="color: #000; font-size: 20px; font-weight: 800; letter-spacing: -0.2px;">BeetWKY-7</div>
+             </div>
+             <div id="serverTag" style="color: #ffff00; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Basic Server</div>
+             <!-- STAR RATING -->
+             <div id="starRatingContainer" style="display: flex; gap: 3px; margin-top: 4px; align-items: center;">
+             </div>
+           </div>
+         </div>
+   
+         <!-- FEATURES LIST - VERTICAL STACK -->
+<div style="
+background: #ffffff;
+border-radius: 12px;
+padding: 14px 16px;
+border: 1px solid #e2e8f0;
+margin-bottom: 10px;
+">
+<div style="
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 8px;
+">⚡ FEATURES / WHAT YOU GET</div>
+
+<!-- Server Signal Speed -->
+<div style="
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #f8fafc;
+">
+  <span style="color: #94a3b8; font-size: 14px; font-weight: 600;">Server Signal Speed</span>
+  <span style="color: #0f172a; font-size: 18px; font-weight: 800;">
+    <span id="serverSpeed" style="color: #dc2626;">17</span> <span style="color: #94a3b8; font-size: 14px; font-weight: 600;">mbps</span>
+  </span>
+</div>
+
+<!-- Active Days -->
+<div style="
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #f8fafc;
+">
+  <span style="color: #94a3b8; font-size: 14px; font-weight: 600;">Active Days</span>
+  <span style="color: #0f172a; font-size: 18px; font-weight: 800;">
+    <span id="serverDays" style="color: #dc2626;">30</span> <span style="color: #94a3b8; font-size: 14px; font-weight: 600;">days</span>
+  </span>
+</div>
+
+<!-- Predictions Per Day -->
+<div style="
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #f8fafc;
+">
+  <span style="color: #94a3b8; font-size: 14px; font-weight: 600;">Predictions Per Day</span>
+  <span style="color: #0f172a; font-size: 18px; font-weight: 800;">
+    <span id="serverPredictions" style="color: #dc2626;">33</span> <span style="color: #94a3b8; font-size: 14px; font-weight: 600;">/ day</span>
+  </span>
+</div>
+
+<!-- Server Accuracy -->
+<div style="
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+">
+  <span style="color: #94a3b8; font-size: 14px; font-weight: 600;">Server Accuracy</span>
+  <span style="color: #0f172a; font-size: 18px; font-weight: 800;">
+    <span id="serverAccuracy" style="color: #16a34a;">87%</span>
+  </span>
+</div>
+</div>
+
+
+
+
+<!-- Accuracy Bar - REMOVED (now inside features list) -->
+   
+    
+   
+         <!-- Promotional Sentence -->
+         <div id="serverPromo" style="
+           color: #475569;
+           font-size: 13px;
+           font-weight: 600;
+           line-height: 1.5;
+           padding: 10px 12px;
+           background: #ffffff;
+           border-radius: 8px;
+           border-left: 4px solid #dc2626;
+         ">
+           Reliable entry-level server for consistent daily predictions.
+         </div>
+         <span style="color: #ffff00; font-size: 10px; font-weight: 300;">ALL PACKAGES COME WITH 24/7 WHATSAPP SUPPORT</span>
+       </div>
+   </div>
+   <!-- ============================================================
+        END PACKAGES SECTION - LUXURY MODERN DESIGN
+        ============================================================ -->
+   
+   <!-- ============================================================
+        RATE OUR APP SECTION
+        ============================================================ -->
+   
+
+   <!-- ============================================================
+        PAYMENT SECTION WITH HOW TO PAY BUTTON
+        ============================================================ -->
+   <div style="margin-top:15px; position: relative; z-index: 1;">
+   
+     <!-- ============================================================
+          HOW TO PAY BUTTON
+          ============================================================ -->
+     <button onclick="openHowToPay()" style="
+       width: 100%;
+       padding: 16px;
+       background: linear-gradient(145deg, #1a1a2e, #2a2a4a);
+       color: #f59e0b;
+       border: 2px solid rgba(255,255,255,0.1);
+       border-radius: 14px;
+       font-weight: 800;
+       font-size: 18px;
+       cursor: pointer;
+       margin-bottom: 14px;
+       transition: all 0.3s ease;
+       font-family: inherit;
+       letter-spacing: 0.5px;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       gap: 12px;
+       box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+     " onmouseover="this.style.background='linear-gradient(145deg, #2a2a4a, #3a3a5a)'; this.style.borderColor='rgba(245,158,11,0.3)'; this.style.transform='scale(1.02)';" onmouseout="this.style.background='linear-gradient(145deg, #1a1a2e, #2a2a4a)'; this.style.borderColor='rgba(245,158,11,0.15)'; this.style.transform='scale(1)';">
+       
+       <span> HOW TO PAY ?</span>
+       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round">
+         <path d="M5 12h14M12 5l7 7-7 7"/>
+       </svg>
+     </button>
+   
+     
+   
+     <div class="merchant-row">
+       <code id="merchantCodeDisplay">7049771</code>
+       <button class="copy-btn" onclick="copyMerchantCode()">Copy</button>
+     </div>
+     <input type="text" id="paymentRef" placeholder="YOUR PHONE NUMBER HERE (REFERENCE SECTION) , USE THE SAME NUMBER ON YOUR MOBILE MONEY REFERENCE " style="width:100%; padding:10px; background:#ffffff; border:1px solid rgba(255,215,0,0.2); border-radius:6px; color:black; margin-bottom:8px; outline:none;" />
+   
+     <!-- PAYMENT BUTTON -->
+     <button onclick="verifyPayment()" id="paymentButton" style="width:100%; padding:14px; background:#8b0000; color:#ffffff; border:none; border-radius:12px; font-weight:800; cursor:pointer; font-size:16px; transition:all 0.3s ease; box-shadow:0 4px 20px rgba(245,158,11,0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 6px 30px rgba(245,158,11,0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 20px rgba(245,158,11,0.3)';">
+        YOUR BUDGET IS -  <span id="paymentAmountDisplay">44,000</span> UGX — CLICK HERE ONLY AFTER PAYMENT TO UNLOCK YOUR DASHBOARD</button>
+   
+     <!-- LOADING SCREEN -->
+     <div id="paymentLoading" style="display:none; text-align:center; padding:20px 0;">
+       <div style="display:inline-block; width:30px; height:30px; border:3px solid rgba(255,255,255,0.1); border-top-color:#f59e0b; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+       <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+       <p style="color:#f59e0b; margin-top:10px; font-size:14px; font-weight:600;">⏳ Processing...</p>
+       <p style="color:#888; font-size:12px;">This takes 1-2 minutes. Auto-unlock when ready.</p>
+     </div>
+     <div id="paymentStatus" style="margin-top:8px; font-size:12px; color:#888;"></div>
+   </div>
+   
+   <div style="margin-top:10px; text-align:center; font-size:11px; color:#666;"></div>
+   </div>
+   <!-- ============================================================
+        END PAYMENT SECTION
+        ============================================================ -->
+   
+   <!-- ============================================================
+        RATE OUR APP SECTION
+        ============================================================ -->
+ 
+   
+
+
+
       <!-- Token Entry Section -->
       <div class="panel" style="border-color:rgba(0,204,68,0.3); display:none;">
       <div style="color:#00cc44; font-weight:bold; margin-bottom:10px;">🔑 Enter Access Token manually OR Wait for automatic unlock in under 1 minute , payment checking ongoing</div>
@@ -3252,9 +3691,7 @@ text-align: center;
       <div id="tokenStatus" style="margin-top:6px; font-size:12px; color:#888; text-align:center;">Enter the token sent by admin via WhatsApp OR Wait for automatic unlock in 60 sec (UNLOCK WILL ONLY BE AVAILED TO PAID USERS) </div>
       </div>
       
-      <div class="image-placeholder" id="image1Placeholder">
-      <img src="image7.png" alt="Image 7" style="width:100%; height:100%; object-fit:cover;" />
-      </div>
+    
       
       <!-- FREE TRIAL CARD -->
       <div id="freeTrialCard" style="background:rgba(255,255,255,0.04); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-radius:16px; margin:12px 15px; padding:20px 18px 24px; border:1px solid rgba(255,215,0,0.12); text-align:center; position:relative; overflow:hidden;">
@@ -5234,6 +5671,93 @@ if (typeof supabase !== 'undefined' && supabase.createClient) {
     console.warn('⚠️ Supabase library not loaded. Check your script tag.');
 }
 // ============================================================
+// FIX: DEFINE SLIDER FUNCTIONS BEFORE verifyPayment
+// ============================================================
+
+// Define sliderValue globally
+var sliderValue = 24;
+
+// Define SERVERS globally
+var SERVERS = [
+  { id: 'beetwky7', name: 'BeetWKY-7', tag: 'Basic Server', promo: 'Entry-level server for consistent daily predictions.' },
+  { id: 'softpackagent', name: 'SoftPackAgent', tag: 'Standard Server', promo: 'Mid-tier performance with significantly more daily predictions.' },
+  { id: 'fox2wkypro', name: 'Fox2WKY-Pro', tag: 'Advanced Server', promo: 'High-performance server with exceptional speed and accuracy.' },
+  { id: 'edenwkyagent', name: 'EDENWKY-Agent', tag: 'Elite Server', promo: 'The ultimate prediction machine. Near-perfect accuracy.' }
+];
+
+// Define getCurrentServer BEFORE verifyPayment
+function getCurrentServer() {
+  if (sliderValue < 24) return SERVERS[0];
+  if (sliderValue < 48) return SERVERS[1];
+  if (sliderValue < 72) return SERVERS[2];
+  return SERVERS[3];
+}
+
+// Define calculateStats BEFORE verifyPayment
+function calculateStats(sliderVal) {
+  var speed = 17;
+  var accuracy = 87;
+  
+  if (sliderVal >= 24 && sliderVal < 48) {
+    speed = 24;
+    accuracy = 94;
+  } else if (sliderVal >= 48 && sliderVal < 72) {
+    speed = 35;
+    accuracy = 97;
+  } else if (sliderVal >= 72) {
+    speed = 44;
+    accuracy = 99.99;
+  }
+  
+  var progress = sliderVal / 96;
+  var power = 1.2;
+  
+  var baseDays = 30;
+  var basePreds = 33;
+  var maxDays = 220;
+  var maxPreds = 600;
+  
+  var days = baseDays + (maxDays - baseDays) * Math.pow(progress, power * 0.8);
+  var preds = basePreds + (maxPreds - basePreds) * Math.pow(progress, power * 0.9);
+  
+  var unitPosition = sliderVal;
+  var minDays = baseDays + (unitPosition * 0.25);
+  var minPreds = basePreds + (unitPosition * 0.6);
+  
+  days = Math.max(days, minDays);
+  preds = Math.max(preds, minPreds);
+  
+  return {
+    speed: speed,
+    days: Math.round(days),
+    preds: Math.round(preds),
+    acc: accuracy
+  };
+}
+
+// Define getSliderPrice BEFORE verifyPayment
+function getSliderPrice() {
+  return 44000 + (sliderValue * 3000);
+}
+
+// Define getSelectedServerPackage BEFORE verifyPayment
+function getSelectedServerPackage() {
+  var server = getCurrentServer();
+  var stats = calculateStats(sliderValue);
+  var price = getSliderPrice();
+  
+  return {
+    serverId: server.id,
+    serverName: server.name,
+    price: price,
+    speed: stats.speed,
+    days: stats.days,
+    predictions: stats.preds,
+    accuracy: stats.acc,
+    promo: server.promo
+  };
+}
+// ============================================================
 // AFFILIATE PROMO CODE DETECTION FROM URL
 // ============================================================
 // RECORD AFFILIATE VISIT
@@ -5244,7 +5768,49 @@ if (typeof supabase !== 'undefined' && supabase.createClient) {
 // ============================================================
 // PASTE THIS NEW FUNCTION
 // ============================================================
-
+// ============================================================
+// HIDE PACKAGES FOR VERIFIED USERS
+// ============================================================
+function hidePackagesForVerified() {
+  console.log('🔒 Checking if packages should be hidden...');
+  
+  if (!currentUser || !currentUser.verified) {
+    console.log('👤 User not verified, showing packages');
+    return;
+  }
+  
+  console.log('✅ User is verified, hiding packages');
+  
+  // Hide all panels on purchase page
+  var panels = document.querySelectorAll('#pagePurchase .panel');
+  panels.forEach(function(el) {
+    el.style.display = 'none';
+  });
+  
+  // Hide free trial card
+  var trial = document.getElementById('freeTrialCard');
+  if (trial) trial.style.display = 'none';
+  
+  // Hide payment toast trigger
+  var paymentToast = document.getElementById('paymentToast');
+  if (paymentToast) paymentToast.style.display = 'none';
+  
+  // Show verified message if not already showing
+  if (!document.getElementById('verifiedMsg')) {
+    var page = document.getElementById('pagePurchase');
+    if (page) {
+      var div = document.createElement('div');
+      div.id = 'verifiedMsg';
+      div.style.cssText = 'padding:40px 20px;text-align:center;';
+      div.innerHTML = `
+        <div style="color:#00cc44;font-size:28px;font-weight:900;margin-bottom:12px;">✅ ACCESS GRANTED</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:15px;margin-bottom:24px;">You already have full access. No payment needed.</div>
+        <button onclick="goToDashboard()" style="background:#ff3333;color:white;border:none;border-radius:30px;padding:16px 48px;font-size:18px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(255,51,51,0.3);">🚀 GO TO DASHBOARD</button>
+      `;
+      page.appendChild(div);
+    }
+  }
+}
 async function checkForMissedToken() {
     if (!currentUser || currentUser.verified) {
         return false;
@@ -5539,6 +6105,8 @@ function autoUnlockApp(token) {
     setTimeout(() => {
         goToDashboard();
     }, 1500);
+    // Add this line at the end
+setTimeout(hidePackagesForVerified, 300);
 }
 
 // ============================================================
@@ -5853,286 +6421,232 @@ if (currentUser) {
 // ============================================================
 // COMPLETE verifyPayment FUNCTION (Copy this exactly)
 // ============================================================
+// ============================================================
+// VERIFY PAYMENT - WITH DYNAMIC PRICE
+// ============================================================
+
+// ============================================================
+// VERIFY PAYMENT - FIXED FOR SUPABASE
+// ============================================================
 async function verifyPayment() {
-    // Show loading screen
-    document.getElementById('paymentLoading').style.display = 'block';
-    document.getElementById('paymentStatus').style.display = 'none';
+  console.log('🔍 verifyPayment called');
+  console.log('📊 sliderValue:', sliderValue);
+  console.log('📊 currentUser:', currentUser);
+  
+  // Get current slider price
+  var currentPrice = 44000 + (sliderValue * 3000);
+  
+  // Show loading screen
+  var loadingEl = document.getElementById('paymentLoading');
+  var statusEl = document.getElementById('paymentStatus');
+  if (loadingEl) loadingEl.style.display = 'block';
+  if (statusEl) statusEl.style.display = 'none';
 
-    if (!currentUser) {
-        showToast('❌ Please create an account first', 'error');
-        document.getElementById('paymentLoading').style.display = 'none';
+  if (!currentUser) {
+    showToast('❌ Please create an account first', 'error');
+    if (loadingEl) loadingEl.style.display = 'none';
+    return;
+  }
+
+  if (currentUser.verified) {
+    if (statusEl) {
+      statusEl.textContent = '✅ Already verified!';
+      statusEl.style.color = '#00cc44';
+    }
+    showToast('✅ Already verified!', 'success');
+    if (loadingEl) loadingEl.style.display = 'none';
+    goToDashboard();
+    return;
+  }
+
+  var ref = document.getElementById('paymentRef').value.trim();
+  if (!ref) {
+    if (statusEl) {
+      statusEl.textContent = '❌ Please enter payment reference';
+      statusEl.style.color = '#ff3333';
+    }
+    if (loadingEl) loadingEl.style.display = 'none';
+    return;
+  }
+
+  // Get current server
+  var server = getCurrentServer();
+  var stats = calculateStats(sliderValue);
+  var promoCode = detectAffiliatePromoCode();
+
+  // Start listener
+  if (currentUser && supabaseClient) {
+    if (dispatchChannel) {
+      try {
+        supabaseClient.removeChannel(dispatchChannel);
+      } catch (e) {}
+      dispatchChannel = null;
+      isListening = false;
+    }
+    console.log('📡 Starting listener BEFORE payment...');
+    listenForAdminDispatch(currentUser.id);
+  }
+
+  // ============================================================
+  // FIX: ONLY USE COLUMNS THAT EXIST IN YOUR TABLE
+  // ============================================================
+  var paymentData = {
+    user_id: currentUser.id,
+    user_name: currentUser.name,
+    user_email: currentUser.email || null,
+    user_whatsapp: currentUser.whatsapp,
+    package: server.id,
+    package_name: server.name,
+    amount: currentPrice,
+    ref: ref,
+    promo_code: promoCode || null,
+    user_string: generateUserString(),
+    status: 'pending',
+    created_at: new Date().toISOString()
+  };
+
+  console.log('📦 Payment data being sent:', paymentData);
+
+  if (supabaseClient) {
+    try {
+      var { data, error } = await supabaseClient
+        .from('payment_requests')
+        .insert([paymentData])
+        .select();
+
+      if (error) {
+        console.error('❌ Supabase error:', error);
+        if (error.code === '23505') {
+          showToast('⚠️ This reference already exists. Please use a different one.', 'error');
+        } else {
+          showToast('❌ Failed to record payment: ' + error.message, 'error');
+        }
+        if (loadingEl) loadingEl.style.display = 'none';
         return;
-    }
+      }
 
-    if (currentUser.verified) {
-        document.getElementById('paymentStatus').textContent = '✅ Already verified!';
-        document.getElementById('paymentStatus').style.color = '#00cc44';
-        showToast('✅ Already verified!', 'success');
-        document.getElementById('paymentLoading').style.display = 'none';
-        goToDashboard();
-        return;
-    }
+      console.log('✅ Payment saved to Supabase:', data);
+      showToast('✅ Payment recorded! Waiting for token.', 'success');
 
-    const ref = document.getElementById('paymentRef').value.trim();
-    if (!ref) {
-        document.getElementById('paymentStatus').textContent = '❌ Please enter payment reference';
-        document.getElementById('paymentStatus').style.color = '#ff3333';
-        document.getElementById('paymentLoading').style.display = 'none';
-        return;
-    }
-
-    // ✅ FIXED: Auto-detect promo code from URL or localStorage
-    const promoCode = detectAffiliatePromoCode();
-
-    // ✅ If promo code detected, log it
-    if (promoCode) {
-        console.log('🎯 Affiliate promo code captured:', promoCode);
-    }
-
-    const pkg = PACKAGES[selectedPackage];
-
-    // ✅ Mark affiliate visit as converted
-    if (promoCode && supabaseClient) {
+      // Record affiliate sale if promo code exists
+      if (promoCode && supabaseClient) {
         try {
-            const { data: visit, error: findError } = await supabaseClient
-                .from('affiliate_visits')
-                .select('id')
-                .eq('affiliate_code', promoCode)
-                .eq('converted', false)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .maybeSingle();
+          var saleData = {
+            user_id: currentUser.id,
+            user_name: currentUser.name,
+            user_whatsapp: currentUser.whatsapp,
+            package: server.id,
+            package_name: server.name,
+            amount: currentPrice,
+            promo_code: promoCode,
+            affiliate_code: promoCode,
+            commission: currentPrice * 0.5,
+            status: 'pending',
+            sale_date: new Date().toISOString()
+          };
 
-            if (findError) throw findError;
+          var { error: saleError } = await supabaseClient
+            .from('sales')
+            .insert([saleData]);
 
-            if (visit) {
-                const { error: updateError } = await supabaseClient
-                    .from('affiliate_visits')
-                    .update({
-                        converted: true,
-                        converted_at: new Date().toISOString(),
-                        purchase_amount: pkg.price,
-                        purchase_package: pkg.name
-                    })
-                    .eq('id', visit.id);
-
-                if (updateError) throw updateError;
-
-                console.log('✅ Affiliate visit marked as converted for:', promoCode);
-                await updateAffiliateDailyStats(promoCode, pkg.price);
-            }
+          if (saleError) {
+            console.warn('⚠️ Failed to insert into sales:', saleError);
+          } else {
+            console.log('✅ Sale inserted for affiliate:', promoCode);
+          }
         } catch (e) {
-            console.error('❌ Failed to mark visit as converted:', e);
+          console.warn('⚠️ Sales table insert error:', e);
         }
-    }
+      }
 
-    // ✅ Start listener BEFORE payment
-    if (currentUser && supabaseClient) {
-        if (dispatchChannel) {
-            try {
-                supabaseClient.removeChannel(dispatchChannel);
-            } catch (e) {}
-            dispatchChannel = null;
-            isListening = false;
-        }
-        console.log('📡 Starting listener BEFORE payment...');
-        listenForAdminDispatch(currentUser.id);
-    }
-// ✅ ADD DEBUG LOGS HERE
-console.log('🔍🔍🔍 CHECKING PAYMENT DATA');
-console.log('🔍 promoCode value BEFORE paymentData:', promoCode);
-console.log('🔍 type of promoCode:', typeof promoCode);
-console.log('🔍 is promoCode truthy?', !!promoCode);
-    // ✅ Save payment request
-    const paymentData = {
-        user_id: currentUser.id,
-        user_name: currentUser.name,
-        user_email: currentUser.email || null,
-        user_whatsapp: currentUser.whatsapp,
-        package: selectedPackage,
-        package_name: pkg.name,
-        amount: pkg.price,
-        ref: ref,
-        promo_code: promoCode,
-        user_string: generateUserString(),
-        status: 'pending',
-        created_at: new Date().toISOString()
-    };
-    // ✅ ADD DEBUG LOG HERE
-console.log('📦 paymentData.promo_code:', paymentData.promo_code);
-console.log('📦 Full paymentData:', JSON.stringify(paymentData, null, 2));
+      // WhatsApp redirect with payment details
+      var adminPhone = '447851843415';
+      var userName = currentUser.name || 'Customer';
+      var userId = currentUser.id || 'N/A';
+      var userContact = currentUser.whatsapp || 'N/A';
+      var pkgName = server.name || 'Package';
+      var amount = currentPrice || 0;
+      var paymentRef = document.getElementById('paymentRef').value.trim() || 'N/A';
 
-    if (supabaseClient) {
-        try {
-            const { data, error } = await supabaseClient
-                .from('payment_requests')
-                .insert([paymentData])
-                .select();
-
-            if (error) {
-                if (error.code === '23505') {
-                    showToast('⚠️ This reference already exists. Please use a different one.', 'error');
-                } else {
-                    console.error('❌ Payment error:', error);
-                    showToast('❌ Failed to record payment: ' + error.message, 'error');
-                }
-                document.getElementById('paymentLoading').style.display = 'none';
-                return;
-            }
-
-            console.log('✅ Payment saved to Supabase:', data);
-            showToast('✅ Payment recorded! Waiting for token.', 'success');
-
-            // ✅ Insert into sales table for affiliate tracking
-            if (promoCode && supabaseClient) {
-                try {
-                    const saleData = {
-                        user_id: currentUser.id,
-                        user_name: currentUser.name,
-                        user_whatsapp: currentUser.whatsapp,
-                        package: selectedPackage,
-                        package_name: pkg.name,
-                        amount: pkg.price,
-                        promo_code: promoCode,
-                        affiliate_code: promoCode,
-                        commission: pkg.price * 0.5,
-                        status: 'pending',
-                        sale_date: new Date().toISOString()
-                    };
-
-                    const { error: saleError } = await supabaseClient
-                        .from('sales')
-                        .insert([saleData]);
-
-                    if (saleError) {
-                        console.warn('⚠️ Failed to insert into sales:', saleError);
-                    } else {
-                        console.log('✅ Sale inserted into sales table for affiliate:', promoCode);
-                    }
-                } catch (e) {
-                    console.warn('⚠️ Sales table insert error:', e);
-                }
-            }
-
-            // ✅ Update daily stats
-            if (promoCode && supabaseClient) {
-                try {
-                    const today = new Date().toISOString().split('T')[0];
-                    const commission = pkg.price * 0.5;
-
-                    const { data: existing } = await supabaseClient
-                        .from('daily_stats')
-                        .select('id, purchases, earnings')
-                        .eq('affiliate_code', promoCode)
-                        .eq('date', today)
-                        .maybeSingle();
-
-                    if (existing) {
-                        await supabaseClient
-                            .from('daily_stats')
-                            .update({
-                                purchases: (existing.purchases || 0) + 1,
-                                earnings: (existing.earnings || 0) + commission,
-                                updated_at: new Date().toISOString()
-                            })
-                            .eq('id', existing.id);
-                    } else {
-                        await supabaseClient
-                            .from('daily_stats')
-                            .insert({
-                                affiliate_code: promoCode,
-                                date: today,
-                                link_clicks: 0,
-                                purchases: 1,
-                                earnings: commission
-                            });
-                    }
-                    console.log('✅ Daily stats updated for affiliate:', promoCode);
-                } catch (e) {
-                    console.warn('⚠️ Daily stats update error:', e);
-                }
-            }
-
-            // ✅ WhatsApp redirect
-            const adminPhone = '447851843415';
-            const userName = currentUser.name || 'Customer';
-            const userId = currentUser.id || 'N/A';
-            const userContact = currentUser.whatsapp || 'N/A';
-            const pkgName = pkg.name || 'Package';
-            const amount = pkg.price || 0;
-            const paymentRef = document.getElementById('paymentRef').value.trim() || 'N/A';
-
-            const message = ` SHARPI PAYMENT CONFIRMATION
+      var message = `🔐 SHARPI PAYMENT CONFIRMATION
 
 ✅ Payment recorded successfully!
 
 👤 Name: ${userName}
 🆔 User ID: ${userId}
 📱 Contact: ${userContact}
-📦 Package: ${pkgName}
-💰 Amount: ${amount} UGX
+📦 Server: ${pkgName}
+💰 Amount: ${amount.toLocaleString()} UGX
 📋 Ref: ${paymentRef}
+⚡ Speed: ${stats.speed}mbps
+📅 Days: ${stats.days}
+🎯 Predictions: ${stats.preds}/day
+📊 Accuracy: ${stats.acc}%
 ${promoCode ? `🎯 Affiliate: ${promoCode}` : ''}
 
 ⏳ Waiting for admin to dispatch token.
 📱 Please send access token.`;
 
-            const whatsappUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
+      var whatsappUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
 
-            setTimeout(() => {
-                window.open(whatsappUrl, '_blank');
-            }, 1500);
+      setTimeout(function() {
+        window.open(whatsappUrl, '_blank');
+      }, 1500);
 
-        } catch (e) {
-            console.error('❌ Payment error:', e);
-            showToast('❌ Failed to record payment', 'error');
-            document.getElementById('paymentLoading').style.display = 'none';
-            return;
-        }
+    } catch (e) {
+      console.error('❌ Payment error:', e);
+      showToast('❌ Failed to record payment: ' + e.message, 'error');
+      if (loadingEl) loadingEl.style.display = 'none';
+      return;
     }
+  } else {
+    console.error('❌ Supabase client not initialized');
+    showToast('❌ Payment system unavailable. Please try again.', 'error');
+    if (loadingEl) loadingEl.style.display = 'none';
+    return;
+  }
 
-    // ✅ Save locally
-    appData.sales.push({
-        userId: currentUser.id,
-        userName: currentUser.name,
-        package: selectedPackage,
-        amount: pkg.price,
-        ref: ref,
-        promoCode: promoCode,
-        date: new Date().toISOString(),
-        status: 'pending'
-    });
-    saveData();
+  // Save locally
+  appData.sales.push({
+    userId: currentUser.id,
+    userName: currentUser.name,
+    package: server.id,
+    packageName: server.name,
+    amount: currentPrice,
+    speed: stats.speed,
+    days: stats.days,
+    predictions: stats.preds,
+    accuracy: stats.acc,
+    ref: ref,
+    promoCode: promoCode,
+    date: new Date().toISOString(),
+    status: 'pending'
+  });
+  saveData();
 
-    // ✅ Update UI
-    document.getElementById('paymentStatus').textContent = '✅ Payment recorded! Waiting for token...';
-    document.getElementById('paymentStatus').style.color = '#ffd700';
+  // Update UI
+  if (statusEl) {
+    statusEl.textContent = '✅ Payment recorded! Waiting for token... The app will only be unlocked if a payment is confirmed by our Team';
+    statusEl.style.color = '#ffd700';
+  }
 
-    hidePaymentSection();
-    const tokenPanel = document.querySelector('.panel[style*="border-color:rgba(0,204,68,0.3)"]');
-    if (tokenPanel) {
-        tokenPanel.style.display = 'block';
+  // Confirm listener is active
+  setTimeout(function() {
+    if (isListening) {
+      console.log('✅ Listener is active and waiting for dispatch');
+    } else {
+      console.warn('⚠️ Listener not active! Retrying...');
+      if (currentUser) listenForAdminDispatch(currentUser.id);
     }
+  }, 2000);
 
-    // ✅ Confirm listener is active
-    setTimeout(() => {
-        if (isListening) {
-            console.log('✅ Listener is active and waiting for dispatch');
-        } else {
-            console.warn('⚠️ Listener not active! Retrying...');
-            listenForAdminDispatch(currentUser.id);
-        }
-    }, 2000);
-
-    // ✅ Hide loading after 2 seconds
-    setTimeout(() => {
-        document.getElementById('paymentLoading').style.display = 'none';
-        document.getElementById('paymentStatus').style.display = 'block';
-    }, 2000);
+  // Hide loading after 2 seconds
+  setTimeout(function() {
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (statusEl) statusEl.style.display = 'block';
+  }, 2000);
 }
-// ============================================================
-// UPDATE AFFILIATE DAILY STATS
-// ============================================================
+
 async function updateAffiliateDailyStats(affiliateCode, amount) {
     if (!supabaseClient || !affiliateCode) return;
     
@@ -7159,6 +7673,10 @@ async function restoreUserSession() {
     showToast(' Welcome to SHARPI Predictor!', '');
     showPage('pageLanding');
     return false;
+    // Add this line
+if (currentUser && currentUser.verified) {
+  setTimeout(hidePackagesForVerified, 300);
+}
 }
 
     // ============================================================
@@ -7318,9 +7836,12 @@ goToLanding = function() {
     setTimeout(function() {
         updateVerifiedBadge();
     }, 500);
+    
 
     console.log('✅ Ready!');
 })();
+// At the bottom of your init() function
+setTimeout(hidePackagesForVerified, 500);
 // ============================================================
 // REVIEWS SHOW MORE
 // ============================================================
@@ -9093,7 +9614,7 @@ function updatePurchasePageForVerifiedUser() {
             wrapper.style.cssText = 'padding:20px;text-align:center;';
             wrapper.innerHTML = `
                 <div style="color:#ffd700;font-size:20px;font-weight:700;margin-bottom:12px;"></div>
-                <button onclick="goToDashboard()" style="background:#ff3333;color:white;border:none;border-radius:30px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;width:100%;font-family:inherit;">PREDICTOR</button>
+                <button onclick="goToDashboard()" style="background:#ff3333;color:white;border:none;border-radius:30px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;width:100%;font-family:inherit;">OPEN PREDICTOR</button>
             `;
             page.appendChild(wrapper);
         }
@@ -10684,131 +11205,573 @@ async function recordSaleAfterVerification(user, token, promoCode) {
     window.pnUpdateMenuItem = pnUpdateMenuItem;
 
   })();
-  (function() {
-    'use strict';
 
-    // ============================================================
-    // 1. SILENTLY BLOCK RIGHT-CLICK
-    // ============================================================
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    }, true);
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA LIQUID GLASS
+// ============================================================
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA LIQUID GLASS (FIXED SCALING)
+// ============================================================
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA LIQUID GLASS (FIXED SCALING)
+// ============================================================
 
-    // ============================================================
-    // 2. SILENTLY BLOCK KEYBOARD SHORTCUTS
-    // ============================================================
-    document.addEventListener('keydown', function(e) {
-        const key = e.key;
-        const ctrl = e.ctrlKey || e.metaKey;
-        const shift = e.shiftKey;
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA LIQUID GLASS (FIXED CONTINUOUS SCALING)
+// ============================================================
 
-        // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C
-        if (key === 'F12' ||
-            (ctrl && shift && (key === 'I' || key === 'J' || key === 'C')) ||
-            (ctrl && key === 'u')) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    }, true);
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA LIQUID GLASS (FIXED CONTINUOUS SCALING)
+// ============================================================
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA LIQUID GLASS (FIXED CONTINUOUS SCALING)
+// ============================================================
 
-    // ============================================================
-    // 3. SILENTLY DISABLE ALL CONSOLE METHODS
-    // ============================================================
-    const noop = function() {};
-    const consoleMethods = ['log', 'warn', 'error', 'info', 'debug', 'trace', 
-                           'dir', 'dirxml', 'group', 'groupEnd', 'table', 
-                           'count', 'time', 'timeEnd'];
-    consoleMethods.forEach(function(method) {
-        console[method] = noop;
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA WHITE CARD
+// ============================================================
+
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA WHITE CARD (COMPLETE)
+// ============================================================
+
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA WHITE CARD (COMPLETE)
+// ============================================================
+
+// ============================================================
+// SERVER SLIDER SYSTEM - VADA WHITE CARD (COMPLETE)
+// ============================================================
+
+// ============================================================
+// COMPLETE WORKING SLIDER - COPY THIS ENTIRE BLOCK
+// ===========================================================
+
+// ============================================================
+// COMPLETE WORKING SLIDER - CONTINUOUS SCALING
+// ============================================================
+
+var sliderValue = 24;
+
+// Server data - used only for names and promo text
+var SERVERS = [
+  { id: 'beetwky7', name: 'BeetWKY-7', tag: 'Basic Server', promo: 'Entry-level server for consistent daily predictions.' },
+  { id: 'softpackagent', name: 'SoftPackAgent', tag: 'Standard Server', promo: 'Mid-tier performance with significantly more daily predictions.' },
+  { id: 'fox2wkypro', name: 'Fox2WKY-Pro', tag: 'Advanced Server', promo: 'High-performance server with exceptional speed and accuracy.' },
+  { id: 'edenwkyagent', name: 'EDENWKY-Agent', tag: 'Elite Server', promo: 'The ultimate prediction machine. Near-perfect accuracy.' }
+];
+
+function getCurrentServer() {
+  if (sliderValue < 24) return SERVERS[0];
+  if (sliderValue < 48) return SERVERS[1];
+  if (sliderValue < 72) return SERVERS[2];
+  return SERVERS[3];
+}
+
+// ============================================================
+// CONTINUOUS SCALING - NO JUMPS, NO RESETS
+// ============================================================
+// ============================================================
+// REDUCED MULTIPLICATION STRETCH - SMOOTHER GROWTH
+// ============================================================
+// ============================================================
+// PREDICTIONS FOCUSED - More preds/day than days
+// ============================================================
+// ============================================================
+// AGGRESSIVE LOWER UNIT GROWTH - Significant increases early
+// ============================================================
+// ============================================================
+// REDUCED LEAP - SMOOTHER EARLY GROWTH
+// ============================================================
+// ============================================================
+// VERY SMOOTH GROWTH - Minimal leaps
+// ============================================================
+// ============================================================
+// FIXED SERVER SPEEDS - No scaling, only days & predictions grow
+// ============================================================
+// ============================================================
+// FIXED SERVER SPEEDS - Matches server name
+// ============================================================
+// ============================================================
+// FIXED SERVER SPEEDS & ACCURACY - No scaling
+// ============================================================
+function calculateStats(sliderVal) {
+  var speed = 17;
+  var accuracy = 87;
+  
+  if (sliderVal >= 24 && sliderVal < 48) {
+    speed = 24;
+    accuracy = 94;
+  } else if (sliderVal >= 48 && sliderVal < 72) {
+    speed = 35;
+    accuracy = 97;
+  } else if (sliderVal >= 72) {
+    speed = 44;
+    accuracy = 99.99;
+  }
+  
+  var progress = sliderVal / 96;
+  var power = 1.2;
+  
+  var baseDays = 30;
+  var basePreds = 33;
+  var maxDays = 220;
+  var maxPreds = 600;
+  
+  var days = baseDays + (maxDays - baseDays) * Math.pow(progress, power * 0.8);
+  var preds = basePreds + (maxPreds - basePreds) * Math.pow(progress, power * 0.9);
+  
+  var unitPosition = sliderVal;
+  var minDays = baseDays + (unitPosition * 0.25);
+  var minPreds = basePreds + (unitPosition * 0.6);
+  
+  days = Math.max(days, minDays);
+  preds = Math.max(preds, minPreds);
+  
+  return {
+    speed: speed,
+    days: Math.round(days),
+    preds: Math.round(preds),
+    acc: accuracy
+  };
+}
+// ============================================================
+// 4 COMPLETELY DIFFERENT ICONS
+// ============================================================
+function updateServerIcon(serverId) {
+  var container = document.getElementById('serverIcon');
+  if (!container) return;
+  
+  var icons = {
+    'beetwky7': `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="6" width="16" height="14" rx="3" stroke="#38bdf8" stroke-width="2" fill="rgba(56,189,248,0.04)"/>
+      <line x1="18" y1="6" x2="18" y2="2" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="18" cy="2" r="1.5" fill="#38bdf8" opacity="0.6"/>
+      <circle cx="13" cy="12" r="2" fill="#38bdf8" opacity="0.8"/>
+      <circle cx="23" cy="12" r="2" fill="#38bdf8" opacity="0.8"/>
+      <circle cx="13" cy="12" r="1" fill="#0ea5e9"/>
+      <circle cx="23" cy="12" r="1" fill="#0ea5e9"/>
+      <rect x="14" y="16" width="8" height="2" rx="1" fill="#38bdf8" opacity="0.4"/>
+      <rect x="12" y="20" width="12" height="10" rx="2" stroke="#38bdf8" stroke-width="1.8" fill="rgba(56,189,248,0.04)"/>
+      <circle cx="18" cy="24" r="2" fill="#38bdf8" opacity="0.3"/>
+      <circle cx="18" cy="24" r="0.8" fill="#38bdf8" opacity="0.8"/>
+      <rect x="8" y="21" width="4" height="8" rx="1.5" stroke="#38bdf8" stroke-width="1.5" fill="rgba(56,189,248,0.04)"/>
+      <rect x="24" y="21" width="4" height="8" rx="1.5" stroke="#38bdf8" stroke-width="1.5" fill="rgba(56,189,248,0.04)"/>
+      <rect x="13" y="30" width="4" height="4" rx="1" stroke="#38bdf8" stroke-width="1.5" fill="rgba(56,189,248,0.04)"/>
+      <rect x="19" y="30" width="4" height="4" rx="1" stroke="#38bdf8" stroke-width="1.5" fill="rgba(56,189,248,0.04)"/>
+    </svg>`,
+    'softpackagent': `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="18" cy="8" rx="12" ry="4" stroke="#22c55e" stroke-width="2" fill="rgba(34,197,94,0.04)"/>
+      <path d="M6 8 L6 26" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+      <path d="M30 8 L30 26" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="18" cy="26" rx="12" ry="4" stroke="#22c55e" stroke-width="2" fill="rgba(34,197,94,0.04)"/>
+      <rect x="8" y="10" width="20" height="14" rx="2" stroke="#22c55e" stroke-width="1.5" fill="rgba(34,197,94,0.04)"/>
+      <circle cx="13" cy="14" r="1.2" fill="#22c55e" opacity="0.9"/>
+      <circle cx="18" cy="14" r="1.2" fill="#22c55e" opacity="0.4"/>
+      <circle cx="23" cy="14" r="1.2" fill="#22c55e" opacity="0.6"/>
+      <circle cx="13" cy="20" r="1.2" fill="#22c55e" opacity="0.6"/>
+      <circle cx="18" cy="20" r="1.2" fill="#22c55e" opacity="0.9"/>
+      <circle cx="23" cy="20" r="1.2" fill="#22c55e" opacity="0.4"/>
+    </svg>`,
+    'fox2wkypro': `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2 L10 18 L18 16 L14 34 L26 16 L18 18 L22 2 L20 2Z" stroke="#f97316" stroke-width="2.5" stroke-linejoin="round" fill="rgba(249,115,22,0.04)"/>
+      <circle cx="18" cy="18" r="14" stroke="#f97316" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.4"/>
+      <path d="M16 6 L12 14 L14 14 L12 18" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+      <path d="M20 30 L24 22 L22 22 L24 18" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+      <circle cx="18" cy="18" r="2" fill="#f97316" opacity="0.2"/>
+      <circle cx="18" cy="18" r="0.8" fill="#f97316" opacity="0.7"/>
+    </svg>`,
+    'edenwkyagent': `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 28 L7 8 L13 16 L18 4 L23 16 L29 8 L32 28 L4 28Z" stroke="#ec4899" stroke-width="2.2" stroke-linejoin="round" fill="rgba(236,72,153,0.04)"/>
+      <path d="M18 12 L21 18 L18 24 L15 18 L18 12Z" stroke="#ec4899" stroke-width="1.5" stroke-linejoin="round" opacity="0.7"/>
+      <circle cx="13" cy="12" r="1.8" fill="#ec4899" opacity="0.3"/>
+      <circle cx="18" cy="10" r="1.8" fill="#ec4899" opacity="0.3"/>
+      <circle cx="23" cy="12" r="1.8" fill="#ec4899" opacity="0.3"/>
+      <circle cx="18" cy="18" r="4" stroke="#ec4899" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.4"/>
+      <circle cx="18" cy="18" r="1.2" fill="#ec4899" opacity="0.6"/>
+    </svg>`
+  };
+  
+  container.innerHTML = icons[serverId] || icons['beetwky7'];
+}
+
+// ============================================================
+// UPDATE DISPLAY
+// ============================================================
+function updateSliderDisplay() {
+  var slider = document.getElementById('serverSlider');
+  var priceDisplay = document.getElementById('sliderPriceDisplay');
+  if (!slider || !priceDisplay) return;
+  
+  var server = getCurrentServer();
+  var stats = calculateStats(sliderValue);
+  var price = 44000 + (sliderValue * 3000);
+  
+  priceDisplay.textContent = price.toLocaleString() + ' UGX';
+  
+  document.getElementById('serverName').textContent = server.name;
+  document.getElementById('serverTag').textContent = server.tag;
+  document.getElementById('serverSpeed').textContent = stats.speed;
+  document.getElementById('serverDays').textContent = stats.days;
+  document.getElementById('serverPredictions').textContent = stats.preds;
+  
+  // Update accuracy (now inside features list)
+  var accDisplay = stats.acc >= 100 ? '99.99' : stats.acc.toFixed(1);
+  document.getElementById('serverAccuracy').textContent = accDisplay + '%';
+  
+  // REMOVED: accuracy bar update
+  
+  document.getElementById('serverPromo').textContent = server.promo;
+  
+  updateServerIcon(server.id);
+  updateStarRating(server.id);
+  
+  var paymentDisplay = document.getElementById('paymentAmountDisplay');
+  if (paymentDisplay) {
+    paymentDisplay.textContent = price.toLocaleString();
+  }
+  
+  var howToPayAmount = document.getElementById('howToPayAmount');
+  if (howToPayAmount) {
+    howToPayAmount.textContent = price.toLocaleString() + ' UGX';
+  }
+  
+  var pct = (sliderValue / 96) * 100;
+  slider.style.background = 'linear-gradient(to right, #fca5a5 0%, #fbbf24 ' + pct + '%, #e5e7eb ' + pct + '%, #e5e7eb 100%)';
+}
+function adjustSlider(direction) {
+  var newValue = sliderValue + direction;
+  if (newValue < 0 || newValue > 96) return;
+  sliderValue = newValue;
+  document.getElementById('serverSlider').value = sliderValue;
+  updateSliderDisplay();
+}
+
+function getSliderPrice() {
+  return 44000 + (sliderValue * 3000);
+}
+
+// ============================================================
+// INITIALIZE
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  var slider = document.getElementById('serverSlider');
+  if (slider) {
+    slider.addEventListener('input', function() {
+      sliderValue = parseInt(this.value);
+      updateSliderDisplay();
     });
+  }
+  sliderValue = 24;
+  updateSliderDisplay();
+});
 
-    // ============================================================
-    // 4. SILENTLY BLOCK SELECTION (except on inputs)
-    // ============================================================
-    document.addEventListener('selectstart', function(e) {
-        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-            e.preventDefault();
-            return false;
-        }
-    }, true);
+// ============================================================
+// UPDATE PAYMENT BUTTON WITH CURRENT SLIDER PRICE
+// ============================================================
+function updatePaymentButton() {
+  var price = 44000 + (sliderValue * 3000);
+  var display = document.getElementById('paymentAmountDisplay');
+  if (display) {
+    display.textContent = price.toLocaleString();
+  }
+  
+  // Also update any other price displays
+  var priceElements = document.querySelectorAll('.dynamic-price');
+  priceElements.forEach(function(el) {
+    el.textContent = price.toLocaleString();
+  });
+}
+// ============================================================
+// HOW TO PAY - OPEN/CLOSE
+// ============================================================
+function openHowToPay() {
+  // Update the amount in the How To Pay modal
+  var price = 44000 + (sliderValue * 3000);
+  var amountDisplay = document.getElementById('howToPayAmount');
+  if (amountDisplay) {
+    amountDisplay.textContent = price.toLocaleString() + ' UGX';
+  }
+  
+  var overlay = document.getElementById('howToPayOverlay');
+  if (overlay) {
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
 
-    // ============================================================
-    // 5. SILENTLY BLOCK DRAGGING
-    // ============================================================
-    document.addEventListener('dragstart', function(e) {
-        e.preventDefault();
-        return false;
-    }, true);
+function closeHowToPay() {
+  var overlay = document.getElementById('howToPayOverlay');
+  if (overlay) {
+    overlay.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+}
 
-    // ============================================================
-    // 6. SILENTLY DETECT DEVTOOLS AND BREAK IT
-    // ============================================================
-    let devtoolsOpen = false;
-    const element = new Image();
-    Object.defineProperty(element, 'id', {
-        get: function() {
-            devtoolsOpen = true;
-            return '';
-        }
-    });
+// Close overlay when clicking outside
+document.addEventListener('click', function(e) {
+  var overlay = document.getElementById('howToPayOverlay');
+  if (overlay && e.target === overlay) {
+    closeHowToPay();
+  }
+});
 
-    setInterval(function check() {
-        devtoolsOpen = false;
-        console.log('%c', element);
-        if (devtoolsOpen) {
-            // DevTools is open – silently break console further
-            ['log', 'warn', 'error', 'info', 'debug'].forEach(function(method) {
-                console[method] = noop;
-            });
-            // Optionally: break the debugger
-            try { debugger; } catch(e) {}
-        }
-    }, 1000);
+// Close overlay with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeHowToPay();
+  }
+});
 
-    // ============================================================
-    // 7. SILENTLY BLOCK VIEW-SOURCE PROTOCOL
-    // ============================================================
-    try {
-        if (window.location.protocol === 'view-source:') {
-            window.location.href = window.location.href.replace('view-source:', '');
-        }
-    } catch(e) {}
-
-    // ============================================================
-    // 8. SILENTLY BLOCK DEVTOOLS ON MOBILE
-    // ============================================================
-    if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-        }, true);
+// ============================================================
+// UPDATE HOW TO PAY AMOUNT WHEN SLIDER MOVES
+// ============================================================
+// Add this to your updateSliderDisplay function
+// ============================================================
+// UPDATE STAR RATING BASED ON SERVER
+// ============================================================
+// ============================================================
+// UPDATE STAR RATING WITH LABEL
+// ============================================================
+// ============================================================
+// UPDATE STAR RATING - COMPLETE REWRITE
+// ============================================================
+function updateStarRating(serverId) {
+  var starCounts = {
+    'beetwky7': 1,
+    'softpackagent': 2,
+    'fox2wkypro': 3,
+    'edenwkyagent': 4
+  };
+  
+  var starLabels = {
+    'beetwky7': 'Basic',
+    'softpackagent': 'Standard',
+    'fox2wkypro': 'Advanced',
+    'edenwkyagent': 'Elite'
+  };
+  
+  var count = starCounts[serverId] || 1;
+  var label = starLabels[serverId] || 'Basic';
+  
+  var container = document.getElementById('starRatingContainer');
+  if (!container) return;
+  
+  var html = '';
+  for (var i = 1; i <= 4; i++) {
+    if (i <= count) {
+      html += '<span style="color: #f59e0b; font-size: 16px; text-shadow: 0 0 10px rgba(245,158,11,0.4);">★</span>';
+    } else {
+      html += '<span style="color: #d1d5db; font-size: 16px;">☆</span>';
     }
-
-    // ============================================================
-    // 9. SILENTLY OVERRIDE DEBUGGER STATEMENT
-    // ============================================================
-    window.debugger = function() { return; };
-
-    // ============================================================
-    // 10. SILENTLY REMOVE SOURCE MAPS
-    // ============================================================
-    try {
-        document.querySelectorAll('script[src*=".map"]').forEach(function(el) {
-            el.remove();
-        });
-    } catch(e) {}
-
-    console.log('🛡️ Security Active');
-})();
+  }
+  html += '<span style="color: #94a3b8; font-size: 10px; font-weight: 600; margin-left: 4px;">' + label + '</span>';
+  
+  container.innerHTML = html;
+}
 </script>
 <!-- ============================================================
-     END PROXYNEST API PLUGIN
+     HOW TO PAY OVERLAY
      ============================================================ -->
+     <div id="howToPayOverlay" style="
+     display: none;
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background: rgba(0,0,0,0.85);
+     backdrop-filter: blur(12px);
+     -webkit-backdrop-filter: blur(12px);
+     z-index: 999999;
+     align-items: center;
+     justify-content: center;
+     padding: 20px;
+     animation: fadeIn 0.3s ease;
+   ">
+     <div style="
+       background: #1a1a2e;
+       border-radius: 24px;
+       max-width: 420px;
+       width: 100%;
+       max-height: 90vh;
+       overflow-y: auto;
+       padding: 28px 24px 24px;
+       border: 1px solid rgba(245,158,11,0.08);
+       box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+       position: relative;
+     ">
+       <!-- Close Button -->
+       <button onclick="closeHowToPay()" style="
+         position: absolute;
+         top: 12px;
+         right: 16px;
+         background: none;
+         border: none;
+         color: #666;
+         font-size: 24px;
+         cursor: pointer;
+         transition: color 0.2s;
+       " onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'">✕</button>
+   
+       <!-- Header -->
+       <div style="text-align: center; margin-bottom: 20px;">
+         <div style="
+           width: 56px;
+           height: 56px;
+           background: rgba(245,158,11,0.06);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           margin: 0 auto 10px;
+           font-size: 28px;
+         ">💰</div>
+         <div style="color: #f59e0b; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">How To Pay</div>
+         <div style="color: rgba(255,255,255,0.3); font-size: 13px; margin-top: 4px;">Follow these steps to complete your payment</div>
+       </div>
+   
+       <!-- STEP 1 -->
+       <div style="display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+         <div style="
+           flex-shrink: 0;
+           width: 32px;
+           height: 32px;
+           background: rgba(245,158,11,0.06);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 13px;
+           font-weight: 800;
+           color: #f59e0b;
+           border: 1px solid rgba(245,158,11,0.06);
+         ">1</div>
+         <div style="flex:1;">
+           <div style="color: white; font-size: 15px; font-weight: 600;">Dial Merchant Code</div>
+           <div style="color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 2px;">On your phone, dial <span style="color: #f59e0b; font-weight: 600;">*185*9#</span> and select "Pay Merchant"</div>
+         </div>
+       </div>
+   
+       <!-- STEP 2 -->
+       <div style="display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+         <div style="
+           flex-shrink: 0;
+           width: 32px;
+           height: 32px;
+           background: rgba(245,158,11,0.06);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 13px;
+           font-weight: 800;
+           color: #f59e0b;
+           border: 1px solid rgba(245,158,11,0.06);
+         ">2</div>
+         <div style="flex:1;">
+           <div style="color: white; font-size: 15px; font-weight: 600;">Enter Merchant ID</div>
+           <div style="color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 2px;">Enter the merchant code: <span style="color: #f59e0b; font-weight: 600; font-family: monospace; font-size: 16px;">7049771</span></div>
+           <button onclick="copyMerchantCode()" style="
+             background: rgba(245,158,11,0.06);
+             border: 1px solid rgba(245,158,11,0.06);
+             color: #f59e0b;
+             padding: 3px 14px;
+             border-radius: 6px;
+             cursor: pointer;
+             font-size: 11px;
+             font-weight: 600;
+             margin-top: 4px;
+           ">📋 Copy Code</button>
+         </div>
+       </div>
+   
+       <!-- STEP 3 -->
+       <div style="display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+         <div style="
+           flex-shrink: 0;
+           width: 32px;
+           height: 32px;
+           background: rgba(245,158,11,0.06);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 13px;
+           font-weight: 800;
+           color: #f59e0b;
+           border: 1px solid rgba(245,158,11,0.06);
+         ">3</div>
+         <div style="flex:1;">
+           <div style="color: white; font-size: 15px; font-weight: 600;">Enter Amount</div>
+           <div style="color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 2px;">Enter the amount shown on the slider: <span id="howToPayAmount" style="color: #f59e0b; font-weight: 700;">44,000 UGX</span></div>
+         </div>
+       </div>
+   
+       <!-- STEP 4 -->
+       <div style="display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+         <div style="
+           flex-shrink: 0;
+           width: 32px;
+           height: 32px;
+           background: rgba(245,158,11,0.06);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 13px;
+           font-weight: 800;
+           color: #f59e0b;
+           border: 1px solid rgba(245,158,11,0.06);
+         ">4</div>
+         <div style="flex:1;">
+           <div style="color: white; font-size: 15px; font-weight: 600;">Use Your Phone Number as Reference</div>
+           <div style="color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 2px;">In the reference field, enter <span style="color: #f59e0b; font-weight: 600;">your phone number</span> (e.g., 0700001234)</div>
+           <div style="color: rgba(255,255,255,0.2); font-size: 11px; margin-top: 2px;">⚠️ Use the SAME number in the payment reference below</div>
+         </div>
+       </div>
+   
+       <!-- STEP 5 -->
+       <div style="display: flex; gap: 14px; padding: 12px 0;">
+         <div style="
+           flex-shrink: 0;
+           width: 32px;
+           height: 32px;
+           background: rgba(46,204,113,0.06);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 13px;
+           font-weight: 800;
+           color: #2ecc71;
+           border: 1px solid rgba(46,204,113,0.06);
+         ">5</div>
+         <div style="flex:1;">
+           <div style="color: white; font-size: 15px; font-weight: 600;">Confirm & Get Verified</div>
+           <div style="color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 2px;">After payment, click <span style="color: #f59e0b; font-weight: 600;">"CLICK HERE AFTER PAYMENT"</span> to get instant access</div>
+           <div style="color: #2ecc71; font-size: 12px; margin-top: 4px;">✅ Access granted automatically within 1-2 minutes</div>
+         </div>
+       </div>
+   
+       <!-- Close Button -->
+       <button onclick="closeHowToPay()" style="
+         width: 100%;
+         padding: 14px;
+         background: rgba(255,255,255,0.04);
+         border: 1px solid rgba(255,255,255,0.06);
+         border-radius: 12px;
+         color: rgba(255,255,255,0.4);
+         font-size: 15px;
+         font-weight: 600;
+         cursor: pointer;
+         margin-top: 16px;
+         transition: all 0.3s ease;
+         font-family: inherit;
+       " onmouseover="this.style.background='rgba(255,255,255,0.08)'; this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'; this.style.color='rgba(255,255,255,0.4)'">
+         ✕ Close
+       </button>
+     </div>
+   </div>
 </body>
 </html>
